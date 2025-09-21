@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  dominator-api:
+  java-app:
     build: .
     ports:
       - "8080:8080"
