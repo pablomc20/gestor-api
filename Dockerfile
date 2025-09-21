@@ -1,14 +1,12 @@
-# Usa una imagen base de OpenJDK 21
-FROM openjdk:21-jdk-slim
+# Etapa de build
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Argumento para la ruta del JAR
-ARG JAR_FILE=target/*.jar
-
-# Copia el archivo JAR de la aplicación al contenedor
-COPY ${JAR_FILE} app.jar
-
-# Expone el puerto 8080, que es el puerto por defecto de Spring Boot
+# Etapa de runtime
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]
