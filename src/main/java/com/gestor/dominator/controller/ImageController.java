@@ -70,7 +70,7 @@ public class ImageController {
     @GetMapping("/file/{filename}")
     public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
         try {
-            Path filePath = Paths.get("app/uploads/images", filename);
+            Path filePath = Paths.get("uploads/images", filename);
             if (!Files.exists(filePath)) {
                 return ResponseEntity.notFound().build();
             }

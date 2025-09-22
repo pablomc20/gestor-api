@@ -5,9 +5,11 @@ import com.gestor.dominator.dto.ImageUpdateRequest;
 import com.gestor.dominator.model.Image;
 import com.gestor.dominator.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,13 +26,20 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
-    private final Path uploadPath = Paths.get("/app/uploads/images");
+    @Value("${app.upload.dir:uploads/images}")
+    private String uploadDir;
 
-    public ImageService() {
+    private Path uploadPath;
+
+    @PostConstruct
+    public void init() {
         try {
+            this.uploadPath = Paths.get(uploadDir).toAbsolutePath();
             Files.createDirectories(uploadPath);
+            System.out.println("Directorio de uploads creado exitosamente: " + uploadPath);
         } catch (IOException e) {
-            throw new RuntimeException("No se pudo crear el directorio de uploads", e);
+            System.err.println("Error al crear el directorio de uploads: " + uploadPath + " - " + e.getMessage());
+            throw new RuntimeException("No se pudo crear el directorio de uploads: " + uploadDir, e);
         }
     }
 
