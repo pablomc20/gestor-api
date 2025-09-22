@@ -5,8 +5,11 @@ services:
     build: .
     ports:
       - "${SERVER_PORT_BACK:-8080}:${SERVER_PORT_BACK:-8080}"
+    volumes:
+      - /opt/dokploy/uploads:/app/uploads
     environment:
       - SPRING_PROFILES_ACTIVE=prod
       - MONGODB_URI=${MONGODB_URI}
       - SERVER_PORT_BACK=${SERVER_PORT_BACK:-8080}
       - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped

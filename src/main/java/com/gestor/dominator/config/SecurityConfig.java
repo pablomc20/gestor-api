@@ -35,6 +35,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/auth/**").permitAll()  // Endpoints de autenticación públicos
                 .requestMatchers("/public/**").permitAll() // Endpoints públicos
+                .requestMatchers("/images/file/**").permitAll() // Archivos de imagen públicos
                 .anyRequest().authenticated()              // Todo lo demás requiere autenticación
             )
             .sessionManagement(session -> session
