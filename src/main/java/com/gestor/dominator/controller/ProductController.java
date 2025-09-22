@@ -2,12 +2,15 @@ package com.gestor.dominator.controller;
 
 import com.gestor.dominator.dto.ProductRequest;
 import com.gestor.dominator.dto.ProductResponse;
+import com.gestor.dominator.exceptions.custom.MongoDbException;
 import com.gestor.dominator.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,28 +30,21 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable String id) {
         Optional<ProductResponse> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return product
+                .map(p -> ResponseEntity.ok(p))
+                .orElseThrow(() -> MongoDbException.findError(id, id));
     }
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable String categoryId) {
-        try {
-            List<ProductResponse> products = productService.getProductsByCategory(categoryId);
-            return ResponseEntity.ok(products);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        List<ProductResponse> products = productService.getProductsByCategory(categoryId);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/tag/{tagId}")
     public ResponseEntity<List<ProductResponse>> getProductsByTag(@PathVariable String tagId) {
-        try {
-            List<ProductResponse> products = productService.getProductsByTag(tagId);
-            return ResponseEntity.ok(products);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        List<ProductResponse> products = productService.getProductsByTag(tagId);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/search")
@@ -58,24 +54,16 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequest request) {
-        try {
-            ProductResponse response = productService.createProduct(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
+        ProductResponse response = productService.createProduct(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable String id, @RequestBody ProductRequest request) {
-        try {
-            Optional<ProductResponse> updatedProduct = productService.updateProduct(id, request);
-            return updatedProduct.map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable String id, @Valid @RequestBody ProductRequest request) {
+        Optional<ProductResponse> updatedProduct = productService.updateProduct(id, request);
+        return updatedProduct.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

@@ -2,6 +2,8 @@ package com.gestor.dominator.service;
 
 import com.gestor.dominator.dto.ImageResponse;
 import com.gestor.dominator.dto.ImageUpdateRequest;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
+import com.gestor.dominator.exceptions.custom.FileSystemException;
 import com.gestor.dominator.model.Image;
 import com.gestor.dominator.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ public class ImageService {
             System.out.println("Directorio de uploads creado exitosamente: " + uploadPath);
         } catch (IOException e) {
             System.err.println("Error al crear el directorio de uploads: " + uploadPath + " - " + e.getMessage());
-            throw new RuntimeException("No se pudo crear el directorio de uploads: " + uploadDir, e);
+            throw new FileSystemException("No se pudo crear el directorio de uploads: " + uploadDir, e);
         }
     }
 
@@ -54,24 +56,28 @@ public class ImageService {
                 .map(this::convertToResponse);
     }
 
-    public ImageResponse uploadImage(MultipartFile file) throws IOException {
+    public ImageResponse uploadImage(MultipartFile file) {
         // Validar tipo de archivo
         if (!isValidImageType(file.getContentType())) {
-            throw new IllegalArgumentException("Tipo de archivo no válido. Solo se permiten imágenes.");
+            throw new DataValidationException("Tipo de archivo no válido. Solo se permiten imágenes.");
         }
 
         // Generar nombre único
         String filename = generateUniqueFilename(file.getOriginalFilename());
 
-        // Guardar archivo en disco
-        Path filePath = uploadPath.resolve(filename);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            // Guardar archivo en disco
+            Path filePath = uploadPath.resolve(filename);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Crear entidad Image
-        Image image = new Image(filename, file.getOriginalFilename(), file.getSize(), file.getContentType());
-        Image savedImage = imageRepository.save(image);
+            // Crear entidad Image
+            Image image = new Image(filename, file.getOriginalFilename(), file.getSize(), file.getContentType());
+            Image savedImage = imageRepository.save(image);
 
-        return convertToResponse(savedImage);
+            return convertToResponse(savedImage);
+        } catch (IOException e) {
+            throw new FileSystemException("Error al guardar el archivo en el servidor", e);
+        }
     }
 
     public Optional<ImageResponse> updateImage(String id, ImageUpdateRequest request) {
@@ -97,7 +103,7 @@ public class ImageService {
                         imageRepository.deleteById(id);
                         return true;
                     } catch (IOException e) {
-                        throw new RuntimeException("Error al eliminar el archivo físico", e);
+                        throw new FileSystemException("Error al eliminar el archivo físico", e);
                     }
                 })
                 .orElse(false);

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,24 +46,16 @@ public class RoomController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody RoomRequest request) {
-        try {
-            RoomResponse response = roomService.createRoom(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest request) {
+        RoomResponse response = roomService.createRoom(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRoom(@PathVariable String id, @RequestBody RoomRequest request) {
-        try {
-            Optional<RoomResponse> updatedRoom = roomService.updateRoom(id, request);
-            return updatedRoom.map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<RoomResponse> updateRoom(@PathVariable String id, @Valid @RequestBody RoomRequest request) {
+        Optional<RoomResponse> updatedRoom = roomService.updateRoom(id, request);
+        return updatedRoom.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

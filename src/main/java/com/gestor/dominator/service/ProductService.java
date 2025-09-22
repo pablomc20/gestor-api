@@ -5,6 +5,7 @@ import com.gestor.dominator.dto.ProductRequest;
 import com.gestor.dominator.dto.ProductResponse;
 import com.gestor.dominator.dto.RoomResponse;
 import com.gestor.dominator.dto.tag.TagResponse;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.Image;
 import com.gestor.dominator.model.Product;
 import com.gestor.dominator.model.Room;
@@ -51,7 +52,7 @@ public class ProductService {
     public List<ProductResponse> getProductsByCategory(String categoryId) {
         // Validar que la categoría existe
         if (!roomRepository.existsById(categoryId)) {
-            throw new IllegalArgumentException("La categoría especificada no existe");
+            throw new DataValidationException("La categoría especificada no existe");
         }
         return productRepository.findByCategory(categoryId).stream()
                 .map(this::convertToResponse)
@@ -67,7 +68,7 @@ public class ProductService {
     public List<ProductResponse> getProductsByTag(String tagId) {
         // Validar que el tag existe
         if (!tagRepository.existsById(tagId)) {
-            throw new IllegalArgumentException("El tag especificado no existe");
+            throw new DataValidationException("El tag especificado no existe");
         }
         return productRepository.findByTagsContaining(tagId).stream()
                 .map(this::convertToResponse)
@@ -77,24 +78,24 @@ public class ProductService {
     public ProductResponse createProduct(ProductRequest request) {
         // Validar que la categoría existe
         if (request.getCategory() != null && !roomRepository.existsById(request.getCategory())) {
-            throw new IllegalArgumentException("La categoría especificada no existe");
+            throw new DataValidationException("La categoría especificada no existe");
         }
 
         // Validar que los tags existen
         if (request.getTags() != null) {
             for (String tagId : request.getTags()) {
                 if (!tagRepository.existsById(tagId)) {
-                    throw new IllegalArgumentException("Uno de los tags especificados no existe: " + tagId);
+                    throw new DataValidationException("Uno de los tags especificados no existe: " + tagId);
                 }
             }
         }
 
         // Validar campos requeridos
         if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-            throw new IllegalArgumentException("El título del producto es requerido");
+            throw new DataValidationException("El título del producto es requerido");
         }
         if (request.getPrice() == null || request.getPrice() < 0) {
-            throw new IllegalArgumentException("El precio debe ser mayor o igual a cero");
+            throw new DataValidationException("El precio debe ser mayor o igual a cero");
         }
 
         Product product = new Product(
@@ -117,24 +118,24 @@ public class ProductService {
                 .map(product -> {
                     // Validar que la categoría existe
                     if (request.getCategory() != null && !roomRepository.existsById(request.getCategory())) {
-                        throw new IllegalArgumentException("La categoría especificada no existe");
+                        throw new DataValidationException("La categoría especificada no existe");
                     }
 
                     // Validar que los tags existen
                     if (request.getTags() != null) {
                         for (String tagId : request.getTags()) {
                             if (!tagRepository.existsById(tagId)) {
-                                throw new IllegalArgumentException("Uno de los tags especificados no existe: " + tagId);
+                                throw new DataValidationException("Uno de los tags especificados no existe: " + tagId);
                             }
                         }
                     }
 
                     // Validar campos requeridos
                     if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-                        throw new IllegalArgumentException("El título del producto es requerido");
+                        throw new DataValidationException("El título del producto es requerido");
                     }
                     if (request.getPrice() == null || request.getPrice() < 0) {
-                        throw new IllegalArgumentException("El precio debe ser mayor o igual a cero");
+                        throw new DataValidationException("El precio debe ser mayor o igual a cero");
                     }
 
                     product.setTitle(request.getTitle());

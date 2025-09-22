@@ -2,6 +2,7 @@ package com.gestor.dominator.service;
 
 import com.gestor.dominator.dto.RoomRequest;
 import com.gestor.dominator.dto.RoomResponse;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.Room;
 import com.gestor.dominator.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +38,12 @@ public class RoomService {
     public RoomResponse createRoom(RoomRequest request) {
         // Validar que el slug no exista
         if (roomRepository.existsBySlug(request.getSlug())) {
-            throw new IllegalArgumentException("Ya existe una sala con el slug: " + request.getSlug());
+            throw new DataValidationException("Ya existe una sala con el slug: " + request.getSlug());
         }
 
         // Validar que el nombre no exista
         if (roomRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Ya existe una sala con el nombre: " + request.getName());
+            throw new DataValidationException("Ya existe una sala con el nombre: " + request.getName());
         }
 
         Room room = new Room(request.getName(), request.getSlug());
@@ -55,12 +56,12 @@ public class RoomService {
                 .map(room -> {
                     // Validar slug único (excluyendo el actual)
                     if (!room.getSlug().equals(request.getSlug()) && roomRepository.existsBySlug(request.getSlug())) {
-                        throw new IllegalArgumentException("Ya existe una sala con el slug: " + request.getSlug());
+                        throw new DataValidationException("Ya existe una sala con el slug: " + request.getSlug());
                     }
 
                     // Validar nombre único (excluyendo el actual)
                     if (!room.getName().equals(request.getName()) && roomRepository.existsByName(request.getName())) {
-                        throw new IllegalArgumentException("Ya existe una sala con el nombre: " + request.getName());
+                        throw new DataValidationException("Ya existe una sala con el nombre: " + request.getName());
                     }
 
                     room.setName(request.getName());

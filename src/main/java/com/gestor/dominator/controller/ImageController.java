@@ -2,6 +2,7 @@ package com.gestor.dominator.controller;
 
 import com.gestor.dominator.dto.ImageResponse;
 import com.gestor.dominator.dto.ImageUpdateRequest;
+import com.gestor.dominator.exceptions.custom.FileSystemException;
 import com.gestor.dominator.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,16 +39,9 @@ public class ImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            ImageResponse response = imageService.uploadImage(file);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al subir la imagen: " + e.getMessage());
-        }
+    public ResponseEntity<ImageResponse> uploadImage(@RequestParam("file") MultipartFile file) {
+        ImageResponse response = imageService.uploadImage(file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
@@ -80,13 +74,13 @@ public class ImageController {
             if (contentType == null) {
                 contentType = "application/octet-stream";
             }
-            
+
 
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .body(imageBytes);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new FileSystemException("Error al leer el archivo de imagen", e);
         }
     }
 }

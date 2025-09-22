@@ -3,6 +3,7 @@ package com.gestor.dominator.controller;
 import com.gestor.dominator.dto.AuthResponse;
 import com.gestor.dominator.dto.LoginRequest;
 import com.gestor.dominator.dto.RegisterRequest;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.User;
 import com.gestor.dominator.repository.UserRepository;
 import com.gestor.dominator.service.config.JwtUtil;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,52 +38,44 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
-                )
-            );
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+            )
+        );
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            User user = (User) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        User user = (User) authentication.getPrincipal();
 
-            String token = jwtUtil.generateToken(user);
+        String token = jwtUtil.generateToken(user);
 
-            AuthResponse response = new AuthResponse(token);
+        AuthResponse response = new AuthResponse(token);
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(response);
     }
 
     // @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            // Verificar si el usuario ya existe
-            if (userRepository.existsByUsername(registerRequest.getUsername())) {
-                return ResponseEntity.badRequest().body("El usuario ya existe");
-            }
-
-            // Crear nuevo usuario
-            List<String> roles = registerRequest.getRoles() != null && !registerRequest.getRoles().isEmpty()
-                ? registerRequest.getRoles()
-                : Arrays.asList("USER");
-
-            User user = new User(
-                registerRequest.getUsername(),
-                passwordEncoder.encode(registerRequest.getPassword()),
-                roles
-            );
-
-            userRepository.save(user);
-
-            return ResponseEntity.ok("Usuario registrado exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error al registrar usuario: " + e.getMessage());
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        // Verificar si el usuario ya existe
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            throw new DataValidationException("Ya existe un usuario con el nombre de usuario: " + registerRequest.getUsername());
         }
+
+        // Crear nuevo usuario
+        List<String> roles = registerRequest.getRoles() != null && !registerRequest.getRoles().isEmpty()
+            ? registerRequest.getRoles()
+            : Arrays.asList("USER");
+
+        User user = new User(
+            registerRequest.getUsername(),
+            passwordEncoder.encode(registerRequest.getPassword()),
+            roles
+        );
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Usuario registrado exitosamente");
     }
 }

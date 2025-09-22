@@ -14,6 +14,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gestor.dominator.service.config.CustomUserDetailsService;
 import com.gestor.dominator.service.config.JwtUtil;
+import com.gestor.dominator.exceptions.custom.AuthenticationException;
+import com.gestor.dominator.dto.ErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
@@ -26,37 +29,67 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    /**
+     * Verifica si el path de la solicitud requiere autenticación JWT.
+     * Los paths públicos no requieren token.
+     */
+    private boolean requiresAuthentication(String requestURI) {
+        return !(requestURI.startsWith("/auth/") ||
+                 requestURI.startsWith("/public/") ||
+                 requestURI.startsWith("/images/file/"));
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String username;
+        try {
+            final String authHeader = request.getHeader("Authorization");
+            final String jwt;
+            final String username;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        jwt = authHeader.substring(7);
-        username = jwtUtil.extractUsername(jwt);
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                if (requiresAuthentication(request.getRequestURI())) {
+                    throw new AuthenticationException("Token de autenticación requerido");
+                }
+                filterChain.doFilter(request, response);
+                return;
             }
-        }
 
-        filterChain.doFilter(request, response);
+            jwt = authHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                if (jwtUtil.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (AuthenticationException ex) {
+            // Manejar la excepción directamente en el filtro
+            ErrorResponse errorResponse = new ErrorResponse(
+                ex.getError(),
+                ex.getDescription(),
+                ex.getStatusCode()
+            );
+
+            response.setStatus(ex.getStatus().value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+        }
     }
 }
