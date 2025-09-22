@@ -1,4 +1,4 @@
-package com.gestor.dominator.service;
+package com.gestor.dominator.service.config;
 
 import com.gestor.dominator.model.User;
 import com.gestor.dominator.repository.UserRepository;

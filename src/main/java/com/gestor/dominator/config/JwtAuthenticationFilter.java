@@ -1,7 +1,5 @@
 package com.gestor.dominator.config;
 
-import com.gestor.dominator.service.CustomUserDetailsService;
-import com.gestor.dominator.service.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.gestor.dominator.service.config.CustomUserDetailsService;
+import com.gestor.dominator.service.config.JwtUtil;
 
 import java.io.IOException;
 

@@ -5,7 +5,8 @@ import com.gestor.dominator.dto.LoginRequest;
 import com.gestor.dominator.dto.RegisterRequest;
 import com.gestor.dominator.model.User;
 import com.gestor.dominator.repository.UserRepository;
-import com.gestor.dominator.service.JwtUtil;
+import com.gestor.dominator.service.config.JwtUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +36,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -53,7 +54,7 @@ public class AuthController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Credenciales inválidas");
+            return ResponseEntity.badRequest().build();
         }
     }
 

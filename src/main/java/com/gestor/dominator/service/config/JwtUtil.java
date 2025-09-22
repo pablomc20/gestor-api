@@ -1,4 +1,4 @@
-package com.gestor.dominator.service;
+package com.gestor.dominator.service.config;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
