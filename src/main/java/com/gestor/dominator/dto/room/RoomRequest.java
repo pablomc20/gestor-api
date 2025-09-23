@@ -1,4 +1,4 @@
-package com.gestor.dominator.dto;
+package com.gestor.dominator.dto.room;
 
 import lombok.Data;
 

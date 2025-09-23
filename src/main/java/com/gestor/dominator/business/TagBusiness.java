@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.gestor.dominator.components.ObjectIdConverter;
 import com.gestor.dominator.dto.tag.TagResponse;
 import com.gestor.dominator.model.Tag;
 import com.gestor.dominator.repository.TagRepository;
@@ -19,6 +20,8 @@ public class TagBusiness implements TagService {
     
     private final TagRepository tagRepository;
 
+    private final ObjectIdConverter objectIdConverter;
+
     @Override
     public List<TagResponse> getAllTags() {
         return tagRepository.findAll().stream()
@@ -28,7 +31,7 @@ public class TagBusiness implements TagService {
 
     @Override
     public Optional<TagResponse> getTagById(String id) {
-        return tagRepository.findById(id)
+        return tagRepository.findById(objectIdConverter.stringToObjectId(id))
                 .map(this::convertToResponse);
     }
 

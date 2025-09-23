@@ -1,7 +1,7 @@
 package com.gestor.dominator.controller;
 
-import com.gestor.dominator.dto.RoomRequest;
-import com.gestor.dominator.dto.RoomResponse;
+import com.gestor.dominator.dto.room.RoomRequest;
+import com.gestor.dominator.dto.room.RoomResponse;
 import com.gestor.dominator.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

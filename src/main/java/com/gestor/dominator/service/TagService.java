@@ -16,6 +16,6 @@ public interface TagService {
     public List<TagResponse> searchTagsByName(String name);
 
     public List<TagResponse> getTagsByType(String type);
-    
+
     public List<TagResponse> getTagsByGroup(String groupId);
 }

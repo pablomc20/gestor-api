@@ -1,11 +1,11 @@
 package com.gestor.dominator.controller;
 
-import com.gestor.dominator.dto.ProductRequest;
-import com.gestor.dominator.dto.ProductResponse;
+import com.gestor.dominator.dto.product.ProductRequest;
+import com.gestor.dominator.dto.product.ProductResponse;
+import com.gestor.dominator.dto.product.ProductWithReferencesResponse;
 import com.gestor.dominator.exceptions.custom.MongoDbException;
 import com.gestor.dominator.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +22,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductWithReferencesResponse>> getAllProducts() {
+        List<ProductWithReferencesResponse> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 

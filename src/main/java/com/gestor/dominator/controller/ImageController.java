@@ -1,8 +1,8 @@
 package com.gestor.dominator.controller;
 
-import com.gestor.dominator.dto.ImageResponse;
-import com.gestor.dominator.dto.ImageUpdateRequest;
-import com.gestor.dominator.exceptions.custom.FileSystemException;
+import com.gestor.dominator.dto.image.ImageRenderResponse;
+import com.gestor.dominator.dto.image.ImageResponse;
+import com.gestor.dominator.dto.image.ImageUpdateRequest;
 import com.gestor.dominator.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,10 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,34 +49,16 @@ public class ImageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteImage(@PathVariable String id) {
-        boolean deleted = imageService.deleteImage(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        imageService.deleteImage(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/file/{filename}")
     public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
-        try {
-            Path filePath = Paths.get("uploads/images", filename);
-            if (!Files.exists(filePath)) {
-                return ResponseEntity.notFound().build();
-            }
+        ImageRenderResponse response = imageService.getImageFile(filename);
 
-            byte[] imageBytes = Files.readAllBytes(filePath);
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
-
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(imageBytes);
-        } catch (IOException e) {
-            throw new FileSystemException("Error al leer el archivo de imagen", e);
-        }
+        return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(response.contentType()))
+                    .body(response.imageData());
     }
 }
