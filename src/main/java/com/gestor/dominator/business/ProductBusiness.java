@@ -74,9 +74,6 @@ public class ProductBusiness implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsByTag(String tagId) {
-        if (!tagRepository.existsById(objectIdConverter.stringToObjectId(tagId))) {
-            throw new DataValidationException("El tag especificado no existe");
-        }
         return productRepository.findByTagsContaining(objectIdConverter.stringToObjectId(tagId)).stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
@@ -187,7 +184,7 @@ public class ProductBusiness implements ProductService {
         if (product.images() != null) {
             for (ObjectId imageId : product.images()) {
                 imageRepository.findById(imageId).ifPresent(image -> {
-                    images.add(convertImageToResponse(image));
+                    images.add(ImageResponse.fromModel(image));
                 });
             }
         }
@@ -219,22 +216,11 @@ public class ProductBusiness implements ProductService {
     }
 
     private TagResponse convertTagToResponse(Tag tag) {
-        return new TagResponse(
-                tag.getId(),
-                tag.getName(),
-                tag.getSlug(),
-                tag.getType(),
-                tag.getGroup()
-        );
+        return TagResponse.builder()
+                .id(tag.getId())
+                .name(tag.getName())
+                .slug(tag.getSlug())
+                .build();        
     }
-    private ImageResponse convertImageToResponse(Image image) {
-        return new ImageResponse(
-                image.getId(),
-                image.getFilename(),
-                "/images/file/" + image.getFilename(),
-                image.getSize(),
-                image.getMimeType(),
-                image.getCreatedAt()
-        );
-    }
+
 }

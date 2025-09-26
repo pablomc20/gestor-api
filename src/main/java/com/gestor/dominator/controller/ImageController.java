@@ -53,12 +53,4 @@ public class ImageController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/file/{filename}")
-    public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
-        ImageRenderResponse response = imageService.getImageFile(filename);
-
-        return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(response.contentType()))
-                    .body(response.imageData());
-    }
 }

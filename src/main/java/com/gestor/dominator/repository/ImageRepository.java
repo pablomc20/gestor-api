@@ -10,10 +10,4 @@ import java.util.Optional;
 
 @Repository
 public interface ImageRepository extends MongoRepository<Image, ObjectId> {
-
-    Optional<Image> findByFilename(String filename);
-
-    List<Image> findByOriginalName(String originalName);
-
-    boolean existsByFilename(String filename);
 }

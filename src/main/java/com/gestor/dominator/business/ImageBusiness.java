@@ -9,6 +9,8 @@ import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.Image;
 import com.gestor.dominator.repository.ImageRepository;
 import com.gestor.dominator.service.ImageService;
+import com.gestor.dominator.utils.FileUtils;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,24 +33,24 @@ public class ImageBusiness implements ImageService {
     @Override
     public List<ImageResponse> getAllImages() {
         return imageRepository.findAll().stream()
-                .map(this::convertToResponse)
+                .map(image -> ImageResponse.fromModel(image))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<ImageResponse> getImageById(String id) {
         return imageRepository.findById(objectIdConverter.stringToObjectId(id))
-                .map(this::convertToResponse);
+                .map(image -> ImageResponse.fromModel(image));
     }
 
     @Override
     public ImageResponse uploadImage(MultipartFile file) {
         String filename = fileStorageComponent.save(file);
-        Image image = new Image(filename, file.getOriginalFilename(), file.getSize(), file.getContentType());
+        Image image = new Image(filename, FileUtils.getFileExtension(file.getOriginalFilename()), file.getSize(), file.getContentType());
 
         Image savedImage = imageRepository.save(image);
 
-        return convertToResponse(savedImage);
+        return ImageResponse.fromModel(savedImage);
     }
 
     @Override
@@ -56,10 +58,10 @@ public class ImageBusiness implements ImageService {
         return imageRepository.findById(objectIdConverter.stringToObjectId(id))
                 .map(image -> {
                     if (request.originalName() != null) {
-                        image.setOriginalName(request.originalName());
+                        image.setFilename(request.originalName());
                     }
                     Image updatedImage = imageRepository.save(image);
-                    return convertToResponse(updatedImage);
+                    return ImageResponse.fromModel(updatedImage);
                 });
     }
 
@@ -69,7 +71,7 @@ public class ImageBusiness implements ImageService {
         Image image = imageRepository.findById(objectIdConverter.stringToObjectId(id))
                 .orElseThrow(() -> new DataValidationException("No existe imagen"));
 
-        fileStorageComponent.delete(image.getFilename());
+        fileStorageComponent.delete(image.getFilename(), image.getExt());
         imageRepository.deleteById(objectIdConverter.stringToObjectId(id));
     }
 
@@ -78,13 +80,4 @@ public class ImageBusiness implements ImageService {
         return fileStorageComponent.loadFile(filename);
     }
 
-    private ImageResponse convertToResponse(Image image) {
-        return new ImageResponse(
-                image.getId(),
-                image.getFilename(),
-                "/images/file/" + image.getFilename(),
-                image.getSize(),
-                image.getMimeType(),
-                image.getCreatedAt());
-    }
 }
