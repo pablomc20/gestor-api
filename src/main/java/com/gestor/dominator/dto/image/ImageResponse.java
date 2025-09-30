@@ -19,9 +19,9 @@ public record ImageResponse(
     public static ImageResponse fromModel(Image image) {
         return new ImageResponse(
             image.getId().toString(),
-            "/images/file/" + image.getFilename() + "_orig" + image.getExt(),
-            "/images/file/" + image.getFilename() + "_med" + image.getExt(),
-            "/images/file/" + image.getFilename() + "_thumb" + image.getExt(),
+            "/public/file/" + image.getFilename() + "_orig" + image.getExt(),
+            "/public/file/" + image.getFilename() + "_med" + image.getExt(),
+            "/public/file/" + image.getFilename() + "_thumb" + image.getExt(),
             image.getSize(),
             image.getMimeType(),
             image.getCreatedAt()

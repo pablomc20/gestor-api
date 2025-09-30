@@ -38,7 +38,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean requiresAuthentication(String requestURI) {
         return !(requestURI.startsWith("/auth/") ||
                  requestURI.startsWith("/public/") ||
-                 requestURI.startsWith("/images/file/"));
+                 requestURI.startsWith("/images/file/") ||
+                 requestURI.contains("/swagger-ui") ||
+                 requestURI.contains("/v3/api-docs") ||
+                 requestURI.equals("/swagger-ui.html"));
     }
 
     @Override

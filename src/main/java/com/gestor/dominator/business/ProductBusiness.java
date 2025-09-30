@@ -139,6 +139,7 @@ public class ProductBusiness implements ProductService {
                             : null;
 
                     Product productToUpdate = Product.builder()
+                        .id(product.id())
                         .title(request.title())
                         .category(categoryId)
                         .description(request.description())

@@ -13,6 +13,10 @@ public record RegisterRequest(
 
     @NotEmpty(message = "La contraseña es requerida")
     String password,
+
+    @NotEmpty(message = "El email es requerido")
+    @Size(min = 5, max = 100, message = "El email debe tener entre 5 y 100 caracteres")
+    String email,
     
     List<String> roles
 ) {

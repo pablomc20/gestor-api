@@ -1,11 +1,11 @@
 package com.gestor.dominator.model;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,26 +17,19 @@ import java.util.Collection;
 import java.util.List;
 
 @Document(collection = "users")
+@Builder
 @Getter
-@Setter
 @ToString(exclude = "password")
 @EqualsAndHashCode(exclude = "password")
-@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
     private String id;
     private String username;
     private String password;
+    private String email;
     private List<String> roles;
     private LocalDateTime createdAt;
-
-    public User(String username, String password, List<String> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-        this.createdAt = LocalDateTime.now();
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
