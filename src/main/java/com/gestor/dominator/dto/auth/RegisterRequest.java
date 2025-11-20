@@ -9,11 +9,13 @@ import java.util.List;
 public record RegisterRequest(
     @NotEmpty(message = "El nombre de usuario es requerido")
     @Size(min = 2, max = 100, message = "El nombre de usuario debe tener entre 2 y 100 caracteres")
-    String username,
-
+    String firstName,
+    String lastName,
+    String email,
     @NotEmpty(message = "La contraseña es requerida")
     String password,
-    
-    List<String> roles
+    String phone,
+    String address,
+    Character role // Ej: 'U'
 ) {
 }

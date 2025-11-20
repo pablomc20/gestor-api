@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 
 @Builder
 public record LoginRequest(
-    @NotEmpty(message = "El nombre de usuario es requerido")
-    String username,
+    @NotEmpty(message = "El correo es requerido")
+    String email,
     @NotEmpty(message = "La contraseña es requerida")
     String password
 ) {

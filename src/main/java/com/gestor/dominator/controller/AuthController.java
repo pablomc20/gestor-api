@@ -3,8 +3,9 @@ package com.gestor.dominator.controller;
 import com.gestor.dominator.dto.auth.AuthResponse;
 import com.gestor.dominator.dto.auth.LoginRequest;
 import com.gestor.dominator.dto.auth.RegisterRequest;
+import com.gestor.dominator.exceptions.custom.AuthenticationException;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
-import com.gestor.dominator.model.User;
+import com.gestor.dominator.model.postgre.User;
 import com.gestor.dominator.repository.UserRepository;
 import com.gestor.dominator.service.config.JwtUtil;
 
@@ -39,7 +40,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                loginRequest.username(),
+                loginRequest.email(),
                 loginRequest.password()
             )
         );
@@ -53,23 +54,23 @@ public class AuthController {
             AuthResponse.builder().token(token).build());
     }
 
-    // @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         // Verificar si el usuario ya existe
-        if (userRepository.existsByUsername(registerRequest.username())) {
-            throw new DataValidationException("Ya existe un usuario con el nombre de usuario: " + registerRequest.username());
+        if (userRepository.existsByEmail(request.email())) {
+            throw new AuthenticationException("El email ya está en uso.");
         }
 
-        // Crear nuevo usuario
-        List<String> roles = registerRequest.roles() != null && !registerRequest.roles().isEmpty()
-            ? registerRequest.roles()
-            : Arrays.asList("USER");
-
-        User user = new User(
-            registerRequest.username(),
-            passwordEncoder.encode(registerRequest.password()),
-            roles
-        );
+        User user = User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .phone(request.phone())
+                .address(request.address())
+                .role(request.role() != null ? request.role() : 'U') // 'U' por defecto
+                .enabled(true) // Habilitado por defecto
+                .build();
 
         userRepository.save(user);
 
