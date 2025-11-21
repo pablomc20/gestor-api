@@ -1,5 +1,6 @@
 package com.gestor.dominator.business;
 
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators.Add;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,7 +12,9 @@ import com.gestor.dominator.dto.auth.AuthResponse;
 import com.gestor.dominator.dto.auth.LoginRequest;
 import com.gestor.dominator.dto.auth.RegisterRequest;
 import com.gestor.dominator.exceptions.custom.AuthenticationException;
+import com.gestor.dominator.model.postgre.Address;
 import com.gestor.dominator.model.postgre.User;
+import com.gestor.dominator.model.postgre.UserDetail;
 import com.gestor.dominator.repository.UserRepository;
 import com.gestor.dominator.service.config.JwtUtil;
 import com.gestor.dominator.service.product.UserService;
@@ -63,6 +66,14 @@ public class AuthBusiness implements UserService {
         .role("CLIENT") // 'CLIENT' por defecto
         .enabled(true) // Habilitado por defecto
         .build();
+
+    UserDetail detail = UserDetail.builder()
+        .name(registerRequest.name())
+        .phone(registerRequest.phone())
+        .build();
+
+    detail.setUser(user);
+    user.setUserDetail(detail);
 
     userRepository.save(user);
   }

@@ -12,7 +12,5 @@ public record RegisterRequest(
 
         @NotEmpty(message = "El email es requerido") @Size(min = 5, max = 100, message = "El email debe tener entre 5 y 100 caracteres") String email,
 
-        String phone,
-        String role // Ej: 'U'
-) {
+        String phone) {
 }
