@@ -1,4 +1,4 @@
-package com.gestor.dominator.config;
+package com.gestor.dominator.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,17 +37,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private boolean requiresAuthentication(String requestURI) {
         return !(requestURI.startsWith("/auth/") ||
-                 requestURI.startsWith("/public/") ||
-                 requestURI.startsWith("/images/file/") ||
-                 requestURI.contains("/swagger-ui") ||
-                 requestURI.contains("/v3/api-docs") ||
-                 requestURI.equals("/swagger-ui.html"));
+                requestURI.startsWith("/public/") ||
+                requestURI.startsWith("/images/file/") ||
+                requestURI.contains("/swagger-ui") ||
+                requestURI.contains("/v3/api-docs") ||
+                requestURI.equals("/swagger-ui.html"));
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         try {
             final String authHeader = request.getHeader("Authorization");
@@ -72,8 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            userDetails.getAuthorities()
-                    );
+                            userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
@@ -83,10 +82,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (AuthenticationException ex) {
             // Manejar la excepción directamente en el filtro
             ErrorResponse errorResponse = new ErrorResponse(
-                ex.getError(),
-                ex.getDescription(),
-                ex.getStatusCode()
-            );
+                    ex.getError(),
+                    ex.getDescription(),
+                    ex.getStatusCode());
 
             response.setStatus(ex.getStatus().value());
             response.setContentType("application/json");

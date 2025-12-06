@@ -42,8 +42,4 @@ public class UserDetail {
   @JoinColumn(name = "user_id", unique = true)
   private User user;
 
-  @OneToMany(mappedBy = "userDetail", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Address> addresses = new ArrayList<>();
-
-  // getters y setters
 }
