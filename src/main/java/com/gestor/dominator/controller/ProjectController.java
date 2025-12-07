@@ -1,6 +1,8 @@
 package com.gestor.dominator.controller;
 
 import com.gestor.dominator.dto.ErrorResponse;
+import com.gestor.dominator.dto.projects.CreateProjectRq;
+import com.gestor.dominator.dto.projects.CreateProjectRs;
 import com.gestor.dominator.dto.projects.DetailsForClientRq;
 import com.gestor.dominator.dto.projects.DetailsForClientRs;
 import com.gestor.dominator.service.projects.ProjectService;
@@ -24,17 +26,30 @@ public class ProjectController {
 
   private final ProjectService projectService;
 
-  @GetMapping("/{projectId}/details-client")
-  @Operation(summary = "Obtener detalles del proyecto para cliente", description = "Recupera los detalles completos de un proyecto específico para mostrar al cliente")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Detalles del proyecto encontrados", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DetailsForClientRs.class))),
-      @ApiResponse(responseCode = "404", description = "Proyecto no encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-      @ApiResponse(responseCode = "400", description = "ID de proyecto inválido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-  })
-  public ResponseEntity<DetailsForClientRs> getDetailsProjectClient(
-      DetailsForClientRq detailsForClientRq) {
-    return projectService.getProyectClientById(detailsForClientRq)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+  // @GetMapping("/{projectId}/details-client")
+  // @Operation(summary = "Obtener detalles del proyecto para cliente",
+  // description = "Recupera los detalles completos de un proyecto específico para
+  // mostrar al cliente")
+  // @ApiResponses(value = {
+  // @ApiResponse(responseCode = "200", description = "Detalles del proyecto
+  // encontrados", content = @Content(mediaType = "application/json", schema =
+  // @Schema(implementation = DetailsForClientRs.class))),
+  // @ApiResponse(responseCode = "404", description = "Proyecto no encontrado",
+  // content = @Content(mediaType = "application/json", schema =
+  // @Schema(implementation = ErrorResponse.class))),
+  // @ApiResponse(responseCode = "400", description = "ID de proyecto inválido",
+  // content = @Content(mediaType = "application/json", schema =
+  // @Schema(implementation = ErrorResponse.class)))
+  // })
+  // public ResponseEntity<DetailsForClientRs> getDetailsProjectClient(
+  // DetailsForClientRq detailsForClientRq) {
+  // return projectService.getProyectClientById(detailsForClientRq)
+  // .map(ResponseEntity::ok)
+  // .orElse(ResponseEntity.notFound().build());
+  // }
+
+  @PostMapping("/new")
+  public ResponseEntity<CreateProjectRs> createNewProject(@RequestBody CreateProjectRq createProject) {
+    return ResponseEntity.ok(projectService.createNewProject(createProject));
   }
 }

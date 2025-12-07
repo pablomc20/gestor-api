@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -23,7 +24,8 @@ import java.util.Map;
 
 /**
  * Manejador global de excepciones para toda la aplicación.
- * Captura y procesa todas las excepciones, devolviendo respuestas estandarizadas.
+ * Captura y procesa todas las excepciones, devolviendo respuestas
+ * estandarizadas.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -38,12 +40,43 @@ public class GlobalExceptionHandler {
         logger.error("Excepción personalizada: {} - {}", ex.getError(), ex.getDescription(), ex);
 
         ErrorResponse errorResponse = new ErrorResponse(
-            ex.getError(),
-            ex.getDescription(),
-            ex.getStatusCode()
-        );
+                ex.getError(),
+                ex.getDescription(),
+                ex.getStatusCode());
 
         return new ResponseEntity<>(errorResponse, ex.getStatus());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
+
+        // Puedes revisar si adentro viene InvalidFormatException
+        Throwable cause = ex.getCause();
+        if (cause instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException ife) {
+            if (ife.getTargetType() == java.util.UUID.class) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "UUID_INVALID",
+                        "Uno o más UUID no tienen un formato válido.",
+                        HttpStatus.BAD_REQUEST.value());
+                return ResponseEntity.badRequest().body(errorResponse);
+            }
+        }
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "BAD_JSON",
+                "El cuerpo JSON no es válido.",
+                HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> handleNullPointer(NullPointerException ex) {
+        return ResponseEntity.badRequest().body(
+                ErrorResponse.builder()
+                        .error("NULL_FIELD")
+                        .description("El JSON contiene campos faltantes o nulos donde no deberían estar.")
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .build());
     }
 
     /**
@@ -62,10 +95,9 @@ public class GlobalExceptionHandler {
         logger.warn("Errores de validación: {}", errors);
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "VALIDATION_ERROR",
-            description,
-            HttpStatus.CONFLICT.value()
-        );
+                "VALIDATION_ERROR",
+                description,
+                HttpStatus.CONFLICT.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
@@ -78,10 +110,9 @@ public class GlobalExceptionHandler {
         logger.warn("Intento de autenticación fallido: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "AUTHENTICATION_ERROR",
-            "Credenciales inválidas",
-            HttpStatus.UNAUTHORIZED.value()
-        );
+                "AUTHENTICATION_ERROR",
+                "Credenciales inválidas",
+                HttpStatus.UNAUTHORIZED.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -94,10 +125,9 @@ public class GlobalExceptionHandler {
         logger.warn("Usuario no encontrado: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "AUTHENTICATION_ERROR",
-            ex.getMessage(),
-            HttpStatus.UNAUTHORIZED.value()
-        );
+                "AUTHENTICATION_ERROR",
+                ex.getMessage(),
+                HttpStatus.UNAUTHORIZED.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
@@ -110,10 +140,9 @@ public class GlobalExceptionHandler {
         logger.warn("Acceso denegado: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "AUTHORIZATION_ERROR",
-            "Acceso denegado: no tienes permisos suficientes",
-            HttpStatus.FORBIDDEN.value()
-        );
+                "AUTHORIZATION_ERROR",
+                "Acceso denegado: no tienes permisos suficientes",
+                HttpStatus.FORBIDDEN.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
@@ -126,10 +155,9 @@ public class GlobalExceptionHandler {
         logger.warn("Archivo demasiado grande: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "FILE_UPLOAD_ERROR",
-            "El archivo excede el tamaño máximo permitido",
-            HttpStatus.BAD_REQUEST.value()
-        );
+                "FILE_UPLOAD_ERROR",
+                "El archivo excede el tamaño máximo permitido",
+                HttpStatus.BAD_REQUEST.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
@@ -139,10 +167,9 @@ public class GlobalExceptionHandler {
         logger.warn("Recurso no encontrado: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "RESOURCE_NOT_FOUND",
-            "El recurso solicitado no se encuentra",
-            HttpStatus.BAD_REQUEST.value()
-        );
+                "RESOURCE_NOT_FOUND",
+                "El recurso solicitado no se encuentra",
+                HttpStatus.BAD_REQUEST.value());
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
@@ -152,27 +179,24 @@ public class GlobalExceptionHandler {
         logger.warn("Método de solicitud no soportado: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "METHOD_NOT_ALLOWED",
-            "El método de solicitud no está permitido",
-            HttpStatus.METHOD_NOT_ALLOWED.value()
-        );
+                "METHOD_NOT_ALLOWED",
+                "El método de solicitud no está permitido",
+                HttpStatus.METHOD_NOT_ALLOWED.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public ResponseEntity<ErrorResponse> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
+    public ResponseEntity<ErrorResponse> handleInternalAuthenticationServiceException(
+            InternalAuthenticationServiceException ex) {
         logger.warn("Error de autenticación interna: {}", ex.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "AUTHENTICATION_ERROR",
-            "Error interno de autenticación",
-            HttpStatus.UNAUTHORIZED.value()
-        );
+                "AUTHENTICATION_ERROR",
+                "Error interno de autenticación",
+                HttpStatus.UNAUTHORIZED.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
-
-
 
     /**
      * Maneja cualquier otra excepción no capturada
@@ -182,10 +206,9 @@ public class GlobalExceptionHandler {
         logger.error("Excepción no manejada: {}", ex.getMessage(), ex);
 
         ErrorResponse errorResponse = new ErrorResponse(
-            "INTERNAL_SERVER_ERROR",
-            "Ha ocurrido un error interno del servidor",
-            HttpStatus.INTERNAL_SERVER_ERROR.value()
-        );
+                "INTERNAL_SERVER_ERROR",
+                "Ha ocurrido un error interno del servidor",
+                HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

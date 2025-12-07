@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.gestor.dominator.exceptions.custom.AuthenticationException;
+
 import javax.crypto.SecretKey;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +42,15 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            throw AuthenticationException.invalidToken();
+        }
     }
 
     private Boolean isTokenExpired(String token) {
