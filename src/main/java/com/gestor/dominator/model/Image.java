@@ -1,21 +1,14 @@
 package com.gestor.dominator.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "images")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
 public class Image {
 
     @Id

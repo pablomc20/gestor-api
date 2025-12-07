@@ -11,33 +11,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gestor.dominator.dto.image.ImageRenderResponse;
-import com.gestor.dominator.dto.room.RoomResponse;
 import com.gestor.dominator.service.ImageService;
-import com.gestor.dominator.service.RoomService;
 
-@RestController
-@RequestMapping(path="/public")
+// @RestController
+// @RequestMapping(path = "/public")
 public class PublicController {
 
-    @Autowired
-    private RoomService roomService;
+    // @Autowired
+    // private ImageService imageService;
 
-    @Autowired
-    private ImageService imageService;
+    // @GetMapping("/file/{filename}")
+    // public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
+    // ImageRenderResponse response = imageService.getImageFile(filename);
 
-
-    @GetMapping(value = "/rooms")
-    public ResponseEntity<List<RoomResponse>> getAllRooms() {
-        List<RoomResponse> rooms = roomService.getAllRooms();
-        return ResponseEntity.ok(rooms);
-    }
-
-    @GetMapping("/file/{filename}")
-    public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
-        ImageRenderResponse response = imageService.getImageFile(filename);
-
-        return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(response.contentType()))
-                    .body(response.imageData());
-    }
+    // return ResponseEntity.ok()
+    // .contentType(MediaType.parseMediaType(response.contentType()))
+    // .body(response.imageData());
+    // }
 }

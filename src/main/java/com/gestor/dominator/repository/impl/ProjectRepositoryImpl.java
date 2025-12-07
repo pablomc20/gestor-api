@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
-import com.gestor.dominator.model.postgre.projects.CreateProjectRecord;
-import com.gestor.dominator.model.postgre.projects.CreateProjectResult;
+import com.gestor.dominator.model.postgre.project.CreateProjectRecord;
+import com.gestor.dominator.model.postgre.project.CreateProjectResult;
 import com.gestor.dominator.repository.ProjectRepository;
 
 import lombok.RequiredArgsConstructor;
