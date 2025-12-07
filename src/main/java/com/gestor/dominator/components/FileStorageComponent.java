@@ -3,10 +3,10 @@ package com.gestor.dominator.components;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gestor.dominator.client.MinioStorageService;
-import com.gestor.dominator.dto.image.ImageRenderResponse;
+import com.gestor.dominator.client.impl.MinioStorageImpl;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
+import com.gestor.dominator.model.client.minio.ImageRenderResponse;
 import com.gestor.dominator.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileStorageComponent {
 
-    private final MinioStorageService minioStorageService;
+    private final MinioStorageImpl minioStorageService;
 
     private final ThumbnailsConverter thumbnailsConverter;
 
@@ -56,7 +56,7 @@ public class FileStorageComponent {
      * Elimina un archivo de Minio.
      *
      * @param filename El nombre base del archivo a eliminar.
-     * @param ext La extensión del archivo.
+     * @param ext      La extensión del archivo.
      */
     public void delete(String filename, String ext) {
         try {
@@ -74,7 +74,8 @@ public class FileStorageComponent {
     /**
      * Carga un archivo desde Minio como un recurso para ser servido.
      *
-     * @param filename El nombre del archivo a cargar (incluye sufijo como _orig, _med, _thumb).
+     * @param filename El nombre del archivo a cargar (incluye sufijo como _orig,
+     *                 _med, _thumb).
      * @return Un objeto con los bytes del archivo y su tipo de contenido.
      */
     public ImageRenderResponse loadFile(String filename) {

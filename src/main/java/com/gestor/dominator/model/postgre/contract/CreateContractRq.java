@@ -6,9 +6,9 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record CreateContractRecord(
-    BigDecimal final_amount,
-    UUID project_id,
-    Integer number_payment) {
+public record CreateContractRq(
+        BigDecimal final_amount,
+        UUID project_id,
+        Integer number_payment) {
 
 }

@@ -1,10 +1,10 @@
 package com.gestor.dominator.controller;
 
 import com.gestor.dominator.dto.ErrorResponse;
-import com.gestor.dominator.dto.projects.CreateProjectRq;
-import com.gestor.dominator.dto.projects.CreateProjectRs;
-import com.gestor.dominator.dto.projects.DetailsForClientRq;
-import com.gestor.dominator.dto.projects.DetailsForClientRs;
+import com.gestor.dominator.dto.projects.CreateProjectRecord;
+import com.gestor.dominator.dto.projects.CreateProjectResult;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.service.projects.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,17 +32,17 @@ public class ProjectController {
   @GetMapping("/{projectId}/details-client")
   @Operation(summary = "Obtener detalles del proyecto para cliente", description = "Recupera los detalles completos de un proyecto específico para mostrar al cliente")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Detalles del proyecto encontrados", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DetailsForClientRs.class))),
+      @ApiResponse(responseCode = "200", description = "Detalles del proyecto encontrados", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DetailsForEmployeeResult.class))),
       @ApiResponse(responseCode = "404", description = "Proyecto no encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
       @ApiResponse(responseCode = "400", description = "ID de proyecto inválido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
   })
-  public List<DetailsForClientRs> getDetailsProjectClient(
-      DetailsForClientRq detailsForClientRq) {
+  public List<DetailsForEmployeeResult> getDetailsProjectClient(
+      DetailsForEmployeeRecord detailsForClientRq) {
     return projectService.getProyectClientById(detailsForClientRq);
   }
 
   @PostMapping("/new")
-  public ResponseEntity<CreateProjectRs> createNewProject(@RequestBody CreateProjectRq createProject) {
+  public ResponseEntity<CreateProjectResult> createNewProject(@RequestBody CreateProjectRecord createProject) {
     return ResponseEntity.ok(projectService.createNewProject(createProject));
   }
 }

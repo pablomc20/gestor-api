@@ -9,8 +9,8 @@ import com.gestor.dominator.client.DipomexClient;
 import com.gestor.dominator.client.DipomexProperties;
 import com.gestor.dominator.dto.address.AdressCPResult;
 import com.gestor.dominator.dto.address.StatesResult;
-import com.gestor.dominator.model.dipomex.CodigoPostalResponse;
-import com.gestor.dominator.model.dipomex.EstadoResponse;
+import com.gestor.dominator.model.client.dipomex.CodigoPostalResponse;
+import com.gestor.dominator.model.client.dipomex.EstadoResponse;
 import com.gestor.dominator.service.address.AddressService;
 
 import lombok.RequiredArgsConstructor;

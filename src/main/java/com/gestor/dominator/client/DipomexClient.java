@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.gestor.dominator.model.dipomex.CodigoPostalResponse;
-import com.gestor.dominator.model.dipomex.EstadoResponse;
+import com.gestor.dominator.model.client.dipomex.CodigoPostalResponse;
+import com.gestor.dominator.model.client.dipomex.EstadoResponse;
 
 @FeignClient(name = "dipomexClient", url = "${client.dipomex.url}${client.dipomex.version}")
 public interface DipomexClient {

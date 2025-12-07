@@ -2,13 +2,13 @@ package com.gestor.dominator.repository;
 
 import java.util.List;
 
-import com.gestor.dominator.dto.projects.DetailsForClientRq;
-import com.gestor.dominator.dto.projects.DetailsForClientRs;
-import com.gestor.dominator.model.postgre.project.CreateProjectRecord;
-import com.gestor.dominator.model.postgre.project.CreateProjectResult;
+import com.gestor.dominator.model.postgre.project.CreateProjectRq;
+import com.gestor.dominator.model.postgre.project.CreateProjectRs;
+import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRs;
 
 public interface ProjectRepository {
-  List<DetailsForClientRs> getProyectClientById(DetailsForClientRq detailsForClientRq);
+  List<DetailsForEmployeeRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq);
 
-  CreateProjectResult createProject(CreateProjectRecord createProjectRecord);
+  CreateProjectRs createProject(CreateProjectRq createProjectRecord);
 }

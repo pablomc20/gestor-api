@@ -1,4 +1,4 @@
-package com.gestor.dominator.model.postgre.project;
+package com.gestor.dominator.dto.projects;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +17,9 @@ public record CreateProjectRecord(
         UUID category,
         UUID client,
         UUID employee,
+
+        Integer number_payment,
+
         UUID[] colors,
         UUID[] materials,
         UUID[] images) {

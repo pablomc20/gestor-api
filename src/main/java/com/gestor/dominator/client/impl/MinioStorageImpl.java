@@ -1,11 +1,13 @@
-package com.gestor.dominator.client;
+package com.gestor.dominator.client.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gestor.dominator.dto.image.ImageRenderResponse;
+import com.gestor.dominator.client.MinioStorageClient;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
+import com.gestor.dominator.model.client.minio.ImageRenderResponse;
+
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -18,7 +20,7 @@ import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
-public class MinioStorageService {
+public class MinioStorageImpl implements MinioStorageClient {
 
     private final MinioClient minioClient;
 
@@ -28,8 +30,9 @@ public class MinioStorageService {
     @Value("${minio.url}")
     private String endpoint;
 
-    private static final String MESSAGE_SUCCESS =  "Subido con éxito";
+    private static final String MESSAGE_SUCCESS = "Subido con éxito";
 
+    @Override
     public String uploadFile(MultipartFile file, String objectKey) {
         try {
 
@@ -47,6 +50,7 @@ public class MinioStorageService {
         }
     }
 
+    @Override
     public String uploadFile(byte[] thumbBytes, String objectName, String contentType) {
         InputStream inputStream = new ByteArrayInputStream(thumbBytes);
         long size = thumbBytes.length;
@@ -65,6 +69,7 @@ public class MinioStorageService {
         }
     }
 
+    @Override
     public ImageRenderResponse downloadFile(String objectName) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             var response = minioClient.getObject(
@@ -90,6 +95,7 @@ public class MinioStorageService {
         }
     }
 
+    @Override
     public void deleteFile(String objectName) {
         try {
             minioClient.removeObject(

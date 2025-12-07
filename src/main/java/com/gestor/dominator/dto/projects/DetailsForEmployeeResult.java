@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
-public record DetailsForClientRs(
+public record DetailsForEmployeeResult(
         String title,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,

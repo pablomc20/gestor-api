@@ -9,11 +9,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
-import com.gestor.dominator.dto.projects.DetailsForClientRq;
-import com.gestor.dominator.dto.projects.DetailsForClientRs;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
-import com.gestor.dominator.model.postgre.project.CreateProjectRecord;
-import com.gestor.dominator.model.postgre.project.CreateProjectResult;
+import com.gestor.dominator.model.postgre.project.CreateProjectRq;
+import com.gestor.dominator.model.postgre.project.CreateProjectRs;
+import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRs;
 import com.gestor.dominator.repository.ProjectRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   private final ObjectManipulationUtil objectManipulationUtil;
 
   @Override
-  public CreateProjectResult createProject(CreateProjectRecord createProjectRecord) {
+  public CreateProjectRs createProject(CreateProjectRq createProjectRecord) {
     String sql = "SELECT fn_create_new_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     String jsonResult = jdbcTemplate.queryForObject(
@@ -34,8 +36,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         String.class,
         rowMapperProject(createProjectRecord));
 
-    CreateProjectResult createProjectResult = objectManipulationUtil
-        .objectMapperToString(jsonResult, CreateProjectResult.class);
+    CreateProjectRs createProjectResult = objectManipulationUtil
+        .objectMapperToString(jsonResult, CreateProjectRs.class);
 
     if ("error".equals(createProjectResult.status())) {
       throw new PostgreDbException(createProjectResult.error_code() + " - " + createProjectResult.error_message());
@@ -45,10 +47,10 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   }
 
   @Override
-  public List<DetailsForClientRs> getProyectClientById(DetailsForClientRq detailsForClientRq) {
+  public List<DetailsForEmployeeRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq) {
     String sql = "SELECT * FROM fn_read_employee_projects(?)";
 
-    List<DetailsForClientRs> detailsForClientRsList = jdbcTemplate.query(
+    List<DetailsForEmployeeRs> detailsForClientRsList = jdbcTemplate.query(
         sql,
         ps -> ps.setObject(1, detailsForClientRq.projectId()),
         DETAILS_ROW_MAPPER);
@@ -56,7 +58,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     return detailsForClientRsList;
   }
 
-  private Object[] rowMapperProject(CreateProjectRecord r) {
+  private Object[] rowMapperProject(CreateProjectRq r) {
     return new Object[] {
         r.employee(),
         r.client(),
@@ -73,7 +75,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     };
   }
 
-  private static final RowMapper<DetailsForClientRs> DETAILS_ROW_MAPPER = (rs, rowNum) -> DetailsForClientRs.builder()
+  private static final RowMapper<DetailsForEmployeeRs> DETAILS_ROW_MAPPER = (rs, rowNum) -> DetailsForEmployeeRs
+      .builder()
       .title(rs.getString("title"))
       .startDate(rs.getObject("started", LocalDate.class))
       .estimatedCompletionDate(rs.getObject("estimated", LocalDate.class))

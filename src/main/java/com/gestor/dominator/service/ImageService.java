@@ -1,11 +1,11 @@
 
 package com.gestor.dominator.service;
 
-import com.gestor.dominator.dto.image.ImageRenderResponse;
-import com.gestor.dominator.dto.image.ImageResponse;
-import com.gestor.dominator.dto.image.ImageUpdateRequest;
-
 import org.springframework.web.multipart.MultipartFile;
+
+import com.gestor.dominator.model.client.minio.ImageRenderResponse;
+import com.gestor.dominator.model.client.minio.ImageResponse;
+import com.gestor.dominator.model.client.minio.ImageUpdateRequest;
 
 import java.util.List;
 import java.util.Optional;

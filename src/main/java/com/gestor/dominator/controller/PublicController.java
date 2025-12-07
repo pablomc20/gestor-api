@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gestor.dominator.dto.image.ImageRenderResponse;
+import com.gestor.dominator.model.client.minio.ImageRenderResponse;
 import com.gestor.dominator.service.ImageService;
 
 // @RestController

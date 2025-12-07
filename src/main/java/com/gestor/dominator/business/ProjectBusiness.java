@@ -1,16 +1,17 @@
 package com.gestor.dominator.business;
 
-import com.gestor.dominator.dto.projects.CreateProjectRq;
-import com.gestor.dominator.dto.projects.CreateProjectRs;
-import com.gestor.dominator.dto.projects.DetailsForClientRq;
-import com.gestor.dominator.dto.projects.DetailsForClientRs;
+import com.gestor.dominator.dto.projects.CreateProjectRecord;
+import com.gestor.dominator.dto.projects.CreateProjectResult;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.mapper.ContractMapper;
 import com.gestor.dominator.mapper.ProjectMapper;
-import com.gestor.dominator.model.postgre.contract.CreateContractRecord;
-import com.gestor.dominator.model.postgre.contract.CreateContractResult;
-import com.gestor.dominator.model.postgre.project.CreateProjectRecord;
-import com.gestor.dominator.model.postgre.project.CreateProjectResult;
+import com.gestor.dominator.model.postgre.contract.CreateContractRq;
+import com.gestor.dominator.model.postgre.contract.CreateContractRs;
+import com.gestor.dominator.model.postgre.project.CreateProjectRq;
+import com.gestor.dominator.model.postgre.project.CreateProjectRs;
+import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
 import com.gestor.dominator.repository.ContractRepository;
 import com.gestor.dominator.repository.ProjectRepository;
 import com.gestor.dominator.service.projects.ProjectService;
@@ -30,17 +31,18 @@ public class ProjectBusiness implements ProjectService {
   private final ContractMapper contractMapper;
 
   @Override
-  public List<DetailsForClientRs> getProyectClientById(DetailsForClientRq detailsForClientRq) {
-    return projectRepository.getProyectClientById(detailsForClientRq);
+  public List<DetailsForEmployeeResult> getProyectClientById(DetailsForEmployeeRecord detailsForClientRecord) {
+    DetailsForEmployeeRq detailsForClientRq = projectMapper.toDetailsRq(detailsForClientRecord);
+    return projectMapper.toDetailsRs(projectRepository.getProyectClientById(detailsForClientRq));
   }
 
   @Override
   @Transactional
-  public CreateProjectRs createNewProject(CreateProjectRq createProject) {
-    CreateProjectRecord createProjectRecord = projectMapper.toRecord(createProject);
+  public CreateProjectResult createNewProject(CreateProjectRecord createProject) {
+    CreateProjectRq createProjectRecord = projectMapper.toRq(createProject);
 
     // Crear proyecto en la BD
-    CreateProjectResult createProjectResult = projectRepository.createProject(createProjectRecord);
+    CreateProjectRs createProjectResult = projectRepository.createProject(createProjectRecord);
 
     if (createProjectResult.status().equals("ok")) {
       String idProject = createProjectResult.project_id();
@@ -48,20 +50,20 @@ public class ProjectBusiness implements ProjectService {
       // FN - Crear contrato en la BD
       createContract(createProject, idProject);
 
-      CreateProjectRs createProjectRs = projectMapper.toRs(createProjectResult);
+      CreateProjectResult createProjectRs = projectMapper.toResult(createProjectResult);
 
       return createProjectRs;
     }
     throw new PostgreDbException("Error al crear un nuevo proyecto");
   }
 
-  private void createContract(CreateProjectRq createProject, String idProject) {
-    CreateContractRecord createContractRecord = contractMapper.toRecord(createProject, idProject);
+  private void createContract(CreateProjectRecord createProject, String idProject) {
+    CreateContractRq createContractRecord = contractMapper.toRecord(createProject, idProject);
 
     // Crear contrato en la BD
-    CreateContractResult createContractResult = contractRepository.createContract(createContractRecord);
+    CreateContractRs createContractRs = contractRepository.createContract(createContractRecord);
 
-    if (!createContractResult.status().equals("ok")) {
+    if (!createContractRs.status().equals("ok")) {
       throw new PostgreDbException("Error al crear un nuevo contrato");
     }
   }

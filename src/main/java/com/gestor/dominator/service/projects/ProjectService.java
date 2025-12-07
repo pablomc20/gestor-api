@@ -2,14 +2,14 @@ package com.gestor.dominator.service.projects;
 
 import java.util.List;
 
-import com.gestor.dominator.dto.projects.CreateProjectRq;
-import com.gestor.dominator.dto.projects.CreateProjectRs;
-import com.gestor.dominator.dto.projects.DetailsForClientRq;
-import com.gestor.dominator.dto.projects.DetailsForClientRs;
+import com.gestor.dominator.dto.projects.CreateProjectRecord;
+import com.gestor.dominator.dto.projects.CreateProjectResult;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
+import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 
 public interface ProjectService {
 
-  List<DetailsForClientRs> getProyectClientById(DetailsForClientRq detailsForClientRq);
+  List<DetailsForEmployeeResult> getProyectClientById(DetailsForEmployeeRecord detailsForClientRq);
 
-  CreateProjectRs createNewProject(CreateProjectRq createProject);
+  CreateProjectResult createNewProject(CreateProjectRecord createProject);
 }
