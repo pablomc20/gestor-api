@@ -1,7 +1,5 @@
 package com.gestor.dominator.client;
 
-import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,12 +11,12 @@ import com.gestor.dominator.model.dipomex.EstadoResponse;
 @FeignClient(name = "dipomexClient", url = "${client.dipomex.url}${client.dipomex.version}")
 public interface DipomexClient {
 
-  @GetMapping("/codigo_postal")
-  CodigoPostalResponse buscarCP(
-      @RequestParam("cp") String cp,
-      @RequestHeader("APIKEY") String token);
+    @GetMapping("/codigo_postal")
+    CodigoPostalResponse buscarCP(
+            @RequestParam("cp") String cp,
+            @RequestHeader("APIKEY") String token);
 
-  @GetMapping("/estados")
-  EstadoResponse buscarEstados(
-      @RequestHeader("APIKEY") String token);
+    @GetMapping("/estados")
+    EstadoResponse buscarEstados(
+            @RequestHeader("APIKEY") String token);
 }

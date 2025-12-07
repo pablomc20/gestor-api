@@ -1,8 +1,6 @@
 package com.gestor.dominator.dto;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * DTO para respuestas de error estandarizadas.
@@ -10,9 +8,8 @@ import lombok.NoArgsConstructor;
  */
 @Builder
 public record ErrorResponse(
-    String error,
-    String description,
-    int status
-) {
+        String error,
+        String description,
+        int status) {
 
 }

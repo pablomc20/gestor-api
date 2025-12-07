@@ -12,9 +12,12 @@ public record DetailsForClientRs(
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
         BigDecimal finalAmount,
+        Integer daysDifference,
+        String name,
         UUID projectId,
         String status, // project_status enum - cambiar a enum cuando esté definido
         UUID requestId,
+        UUID userId,
         String type, // request_type enum - cambiar a enum cuando esté definido
         Integer numberPayments,
         Integer currentPayment,
