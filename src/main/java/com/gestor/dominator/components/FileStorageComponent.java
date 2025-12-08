@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gestor.dominator.client.impl.MinioStorageImpl;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
-import com.gestor.dominator.model.client.minio.ImageRenderResponse;
+import com.gestor.dominator.model.client.minio.ImageRenderRs;
 import com.gestor.dominator.utils.FileUtils;
 
 import lombok.RequiredArgsConstructor;
@@ -78,7 +78,7 @@ public class FileStorageComponent {
      *                 _med, _thumb).
      * @return Un objeto con los bytes del archivo y su tipo de contenido.
      */
-    public ImageRenderResponse loadFile(String filename) {
+    public ImageRenderRs loadFile(String filename) {
         return minioStorageService.downloadFile(FileUtils.generateObjectName(filename));
     }
 

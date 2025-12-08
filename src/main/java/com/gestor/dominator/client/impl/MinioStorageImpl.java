@@ -1,12 +1,13 @@
 package com.gestor.dominator.client.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gestor.dominator.client.MinioStorageClient;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
-import com.gestor.dominator.model.client.minio.ImageRenderResponse;
+import com.gestor.dominator.model.client.minio.ImageRenderRs;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -70,7 +71,7 @@ public class MinioStorageImpl implements MinioStorageClient {
     }
 
     @Override
-    public ImageRenderResponse downloadFile(String objectName) {
+    public ImageRenderRs downloadFile(String objectName) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             var response = minioClient.getObject(
                     GetObjectArgs.builder()
@@ -89,9 +90,9 @@ public class MinioStorageImpl implements MinioStorageClient {
                 contentType = "application/octet-stream";
             }
 
-            return new ImageRenderResponse(outputStream.toByteArray(), contentType);
+            return new ImageRenderRs(outputStream.toByteArray(), contentType);
         } catch (Exception e) {
-            throw new FileSystemException("Error al descargar el archivo: " + e.getMessage(), e);
+            throw new FileSystemException("Recurso no encontrado", HttpStatus.NOT_FOUND);
         }
     }
 
