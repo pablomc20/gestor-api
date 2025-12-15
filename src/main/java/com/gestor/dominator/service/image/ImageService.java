@@ -1,5 +1,5 @@
 
-package com.gestor.dominator.service;
+package com.gestor.dominator.service.image;
 
 import org.springframework.web.multipart.MultipartFile;
 

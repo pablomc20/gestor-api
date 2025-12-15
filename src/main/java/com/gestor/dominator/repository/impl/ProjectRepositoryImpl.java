@@ -12,11 +12,17 @@ import com.gestor.dominator.components.ObjectManipulationUtil;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
+import com.gestor.dominator.model.postgre.DbResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
+import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
 import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
 import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRs;
+import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
+import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.repository.ProjectRepository;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,65 +33,91 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   private final JdbcTemplate jdbcTemplate;
   private final ObjectManipulationUtil objectManipulationUtil;
 
+  private static final String FN_CREATE_PROJECT = "SELECT fn_create_new_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
   @Override
-  public CreateProjectRs createProject(CreateProjectRq createProjectRecord) {
-    String sql = "SELECT fn_create_new_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  public CreateProjectRs createProject(CreateProjectRq createProjectRq) {
+    String jsonResult = jdbcTemplate.queryForObject(
+        FN_CREATE_PROJECT,
+        String.class,
+        mapCreateProjectParams(createProjectRq));
+
+    DbResult<CreateProjectRs> result = objectManipulationUtil.fromJson(
+        jsonResult,
+        new TypeReference<>() {
+        });
+
+    if (!result.isOk()) {
+      throw new PostgreDbException(
+          result.error().code() + " - " + result.error().message());
+    }
+
+    return result.data();
+  }
+
+  @Override
+  public List<DetailsForClientRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq) {
+    String sql = "SELECT fn_read_client_projects(?)";
+
+    UUID employeeId = detailsForClientRq.projectId();
 
     String jsonResult = jdbcTemplate.queryForObject(
         sql,
         String.class,
-        rowMapperProject(createProjectRecord));
+        employeeId);
 
-    CreateProjectRs createProjectResult = objectManipulationUtil
-        .objectMapperToString(jsonResult, CreateProjectRs.class);
+    DbResult<List<DetailsForClientRs>> detailsListRs = objectManipulationUtil.fromJson(
+        jsonResult,
+        new TypeReference<DbResult<List<DetailsForClientRs>>>() {
+        });
 
-    if ("error".equals(createProjectResult.status())) {
-      throw new PostgreDbException(createProjectResult.error_code() + " - " + createProjectResult.error_message());
+    if (!detailsListRs.isOk()) {
+      throw new PostgreDbException(
+          detailsListRs.error().code() + " - " + detailsListRs.error().message());
     }
 
-    return createProjectResult;
+    return detailsListRs.data();
   }
 
   @Override
-  public List<DetailsForEmployeeRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq) {
-    String sql = "SELECT * FROM fn_read_employee_projects(?)";
+  public ProjectDetailsRs getProjectDetailsById(ProjectDetailsRq projectDetailsRq) {
+    String sql = "SELECT * FROM fn_read_project_details(?)";
 
-    List<DetailsForEmployeeRs> detailsForClientRsList = jdbcTemplate.query(
+    String jsonResult = jdbcTemplate.queryForObject(
         sql,
-        ps -> ps.setObject(1, detailsForClientRq.projectId()),
-        DETAILS_ROW_MAPPER);
+        String.class,
+        projectDetailsRq.projectId());
 
-    return detailsForClientRsList;
+    DbResult<ProjectDetailsRs> projectDetailsRs = objectManipulationUtil.fromJson(
+        jsonResult,
+        new TypeReference<DbResult<ProjectDetailsRs>>() {
+        });
+
+    if (!projectDetailsRs.isOk()) {
+      throw new PostgreDbException(
+          projectDetailsRs.error().code() + " - " + projectDetailsRs.error().message());
+    }
+
+    return projectDetailsRs.data();
   }
 
-  private Object[] rowMapperProject(CreateProjectRq r) {
+  private Object[] mapCreateProjectParams(CreateProjectRq r) {
     return new Object[] {
         r.employee(),
         r.client(),
         r.title(),
-        r.description(),
         r.size(),
+        r.style(),
+        r.additionalInfo(),
         r.startDate(),
         r.estimatedCompletionDate(),
         r.budget(),
         r.category(),
         r.colors(),
         r.materials(),
-        r.images()
+        r.images(),
+        r.chapes()
     };
   }
-
-  private static final RowMapper<DetailsForEmployeeRs> DETAILS_ROW_MAPPER = (rs, rowNum) -> DetailsForEmployeeRs
-      .builder()
-      .title(rs.getString("title"))
-      .startDate(rs.getObject("started", LocalDate.class))
-      .estimatedCompletionDate(rs.getObject("estimated", LocalDate.class))
-      .daysDifference(rs.getInt("days_difference"))
-      .name(rs.getString("name"))
-      .status(rs.getString("status"))
-      .projectId(rs.getObject("project_id", UUID.class))
-      .userId(rs.getObject("user_id", UUID.class))
-      .type(rs.getString("type_desc"))
-      .build();
 
 }

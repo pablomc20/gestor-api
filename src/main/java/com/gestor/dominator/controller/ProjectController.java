@@ -5,6 +5,8 @@ import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
+import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
+import com.gestor.dominator.dto.projects.ProjectDetailsResult;
 import com.gestor.dominator.service.projects.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,6 +41,12 @@ public class ProjectController {
   public List<DetailsForEmployeeResult> getDetailsProjectClient(
       DetailsForEmployeeRecord detailsForClientRq) {
     return projectService.getProyectClientById(detailsForClientRq);
+  }
+
+  @GetMapping("/{projectId}/details")
+  public ResponseEntity<ProjectDetailsResult> getDetailsProjectClient(
+      ProjectDetailsRecord projectDetailsRecord) {
+    return ResponseEntity.ok(projectService.getProjectDetailsById(projectDetailsRecord));
   }
 
   @PostMapping("/new")

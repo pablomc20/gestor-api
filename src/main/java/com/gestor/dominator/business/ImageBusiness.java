@@ -12,7 +12,7 @@ import com.gestor.dominator.model.postgre.image.ImageCreateRs;
 import com.gestor.dominator.model.postgre.image.ImageRq;
 import com.gestor.dominator.model.postgre.image.ImageRs;
 import com.gestor.dominator.repository.ImageRepository;
-import com.gestor.dominator.service.ImageService;
+import com.gestor.dominator.service.image.ImageService;
 import com.gestor.dominator.utils.FileUtils;
 
 import org.springframework.http.HttpStatus;

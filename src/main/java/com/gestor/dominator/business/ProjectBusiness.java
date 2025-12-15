@@ -4,6 +4,8 @@ import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
+import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
+import com.gestor.dominator.dto.projects.ProjectDetailsResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.mapper.ContractMapper;
 import com.gestor.dominator.mapper.ProjectMapper;
@@ -11,7 +13,10 @@ import com.gestor.dominator.model.postgre.contract.CreateContractRq;
 import com.gestor.dominator.model.postgre.contract.CreateContractRs;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
+import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
 import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
+import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.repository.ContractRepository;
 import com.gestor.dominator.repository.ProjectRepository;
 import com.gestor.dominator.service.projects.ProjectService;
@@ -33,7 +38,10 @@ public class ProjectBusiness implements ProjectService {
   @Override
   public List<DetailsForEmployeeResult> getProyectClientById(DetailsForEmployeeRecord detailsForClientRecord) {
     DetailsForEmployeeRq detailsForClientRq = projectMapper.toDetailsRq(detailsForClientRecord);
-    return projectMapper.toDetailsRs(projectRepository.getProyectClientById(detailsForClientRq));
+
+    List<DetailsForClientRs> detailsForClientRs = projectRepository.getProyectClientById(detailsForClientRq);
+
+    return projectMapper.toDetailsRs(detailsForClientRs);
   }
 
   @Override
@@ -44,17 +52,14 @@ public class ProjectBusiness implements ProjectService {
     // Crear proyecto en la BD
     CreateProjectRs createProjectResult = projectRepository.createProject(createProjectRecord);
 
-    if (createProjectResult.status().equals("ok")) {
-      String idProject = createProjectResult.project_id();
+    String idProject = createProjectResult.project_id();
 
-      // FN - Crear contrato en la BD
-      createContract(createProject, idProject);
+    // FN - Crear contrato en la BD
+    createContract(createProject, idProject);
 
-      CreateProjectResult createProjectRs = projectMapper.toResult(createProjectResult);
+    CreateProjectResult createProjectRs = projectMapper.toResult(createProjectResult);
 
-      return createProjectRs;
-    }
-    throw new PostgreDbException("Error al crear un nuevo proyecto");
+    return createProjectRs;
   }
 
   private void createContract(CreateProjectRecord createProject, String idProject) {
@@ -66,5 +71,18 @@ public class ProjectBusiness implements ProjectService {
     if (!createContractRs.status().equals("ok")) {
       throw new PostgreDbException("Error al crear un nuevo contrato");
     }
+  }
+
+  @Override
+  public ProjectDetailsResult getProjectDetailsById(ProjectDetailsRecord projectDetailsRecord) {
+    ProjectDetailsRq projectDetailsRq = projectMapper.toDetailsProjectRq(projectDetailsRecord);
+
+    ProjectDetailsRs projectDetailsRs = projectRepository.getProjectDetailsById(projectDetailsRq);
+
+    if (projectDetailsRs == null) {
+      throw new PostgreDbException("Error al obtener los detalles del proyecto");
+    }
+
+    return projectMapper.toDetailsProjectRs(projectDetailsRs);
   }
 }

@@ -9,8 +9,9 @@ import lombok.Builder;
 @Builder
 public record CreateProjectRecord(
         String title,
-        String description,
         String size,
+        String style,
+        String additionalInfo,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
         BigDecimal budget,
@@ -22,6 +23,7 @@ public record CreateProjectRecord(
 
         UUID[] colors,
         UUID[] materials,
-        UUID[] images) {
+        UUID[] images,
+        UUID[] chapes) {
 
 }
