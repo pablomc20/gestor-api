@@ -13,9 +13,10 @@ import com.gestor.dominator.model.postgre.contract.CreateContractRq;
 public interface ContractMapper {
 
   @Mapping(target = "project_id", source = "idProject", qualifiedByName = "toUUID")
-  @Mapping(target = "final_amount", source = "rq.budget")
-  @Mapping(target = "number_payment", source = "rq.number_payment")
-  CreateContractRq toRecord(CreateProjectRecord rq, String idProject);
+  @Mapping(target = "final_amount", source = "record.budget")
+  @Mapping(target = "number_payment", source = "record.number_payment")
+  @Mapping(target = "description", source = "record.description")
+  CreateContractRq toRecord(CreateProjectRecord record, String idProject);
 
   @Named("toUUID")
   public static UUID toUUID(String id) {

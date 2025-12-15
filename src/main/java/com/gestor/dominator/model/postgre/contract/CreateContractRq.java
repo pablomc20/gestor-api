@@ -7,8 +7,9 @@ import lombok.Builder;
 
 @Builder
 public record CreateContractRq(
-        BigDecimal final_amount,
-        UUID project_id,
-        Integer number_payment) {
+                BigDecimal final_amount,
+                UUID project_id,
+                Integer number_payment,
+                String description) {
 
 }

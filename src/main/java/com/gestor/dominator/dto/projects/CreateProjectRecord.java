@@ -14,12 +14,13 @@ public record CreateProjectRecord(
         String additionalInfo,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
-        BigDecimal budget,
         UUID category,
         UUID client,
         UUID employee,
 
+        BigDecimal budget,
         Integer number_payment,
+        String description,
 
         UUID[] colors,
         UUID[] materials,

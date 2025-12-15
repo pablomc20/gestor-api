@@ -66,11 +66,7 @@ public class ProjectBusiness implements ProjectService {
     CreateContractRq createContractRecord = contractMapper.toRecord(createProject, idProject);
 
     // Crear contrato en la BD
-    CreateContractRs createContractRs = contractRepository.createContract(createContractRecord);
-
-    if (!createContractRs.status().equals("ok")) {
-      throw new PostgreDbException("Error al crear un nuevo contrato");
-    }
+    contractRepository.createContract(createContractRecord);
   }
 
   @Override
