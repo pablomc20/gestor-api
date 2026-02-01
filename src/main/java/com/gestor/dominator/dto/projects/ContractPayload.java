@@ -9,8 +9,10 @@ import lombok.Builder;
 public record ContractPayload(
         UUID contractId,
         BigDecimal budget,
-        Integer number_payment,
-        Integer number_payment_paid,
-        String description) {
+        Integer numberPayment,
+        Integer numberPaymentPaid,
+        String description,
+        String status,
+        String fileUrl) {
 
 }

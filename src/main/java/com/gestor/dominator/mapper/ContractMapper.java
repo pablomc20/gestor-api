@@ -13,9 +13,9 @@ import com.gestor.dominator.model.postgre.contract.ReadContractRs;
 @Mapper(componentModel = "spring")
 public interface ContractMapper {
 
-    @Mapping(target = "project_id", source = "idProject", qualifiedByName = "toUUID")
-    @Mapping(target = "final_amount", source = "contract.budget")
-    @Mapping(target = "number_payment", source = "contract.number_payment")
+    @Mapping(target = "projectId", source = "idProject", qualifiedByName = "toUUID")
+    @Mapping(target = "finalAmount", source = "contract.budget")
+    @Mapping(target = "numberPayment", source = "contract.numberPayment")
     @Mapping(target = "description", source = "contract.description")
     CreateContractRq toCreateContractRq(ContractPayload contract, String idProject);
 
@@ -26,8 +26,10 @@ public interface ContractMapper {
 
     @Mapping(target = "contractId", source = "readContractRs.contract_id")
     @Mapping(target = "budget", source = "readContractRs.final_amount")
-    @Mapping(target = "number_payment", source = "readContractRs.number_payments")
+    @Mapping(target = "numberPayment", source = "readContractRs.number_payments")
     @Mapping(target = "description", source = "readContractRs.description")
-    @Mapping(target = "number_payment_paid", source = "numberPaymentPaid")
+    @Mapping(target = "numberPaymentPaid", source = "numberPaymentPaid")
+    @Mapping(target = "status", source = "readContractRs.status")
+    @Mapping(target = "fileUrl", source = "readContractRs.file_url")
     ContractPayload toDetailsContractRs(ReadContractRs readContractRs, Integer numberPaymentPaid);
 }

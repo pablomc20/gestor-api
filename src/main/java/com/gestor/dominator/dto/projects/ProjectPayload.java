@@ -16,7 +16,7 @@ public record ProjectPayload(
         String colors,
         String materials,
         String additionals,
-        LocalDate start_date,
-        LocalDate end_date) {
+        LocalDate startDate,
+        LocalDate endDate) {
 
 }
