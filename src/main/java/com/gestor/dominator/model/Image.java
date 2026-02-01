@@ -1,35 +1,27 @@
 package com.gestor.dominator.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "images")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
 public class Image {
 
     @Id
-    private ObjectId id;
+    private String id;
     private String filename;
-    private String originalName;
+    private String ext;
     private long size;
     private String mimeType;
     private LocalDateTime createdAt;
 
-    public Image(String filename, String originalName, long size, String mimeType) {
+    public Image(String filename, String ext, long size, String mimeType) {
         this.filename = filename;
-        this.originalName = originalName;
+        this.ext = ext;
         this.size = size;
         this.mimeType = mimeType;
         this.createdAt = LocalDateTime.now();

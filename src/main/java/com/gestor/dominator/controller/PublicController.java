@@ -1,62 +1,44 @@
 package com.gestor.dominator.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gestor.dominator.components.ObjectIdConverter;
-import com.gestor.dominator.dto.room.RoomResponse;
-import com.gestor.dominator.module.Author;
-import com.gestor.dominator.module.AuthorRepository;
-import com.gestor.dominator.module.Profile;
-import com.gestor.dominator.module.ProfileRepository;
-import com.gestor.dominator.service.RoomService;
+import com.gestor.dominator.dto.image.ImageRenderResult;
+import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
+import com.gestor.dominator.dto.projects.ProjectDetailsResult;
+import com.gestor.dominator.service.image.ImageService;
+import com.gestor.dominator.service.projects.ProjectService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping(path="/public")
+@RequestMapping(path = "/public")
+@RequiredArgsConstructor
 public class PublicController {
 
-    @Autowired
-    private RoomService roomService;
+    private final ProjectService projectService;
 
-    @Autowired
-    private AuthorRepository userRepository;
-    
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private ObjectIdConverter objectIdConverter;
-
-
-    @GetMapping(value = "/rooms")
-    public ResponseEntity<List<RoomResponse>> getAllRooms() {
-        List<RoomResponse> rooms = roomService.getAllRooms();
-        return ResponseEntity.ok(rooms);
+    @GetMapping("/project/{id}")
+    public ResponseEntity<ProjectDetailsResult> getProjectDetailsById(@PathVariable String id) {
+        ProjectDetailsRecord projectDetailsRecord = new ProjectDetailsRecord(UUID.fromString(id));
+        ProjectDetailsResult result = projectService.getProjectDetailsById(projectDetailsRecord);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping(path="/health")
-    public @ResponseBody String getHealthStatus() {
-        return "Servicio Dominator está funcionando correctamente.";
-    }
+    // @GetMapping("/file/{filename}")
+    // public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
+    // ImageRenderResponse response = imageService.getImageFile(filename);
 
-    @GetMapping(path="/version")
-    public @ResponseBody String getVersion() {
-        userRepository.save(Author.builder().username("root").password("1234")
-        .profileId(objectIdConverter.stringToObjectId("68d1de1e27b1a314da732781")).build());
-
-        System.out.println(userRepository.findAllWithProfiles());
-
-        // Crear nuevos perfiles de la coleccion de mongo
-
-        // profileRepository.save(Profile.builder().website("google").bio("2genial").build());
-
-        return "creado";
-    }
-
+    // return ResponseEntity.ok()
+    // .contentType(MediaType.parseMediaType(response.contentType()))
+    // .body(response.imageData());
+    // }
 }

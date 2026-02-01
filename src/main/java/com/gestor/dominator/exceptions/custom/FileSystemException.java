@@ -12,5 +12,8 @@ public class FileSystemException extends BaseCustomException {
         super("FILE_SYSTEM_ERROR", description, HttpStatus.INTERNAL_SERVER_ERROR, cause);
     }
 
+    public FileSystemException(String description, HttpStatus status) {
+        super("FILE_SYSTEM_ERROR", description, status);
+    }
 
 }
