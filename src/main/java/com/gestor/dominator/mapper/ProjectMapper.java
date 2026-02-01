@@ -4,8 +4,8 @@ import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
+import com.gestor.dominator.dto.projects.ProjectPayload;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
-import com.gestor.dominator.dto.projects.ProjectDetailsResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
@@ -20,37 +20,43 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
-  CreateProjectRq toRq(CreateProjectRecord createProject);
 
-  @Mapping(target = "idProject", source = "project_id")
-  CreateProjectResult toResult(CreateProjectRs result);
+    @Mapping(target = "budget", source = "contract.budget")
+    CreateProjectRq toCreateRq(CreateProjectRecord createProject);
 
-  DetailsForEmployeeRq toDetailsRq(DetailsForEmployeeRecord detailsForEmployeeRecord);
+    @Mapping(target = "idProject", source = "project_id")
+    CreateProjectResult toResult(CreateProjectRs result);
 
-  @Mapping(target = "startDate", source = "started")
-  @Mapping(target = "estimatedCompletionDate", source = "estimated")
-  @Mapping(target = "daysDifference", source = "days_difference")
-  @Mapping(target = "projectId", source = "project_id")
-  @Mapping(target = "userId", source = "user_id")
-  @Mapping(target = "type", source = "type_desc")
-  @Mapping(target = "finalAmount", ignore = true)
-  @Mapping(target = "numberPayments", ignore = true)
-  @Mapping(target = "currentPayment", ignore = true)
-  @Mapping(target = "phoneEmployee", ignore = true)
-  @Mapping(target = "requestId", ignore = true)
-  DetailsForEmployeeResult toDetailsRs(DetailsForClientRs detailsForClientRs);
+    DetailsForEmployeeRq toDetailsRq(DetailsForEmployeeRecord detailsForEmployeeRecord);
 
-  List<DetailsForEmployeeResult> toDetailsRs(List<DetailsForClientRs> detailsForEmployeeRs);
+    @Mapping(target = "startDate", source = "started")
+    @Mapping(target = "estimatedCompletionDate", source = "estimated")
+    @Mapping(target = "daysDifference", source = "days_difference")
+    @Mapping(target = "projectId", source = "project_id")
+    @Mapping(target = "userId", source = "user_id")
+    @Mapping(target = "type", source = "type_desc")
+    @Mapping(target = "finalAmount", ignore = true)
+    @Mapping(target = "numberPayments", ignore = true)
+    @Mapping(target = "currentPayment", ignore = true)
+    @Mapping(target = "phoneEmployee", ignore = true)
+    @Mapping(target = "requestId", ignore = true)
+    DetailsForEmployeeResult toDetailsRs(DetailsForClientRs detailsForClientRs);
 
-  ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
+    List<DetailsForEmployeeResult> toDetailsRs(List<DetailsForClientRs> detailsForEmployeeRs);
 
-  @Mapping(target = "startDate", source = "started")
-  @Mapping(target = "estimatedCompletionDate", source = "estimated")
-  @Mapping(target = "finalAmount", source = "final_amount")
-  @Mapping(target = "status", source = "status")
-  @Mapping(target = "requestId", source = "request_id")
-  @Mapping(target = "type", source = "type")
-  @Mapping(target = "numberPayments", source = "number_payments")
-  @Mapping(target = "currentPayment", source = "payments_count")
-  ProjectDetailsResult toDetailsProjectRs(ProjectDetailsRs projectDetailsRs);
+    ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
+
+    @Mapping(target = "title", source = "rs.project.title")
+    @Mapping(target = "style", source = "rs.project.style")
+    @Mapping(target = "size", source = "rs.project.size")
+    @Mapping(target = "category", source = "rs.project.category")
+    @Mapping(target = "chapes", source = "rs.project.chapes")
+    @Mapping(target = "colors", source = "rs.project.colors")
+    @Mapping(target = "materials", source = "rs.project.materials")
+    @Mapping(target = "additionals", source = "rs.project.additionals")
+    @Mapping(target = "start_date", source = "rs.project.start_date")
+    @Mapping(target = "end_date", source = "rs.project.end_date")
+    @Mapping(target = "projectId", source = "projectId")
+    @Mapping(target = "status", source = "rs.project.status")
+    ProjectPayload toDetailsProjectRs(ProjectDetailsRs rs, String projectId);
 }

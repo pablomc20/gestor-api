@@ -1,6 +1,8 @@
 package com.gestor.dominator.model.postgre.contract;
 
+import java.util.UUID;
+
 public record CreateContractRs(
-        String contract_id) {
+        UUID contract_id) {
 
 }

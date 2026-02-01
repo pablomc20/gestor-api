@@ -1,6 +1,5 @@
 package com.gestor.dominator.dto.projects;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,9 +17,8 @@ public record CreateProjectRecord(
         UUID client,
         UUID employee,
 
-        BigDecimal budget,
-        Integer number_payment,
-        String description,
+        ContractPayload contract,
+        PaymentPayload[] payments,
 
         UUID[] colors,
         UUID[] materials,
