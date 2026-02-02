@@ -21,38 +21,38 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ContractRepositoryImpl implements ContractRepository {
 
-  private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-  @Override
-  public CreateContractRs createContract(CreateContractRq createContractRecord) {
-    UUID contractId = jdbcTemplate.queryForObject(CREATE_CONTRACT, UUID.class,
-        createContractRecord.final_amount(), createContractRecord.project_id(),
-        createContractRecord.number_payment(), createContractRecord.description());
+    @Override
+    public CreateContractRs createContract(CreateContractRq createContractRecord) {
+        UUID contractId = jdbcTemplate.queryForObject(CREATE_CONTRACT, UUID.class,
+                createContractRecord.finalAmount(), createContractRecord.projectId(),
+                createContractRecord.numberPayment(), createContractRecord.description());
 
-    if (contractId == null) {
-      throw new PostgreDbException("Error al crear el contrato");
+        if (contractId == null) {
+            throw new PostgreDbException("Error al crear el contrato");
+        }
+
+        return new CreateContractRs(contractId);
     }
 
-    return new CreateContractRs(contractId);
-  }
+    @Override
+    public ReadContractRs getContractDetailsById(ReadContractRq contractDetailsRq) {
 
-  @Override
-  public ReadContractRs getContractDetailsById(ReadContractRq contractDetailsRq) {
+        UUID projectId = contractDetailsRq.project_id();
 
-    UUID projectId = contractDetailsRq.project_id();
-
-    return jdbcTemplate.queryForObject(
-        ContractQueryBD.READ_CONTRACT_BY_PROJECT_ID,
-        (rs, rowNum) -> ReadContractRs.builder()
-            .contract_id(rs.getString("contract_id"))
-            .status(rs.getString("status"))
-            .file_url(rs.getString("file_url"))
-            .signed_at(rs.getObject("signed_at", LocalDate.class))
-            .final_amount(rs.getBigDecimal("final_amount"))
-            .number_payments(rs.getInt("number_payments"))
-            .description(rs.getString("description"))
-            .build(),
-        projectId);
-  }
+        return jdbcTemplate.queryForObject(
+                ContractQueryBD.READ_CONTRACT_BY_PROJECT_ID,
+                (rs, rowNum) -> ReadContractRs.builder()
+                        .contract_id(rs.getString("contract_id"))
+                        .status(rs.getString("status"))
+                        .file_url(rs.getString("file_url"))
+                        .signed_at(rs.getObject("signed_at", LocalDate.class))
+                        .final_amount(rs.getBigDecimal("final_amount"))
+                        .number_payments(rs.getInt("number_payments"))
+                        .description(rs.getString("description"))
+                        .build(),
+                projectId);
+    }
 
 }
