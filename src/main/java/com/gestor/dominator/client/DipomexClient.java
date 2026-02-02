@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.gestor.dominator.model.client.dipomex.CodigoPostalResponse;
 import com.gestor.dominator.model.client.dipomex.EstadoResponse;
 
-@FeignClient(name = "dipomexClient", url = "${client.dipomex.url}${client.dipomex.version}")
+@FeignClient(name = "dipomexClient", url = "${client.dipomex.base-url}")
 public interface DipomexClient {
 
     @GetMapping("/codigo_postal")
