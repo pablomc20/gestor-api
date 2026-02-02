@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.gestor.dominator.model.postgre.User;
+import com.gestor.dominator.model.postgre.auth.User;
 
 import java.util.Optional;
 import java.util.UUID;
