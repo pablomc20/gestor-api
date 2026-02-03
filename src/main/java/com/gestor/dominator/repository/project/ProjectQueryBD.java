@@ -6,7 +6,7 @@ public final class ProjectQueryBD {
     }
 
     public static String GET_PROJECT_DETAILS_BY_ID = """
-            SELECT p.title, p.size, p.style, p.additionals, ca.name as category, p.status,
+            SELECT p.user_client, p.user_employee, p.title, p.size, p.style, p.additionals, ca.name as category, p.status,
                 p.start_date, p.estimated_completion_date as end_date,
                 (select STRING_AGG(name, ', ' ORDER BY name)
                     from materials m inner join project_materials pm on pm.material_id = m.material_id

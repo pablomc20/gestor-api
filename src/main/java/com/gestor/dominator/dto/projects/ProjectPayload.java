@@ -7,6 +7,8 @@ import lombok.Builder;
 @Builder
 public record ProjectPayload(
         String projectId,
+        String userIdClient,
+        String userIdEmployee,
         String title,
         String style,
         String size,

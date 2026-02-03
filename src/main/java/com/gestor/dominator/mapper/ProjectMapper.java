@@ -46,6 +46,8 @@ public interface ProjectMapper {
 
     ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
 
+    @Mapping(target = "userIdClient", source = "rs.project.user_client")
+    @Mapping(target = "userIdEmployee", source = "rs.project.user_employee")
     @Mapping(target = "title", source = "rs.project.title")
     @Mapping(target = "style", source = "rs.project.style")
     @Mapping(target = "size", source = "rs.project.size")

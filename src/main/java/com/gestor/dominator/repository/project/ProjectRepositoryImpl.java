@@ -2,7 +2,6 @@ package com.gestor.dominator.repository.project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
-import com.gestor.dominator.dto.projects.ProjectDetailsResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.DbResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
@@ -116,6 +114,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     private ProjectPayload mapProjectDetails(ResultSet rs, int rowNum) throws SQLException {
         return new ProjectPayload(
+                rs.getString("user_client"),
+                rs.getString("user_employee"),
                 rs.getString("title"),
                 rs.getString("style"),
                 rs.getString("size"),
