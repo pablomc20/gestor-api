@@ -6,6 +6,8 @@ import lombok.Builder;
 
 @Builder
 public record ProjectPayload(
+        String user_client,
+        String user_employee,
         String title,
         String style,
         String size,

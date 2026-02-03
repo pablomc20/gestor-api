@@ -114,6 +114,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     private ProjectPayload mapProjectDetails(ResultSet rs, int rowNum) throws SQLException {
         return new ProjectPayload(
+                rs.getString("user_client"),
+                rs.getString("user_employee"),
                 rs.getString("title"),
                 rs.getString("style"),
                 rs.getString("size"),
