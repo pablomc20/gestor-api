@@ -7,18 +7,6 @@ services:
       - "${SERVER_PORT_BACK:-8080}:${SERVER_PORT_BACK:-8080}"
     volumes:
       - /app/uploads:/app/uploads
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - MONGODB_URI=${MONGODB_URI}
-      - SERVER_PORT_BACK=${SERVER_PORT_BACK:-8080}
-      - JWT_SECRET=${JWT_SECRET}
-      - CLIENT_DIPOMEX_URL=${CLIENT_DIPOMEX_URL}
-      - CLIENT_DIPOMEX_TOKEN=${CLIENT_DIPOMEX_TOKEN}
-      - POSTGRE_SQL_URI=${POSTGRE_SQL_URI}
-      - POSTGRE_SQL_USER=${POSTGRE_SQL_USER}
-      - POSTGRE_SQL_PASSWORD=${POSTGRE_SQL_PASSWORD}
-      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
-      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
-      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
-      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+    env_file:
+      - .env
     restart: unless-stopped
