@@ -15,6 +15,8 @@ import com.gestor.dominator.repository.ImageRepository;
 import com.gestor.dominator.service.image.ImageService;
 import com.gestor.dominator.utils.FileUtils;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,31 +41,34 @@ public class ImageBusiness implements ImageService {
     }
 
     @Override
-    public ImageCreateResult uploadImage(MultipartFile file) {
+    public ImageCreateResult uploadImage(MultipartFile[] multipartFile) {
         // Guardar la imagen en MINIO
-        String filename = fileStorageComponent.save(file);
+        List<String> idImages = new java.util.ArrayList<>();
+        for (MultipartFile file : multipartFile) {
+            String filename = fileStorageComponent.save(file);
 
-        if (filename == null) {
-            throw new FileSystemException("No se pudo guardar la imagen", HttpStatus.INTERNAL_SERVER_ERROR);
+            if (filename == null) {
+                throw new FileSystemException("No se pudo guardar la imagen", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            // Guardar la imagen en la BD
+            String ext = FileUtils.getFileExtension(file.getOriginalFilename());
+            ImageRq image = ImageRq.builder()
+                    .filename(filename)
+                    .ext(ext)
+                    .size(file.getSize())
+                    .mimeType(file.getContentType())
+                    .build();
+
+            ImageCreateRs savedImage = imageRepository.save(image);
+
+            if (!savedImage.status().equals("ok")) {
+                throw new PostgreDbException("Error al crear imagen");
+            }
+            idImages.add(savedImage.idImage());
         }
-
-        // Guardar la imagen en la BD
-        String ext = FileUtils.getFileExtension(file.getOriginalFilename());
-        ImageRq image = ImageRq.builder()
-                .filename(filename)
-                .ext(ext)
-                .size(file.getSize())
-                .mimeType(file.getContentType())
-                .build();
-
-        ImageCreateRs savedImage = imageRepository.save(image);
-
-        if (!savedImage.status().equals("ok")) {
-            throw new PostgreDbException("Error al crear imagen");
-        }
-
         return ImageCreateResult.builder()
-                .idImage(savedImage.idImage())
+                .idImages(idImages.toArray(new String[0]))
                 .build();
     }
 

@@ -5,7 +5,7 @@ public final class ProjectQueryBD {
     private ProjectQueryBD() {
     }
 
-    public static String GET_PROJECT_DETAILS_BY_ID = """
+    public static final String GET_PROJECT_DETAILS_BY_ID = """
             SELECT p.user_client, p.user_employee, p.title, p.size, p.style, p.additionals, ca.name as category, p.status,
                 p.start_date, p.estimated_completion_date as end_date,
                 (select STRING_AGG(name, ', ' ORDER BY name)
@@ -26,4 +26,13 @@ public final class ProjectQueryBD {
                 SELECT fn_create_new_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
+    public static final String GET_STATUS_BY_ID = """
+                SELECT status FROM projects WHERE project_id = ?;
+            """;
+
+    public static final String UPDATE_STATUS_PROJECT = 
+                """
+                UPDATE projects SET status = ?::project_status, updated_at = CURRENT_TIMESTAMP 
+                WHERE project_id = ?;
+            """;
 }

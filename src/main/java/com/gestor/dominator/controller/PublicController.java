@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gestor.dominator.business.project.RetrieveProjectDetailsUseCase;
 import com.gestor.dominator.dto.image.ImageRenderResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.dto.projects.ProjectDetailsResult;
@@ -24,12 +25,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PublicController {
 
-    private final ProjectService projectService;
+    private final RetrieveProjectDetailsUseCase createProjectUseCase;
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ProjectDetailsResult> getProjectDetailsById(@PathVariable String id) {
         ProjectDetailsRecord projectDetailsRecord = new ProjectDetailsRecord(UUID.fromString(id));
-        ProjectDetailsResult result = projectService.getProjectDetailsById(projectDetailsRecord);
+        ProjectDetailsResult result = createProjectUseCase.execute(projectDetailsRecord);
         return ResponseEntity.ok(result);
     }
 

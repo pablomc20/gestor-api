@@ -5,6 +5,8 @@ import com.gestor.dominator.dto.image.ImageRenderResult;
 import com.gestor.dominator.dto.image.ImageResult;
 import com.gestor.dominator.service.image.ImageService;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,8 +28,8 @@ public class ImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ImageCreateResult> uploadImage(@RequestParam MultipartFile file) {
-        ImageCreateResult response = imageService.uploadImage(file);
+    public ResponseEntity<ImageCreateResult> uploadImage(@RequestParam("file") MultipartFile[] files) {
+        ImageCreateResult response = imageService.uploadImage(files);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -42,8 +44,8 @@ public class ImageController {
         ImageRenderResult response = imageService.getImageFile(filename);
 
         return ResponseEntity.ok()
-                .contentType(response.mediaType())
-                .body(response.imageData());
+        .contentType(Objects.requireNonNull(response.mediaType()))
+        .body(response.imageData());
     }
 
 }

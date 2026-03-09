@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record ProjectDetailsRs(
-        ProjectPayload project) {
+        ProjectPayloadRs project) {
 
 }

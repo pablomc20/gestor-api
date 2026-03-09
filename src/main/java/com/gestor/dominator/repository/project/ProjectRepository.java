@@ -1,8 +1,9 @@
 package com.gestor.dominator.repository.project;
 
 import java.util.List;
+import java.util.UUID;
 
-import com.gestor.dominator.dto.projects.ProjectPayload;
+import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
@@ -16,4 +17,8 @@ public interface ProjectRepository {
     CreateProjectRs createProject(CreateProjectRq createProjectRecord);
 
     ProjectDetailsRs getProjectDetailsById(ProjectDetailsRq projectDetailsRq);
+
+    String getStatusById(UUID idProject);
+
+    boolean updateStatusProject(UUID idProject, String status);
 }

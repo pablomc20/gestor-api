@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record ProjectPayload(
+public record ProjectPayloadRs(
         String user_client,
         String user_employee,
         String title,

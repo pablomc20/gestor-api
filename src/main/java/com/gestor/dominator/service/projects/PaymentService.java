@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.gestor.dominator.dto.payment.CreatePaymentRecord;
 import com.gestor.dominator.dto.payment.CreatePaymentResult;
+import com.gestor.dominator.dto.payment.ReadPaymentResult;
 
 public interface PaymentService {
     CreatePaymentResult createPayment(CreatePaymentRecord createPaymentRecord);

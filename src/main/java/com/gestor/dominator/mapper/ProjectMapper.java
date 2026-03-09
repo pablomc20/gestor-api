@@ -5,6 +5,7 @@ import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.ProjectPayload;
+import com.gestor.dominator.dto.projects.StatusProjectResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
@@ -46,8 +47,6 @@ public interface ProjectMapper {
 
     ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
 
-    @Mapping(target = "userIdClient", source = "rs.project.user_client")
-    @Mapping(target = "userIdEmployee", source = "rs.project.user_employee")
     @Mapping(target = "title", source = "rs.project.title")
     @Mapping(target = "style", source = "rs.project.style")
     @Mapping(target = "size", source = "rs.project.size")
@@ -61,4 +60,9 @@ public interface ProjectMapper {
     @Mapping(target = "projectId", source = "projectId")
     @Mapping(target = "status", source = "rs.project.status")
     ProjectPayload toDetailsProjectRs(ProjectDetailsRs rs, String projectId);
+
+    @Mapping(target = "currentStatus", source = "currentStatus")
+    @Mapping(target = "nextStatus", source = "nextStatus")
+    StatusProjectResult toStatusProjectResult(String currentStatus, String nextStatus);
+    
 }

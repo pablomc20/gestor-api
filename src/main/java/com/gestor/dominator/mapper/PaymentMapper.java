@@ -8,10 +8,10 @@ import java.util.Comparator;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import com.gestor.dominator.dto.payment.CreatePaymentRecord;
+import com.gestor.dominator.dto.payment.ReadPaymentResult;
 import com.gestor.dominator.dto.projects.PaymentPayload;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentReadRs;
-import com.gestor.dominator.service.projects.ReadPaymentResult;
 
 @Mapper(componentModel = "spring")
 public interface PaymentMapper {

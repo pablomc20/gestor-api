@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
+import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.DbResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
@@ -18,7 +19,7 @@ import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
 import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
-import com.gestor.dominator.model.postgre.project.ProjectPayload;
+import com.gestor.dominator.model.postgre.project.ProjectPayloadRs;
 import com.fasterxml.jackson.core.type.TypeReference;
 import static com.gestor.dominator.repository.project.ProjectQueryBD.*;
 
@@ -80,7 +81,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
         try {
 
-            ProjectPayload projectDetailsRs = jdbcTemplate.queryForObject(
+            ProjectPayloadRs projectDetailsRs = jdbcTemplate.queryForObject(
                     GET_PROJECT_DETAILS_BY_ID,
                     this::mapProjectDetails,
                     projectDetailsRq.projectId());
@@ -89,6 +90,30 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    @Override
+    public String getStatusById(UUID idProject) {
+        try {
+            String statusProject = jdbcTemplate.queryForObject(
+                    GET_STATUS_BY_ID,
+                    String.class,
+                    idProject);
+
+            return statusProject;
+        } catch (EmptyResultDataAccessException e) {
+            return "";
+        }
+    }
+
+    @Override
+    public boolean updateStatusProject(UUID idProject, String status) {
+        
+        
+        return jdbcTemplate.update(
+                UPDATE_STATUS_PROJECT,
+                status,
+                idProject) > 0;
     }
 
     // ********** FUNCIONES AUXILIARES **********
@@ -112,8 +137,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         };
     }
 
-    private ProjectPayload mapProjectDetails(ResultSet rs, int rowNum) throws SQLException {
-        return new ProjectPayload(
+    private ProjectPayloadRs mapProjectDetails(ResultSet rs, int rowNum) throws SQLException {
+        return new ProjectPayloadRs(
                 rs.getString("user_client"),
                 rs.getString("user_employee"),
                 rs.getString("title"),

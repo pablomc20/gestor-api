@@ -11,7 +11,7 @@ public interface ImageService {
 
     ImageResult getImageById(String id);
 
-    ImageCreateResult uploadImage(MultipartFile file);
+    ImageCreateResult uploadImage(MultipartFile[] file);
 
     void deleteImage(String id);
 

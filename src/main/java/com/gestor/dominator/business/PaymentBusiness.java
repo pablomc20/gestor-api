@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import com.gestor.dominator.constants.PaymentType;
 import com.gestor.dominator.dto.payment.CreatePaymentRecord;
 import com.gestor.dominator.dto.payment.CreatePaymentResult;
+import com.gestor.dominator.dto.payment.ReadPaymentResult;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.PaymentMapper;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
 import com.gestor.dominator.repository.payment.PaymentRepository;
 import com.gestor.dominator.service.projects.PaymentService;
-import com.gestor.dominator.service.projects.ReadPaymentResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,13 +52,12 @@ public class PaymentBusiness implements PaymentService {
 
     // ****** MÉTODOS AUXILIARES ******
     private void validatePayload(CreatePaymentRecord createPaymentRecord) {
+        PaymentType.fromValue(createPaymentRecord.type());
+
         require(createPaymentRecord.idContract(), "Id contract is required");
         require(createPaymentRecord.type(), "Type is required");
         require(createPaymentRecord.amount(), "Amount is required");
 
-        if (!PaymentType.isValid(createPaymentRecord.type())) {
-            throw new DataValidationException("Invalid payment type");
-        }
     }
 
     private void require(Object value, String message) {

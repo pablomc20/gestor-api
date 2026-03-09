@@ -48,6 +48,7 @@ public class AuthBusiness implements UserService {
                 .name(user.getUserDetail().getName())
                 .uriImage(user.getUserDetail().getUrl_image())
                 .id(user.getUserId().toString())
+                .role(user.getRole())
                 .token(token).build();
     }
 

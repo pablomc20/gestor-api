@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record ImageCreateResult(
-        String idImage) {
+        String[] idImages) {
 }

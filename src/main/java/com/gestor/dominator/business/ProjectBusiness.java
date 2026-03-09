@@ -6,38 +6,31 @@ import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.PaymentPayload;
-import com.gestor.dominator.dto.projects.ProjectPayload;
-import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
-import com.gestor.dominator.dto.projects.ProjectDetailsResult;
-import com.gestor.dominator.exceptions.custom.PostgreDbException;
+import com.gestor.dominator.dto.projects.StatusProjectRecord;
+import com.gestor.dominator.dto.projects.StatusProjectResult;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.ContractMapper;
 import com.gestor.dominator.mapper.PaymentMapper;
 import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.contract.ContractRepository;
 import com.gestor.dominator.model.postgre.contract.CreateContractRq;
 import com.gestor.dominator.model.postgre.contract.CreateContractRs;
-import com.gestor.dominator.model.postgre.contract.ReadContractRq;
-import com.gestor.dominator.model.postgre.contract.ReadContractRs;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
-import com.gestor.dominator.model.postgre.payment.PaymentReadRs;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
 import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
-import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
-import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.repository.payment.PaymentRepository;
 import com.gestor.dominator.repository.project.ProjectRepository;
 import com.gestor.dominator.service.projects.ProjectService;
+import com.gestor.dominator.constants.StatusProject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,50 +77,19 @@ public class ProjectBusiness implements ProjectService {
     }
 
     @Override
-    public ProjectDetailsResult getProjectDetailsById(ProjectDetailsRecord projectDetailsRecord) {
-        ProjectDetailsRq projectDetailsRq = projectMapper.toDetailsProjectRq(projectDetailsRecord);
+    public StatusProjectResult retrieveStatusById(StatusProjectRecord statusProjectRecord) {
+        String currentStatus = projectRepository.getStatusById(UUID.fromString(statusProjectRecord.projectId()));
 
-        // FN - Obtener detalles del proyecto
-        ProjectDetailsRs projectDetailsRs = projectRepository.getProjectDetailsById(projectDetailsRq);
-        if (projectDetailsRs == null) {
-            throw new PostgreDbException("No se encontro el proyecto");
+        if (currentStatus.isEmpty()) {
+            throw new DataValidationException("No se pudo obtneer el estado del proyecto");
         }
-        ProjectPayload project = projectMapper.toDetailsProjectRs(projectDetailsRs,
-                projectDetailsRecord.projectId().toString());
 
-        // FN - Obtener detalles del contrato
-        ReadContractRs readContractRs = contractRepository.getContractDetailsById(
-                ReadContractRq.builder().project_id(projectDetailsRecord.projectId()).build());
-        // FN - Obtener detalles de los pagos
-        List<PaymentReadRs> paymentsRs = paymentRepository.getPayments(UUID.fromString(readContractRs.contract_id()));
-        Long numberPaymentPaid = paymentsRs.stream().filter(p -> p.paid()).count();
+        String nextStatus = StatusProject.retrieveNextStatusProject(currentStatus);
 
-        ContractPayload contract = contractMapper.toDetailsContractRs(readContractRs, numberPaymentPaid.intValue());
-
-        PaymentPayload[] payments = paymentMapper.toPayloads(paymentsRs);
-        // Ordenar pagos por su propiedad type en este orden (FIRST, SECOND y FINAL)
-        PaymentPayload[] orderedPayments = sortPayments(payments);
-
-        return ProjectDetailsResult.builder()
-                .project(project)
-                .contract(contract)
-                .payments(orderedPayments)
-                .build();
+        return projectMapper.toStatusProjectResult(currentStatus, nextStatus);
     }
 
     // ****** MÉTODOS AUXILIARES ******
-    public PaymentPayload[] sortPayments(PaymentPayload[] payments) {
-
-        return Arrays.stream(payments)
-                .sorted(Comparator.comparingInt(p -> switch (p.type()) {
-                    case "FIRST" -> 1;
-                    case "SECOND" -> 2;
-                    case "FINAL" -> 3;
-                    default -> Integer.MAX_VALUE;
-                }))
-                .toArray(PaymentPayload[]::new);
-    }
-
     private void createPayments(PaymentPayload[] payments, UUID idContract) {
         for (PaymentPayload payment : payments) {
             PaymentCreateRq createPaymentRq = paymentMapper.toPaymentCreateRq(payment, idContract);

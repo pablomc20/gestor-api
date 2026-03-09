@@ -1,4 +1,4 @@
-package com.gestor.dominator.service.projects;
+package com.gestor.dominator.dto.payment;
 
 public record ReadPaymentResult(
         String paymentId,

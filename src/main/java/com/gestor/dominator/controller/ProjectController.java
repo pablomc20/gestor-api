@@ -1,18 +1,17 @@
 package com.gestor.dominator.controller;
 
-import com.gestor.dominator.dto.ErrorResponse;
+import com.gestor.dominator.business.project.ChangeStatusProjectUseCase;
+import com.gestor.dominator.business.project.RetrieveProjectDetailsUseCase;
+import com.gestor.dominator.dto.projects.ChangeStatusProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
 import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.dto.projects.ProjectDetailsResult;
+import com.gestor.dominator.dto.projects.StatusProjectRecord;
+import com.gestor.dominator.dto.projects.StatusProjectResult;
 import com.gestor.dominator.service.projects.ProjectService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -29,28 +28,35 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProjectController {
 
-  private final ProjectService projectService;
+    private final ProjectService projectService;
+    private final RetrieveProjectDetailsUseCase createProjectUseCase;
+    private final ChangeStatusProjectUseCase changeStatusProjectUseCase;
 
-  @GetMapping("/{projectId}/details-client")
-  @Operation(summary = "Obtener detalles del proyecto para cliente", description = "Recupera los detalles completos de un proyecto específico para mostrar al cliente")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Detalles del proyecto encontrados", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DetailsForEmployeeResult.class))),
-      @ApiResponse(responseCode = "404", description = "Proyecto no encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
-      @ApiResponse(responseCode = "400", description = "ID de proyecto inválido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-  })
-  public List<DetailsForEmployeeResult> getDetailsProjectClient(
-      DetailsForEmployeeRecord detailsForClientRq) {
-    return projectService.getProyectClientById(detailsForClientRq);
-  }
+    @GetMapping("/{projectId}/details-client")
+    public List<DetailsForEmployeeResult> getDetailsProjectClient(
+            DetailsForEmployeeRecord detailsForClientRq) {
+        return projectService.getProyectClientById(detailsForClientRq);
+    }
 
-  @GetMapping("/{projectId}/details")
-  public ResponseEntity<ProjectDetailsResult> getDetailsProjectClient(
-      ProjectDetailsRecord projectDetailsRecord) {
-    return ResponseEntity.ok(projectService.getProjectDetailsById(projectDetailsRecord));
-  }
+    @GetMapping("/{projectId}/details")
+    public ResponseEntity<ProjectDetailsResult> getDetailsProjectClient(
+            ProjectDetailsRecord projectDetailsRecord) {
+        return ResponseEntity.ok(createProjectUseCase.execute(projectDetailsRecord));
+    }
 
-  @PostMapping("/new")
-  public ResponseEntity<CreateProjectResult> createNewProject(@RequestBody CreateProjectRecord createProject) {
-    return ResponseEntity.ok(projectService.createNewProject(createProject));
-  }
+    @GetMapping("/status/{projectId}")
+    public ResponseEntity<StatusProjectResult> getStatusName(StatusProjectRecord statusProjectRecord) {
+        return ResponseEntity.ok(projectService.retrieveStatusById(statusProjectRecord));
+    }
+
+    @PostMapping("/status")
+    public ResponseEntity<Boolean> changeStatusProject(@RequestBody ChangeStatusProjectRecord changeStatusProjectRecord) {
+        changeStatusProjectUseCase.execute(changeStatusProjectRecord);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateProjectResult> createNewProject(@RequestBody CreateProjectRecord createProject) {
+        return ResponseEntity.ok(projectService.createNewProject(createProject));
+    }
 }
