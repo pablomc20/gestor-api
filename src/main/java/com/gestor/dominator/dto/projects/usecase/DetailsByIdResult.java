@@ -1,4 +1,4 @@
-package com.gestor.dominator.dto.projects;
+package com.gestor.dominator.dto.projects.usecase;
 
 import lombok.Builder;
 
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Builder
-public record DetailsForEmployeeResult(
+public record DetailsByIdResult(
         String title,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,

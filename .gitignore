@@ -22,6 +22,7 @@ target/
 *.ipr
 
 ### NetBeans ###
+/starter-simple/
 /nbproject/private/
 /nbbuild/
 /dist/

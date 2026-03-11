@@ -3,6 +3,8 @@ package com.gestor.dominator.dto.projects;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
@@ -17,7 +19,8 @@ public record CreateProjectRecord(
         UUID client,
         UUID employee,
 
-        ContractPayload contract,
+        @Valid
+        @NotNull ContractPayload contract,
         PaymentPayload[] payments,
 
         UUID[] colors,

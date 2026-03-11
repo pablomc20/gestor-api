@@ -2,15 +2,15 @@ package com.gestor.dominator.mapper;
 
 import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.ProjectPayload;
 import com.gestor.dominator.dto.projects.StatusProjectResult;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
-import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
-import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 
@@ -28,7 +28,7 @@ public interface ProjectMapper {
     @Mapping(target = "idProject", source = "project_id")
     CreateProjectResult toResult(CreateProjectRs result);
 
-    DetailsForEmployeeRq toDetailsRq(DetailsForEmployeeRecord detailsForEmployeeRecord);
+    DetailsByIdRq toDetailsRq(DetailsByIdRecord detailsForEmployeeRecord);
 
     @Mapping(target = "startDate", source = "started")
     @Mapping(target = "estimatedCompletionDate", source = "estimated")
@@ -41,9 +41,9 @@ public interface ProjectMapper {
     @Mapping(target = "currentPayment", ignore = true)
     @Mapping(target = "phoneEmployee", ignore = true)
     @Mapping(target = "requestId", ignore = true)
-    DetailsForEmployeeResult toDetailsRs(DetailsForClientRs detailsForClientRs);
+    DetailsByIdResult toDetailsRs(DetailsByIdRs detailsForClientRs);
 
-    List<DetailsForEmployeeResult> toDetailsRs(List<DetailsForClientRs> detailsForEmployeeRs);
+    List<DetailsByIdResult> toDetailsRs(List<DetailsByIdRs> detailsForEmployeeRs);
 
     ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
 

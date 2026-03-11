@@ -6,13 +6,13 @@ import java.util.UUID;
 import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
-import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
-import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 
 public interface ProjectRepository {
-    List<DetailsForClientRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq);
+    List<DetailsByIdRs> getProyectClientById(DetailsByIdRq detailsForClientRq);
 
     CreateProjectRs createProject(CreateProjectRq createProjectRecord);
 

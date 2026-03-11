@@ -1,6 +1,8 @@
 
 package com.gestor.dominator.service.image;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gestor.dominator.dto.image.ImageCreateResult;
@@ -11,7 +13,7 @@ public interface ImageService {
 
     ImageResult getImageById(String id);
 
-    ImageCreateResult uploadImage(MultipartFile[] file);
+    ImageCreateResult uploadImage(List<MultipartFile> file);
 
     void deleteImage(String id);
 

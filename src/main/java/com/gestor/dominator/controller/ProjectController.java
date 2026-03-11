@@ -2,18 +2,20 @@ package com.gestor.dominator.controller;
 
 import com.gestor.dominator.business.project.ChangeStatusProjectUseCase;
 import com.gestor.dominator.business.project.RetrieveProjectDetailsUseCase;
-import com.gestor.dominator.dto.projects.ChangeStatusProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.dto.projects.ProjectDetailsResult;
 import com.gestor.dominator.dto.projects.StatusProjectRecord;
 import com.gestor.dominator.dto.projects.StatusProjectResult;
+import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
 import com.gestor.dominator.service.projects.ProjectService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -33,9 +35,9 @@ public class ProjectController {
     private final ChangeStatusProjectUseCase changeStatusProjectUseCase;
 
     @GetMapping("/{projectId}/details-client")
-    public List<DetailsForEmployeeResult> getDetailsProjectClient(
-            DetailsForEmployeeRecord detailsForClientRq) {
-        return projectService.getProyectClientById(detailsForClientRq);
+    public List<DetailsByIdResult> getDetailsProjectClient(
+            DetailsByIdRecord detailsForClientRq) {
+        return projectService.getProyectEmployeeById(detailsForClientRq);
     }
 
     @GetMapping("/{projectId}/details")
@@ -56,7 +58,8 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateProjectResult> createNewProject(@RequestBody CreateProjectRecord createProject) {
+    @Validated
+    public ResponseEntity<CreateProjectResult> createNewProject(@Valid @RequestBody CreateProjectRecord createProject) {
         return ResponseEntity.ok(projectService.createNewProject(createProject));
     }
 }

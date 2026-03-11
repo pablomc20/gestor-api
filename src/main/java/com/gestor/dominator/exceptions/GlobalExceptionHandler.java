@@ -4,6 +4,7 @@ import com.gestor.dominator.dto.ErrorResponse;
 import com.gestor.dominator.exceptions.custom.BaseCustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -196,6 +197,15 @@ public class GlobalExceptionHandler {
                 "Clave duplicada",
                 HttpStatus.CONFLICT.value());
 
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                "DATA_INTEGRITY_ERROR",
+                "Error da validacion, por favor revisar los datos ingresados",
+                HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 

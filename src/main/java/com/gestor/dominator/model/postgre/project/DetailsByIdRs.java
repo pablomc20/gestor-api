@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record DetailsForClientRs(
+public record DetailsByIdRs(
         String title,
         LocalDate started,
         LocalDate estimated,

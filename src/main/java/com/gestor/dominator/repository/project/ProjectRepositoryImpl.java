@@ -15,8 +15,8 @@ import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.DbResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
-import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
-import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.model.postgre.project.ProjectPayloadRs;
@@ -53,7 +53,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public List<DetailsForClientRs> getProyectClientById(DetailsForEmployeeRq detailsForClientRq) {
+    public List<DetailsByIdRs> getProyectClientById(DetailsByIdRq detailsForClientRq) {
         String sql = "SELECT fn_read_client_projects(?)";
 
         UUID employeeId = detailsForClientRq.projectId();
@@ -63,9 +63,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 String.class,
                 employeeId);
 
-        DbResult<List<DetailsForClientRs>> detailsListRs = objectManipulationUtil.fromJson(
+        DbResult<List<DetailsByIdRs>> detailsListRs = objectManipulationUtil.fromJson(
                 jsonResult,
-                new TypeReference<DbResult<List<DetailsForClientRs>>>() {
+                new TypeReference<DbResult<List<DetailsByIdRs>>>() {
                 });
 
         if (!detailsListRs.isOk()) {
@@ -150,8 +150,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 rs.getString("colors"),
                 rs.getString("materials"),
                 rs.getString("additionals"),
-                rs.getDate("start_date").toLocalDate() != null ? rs.getDate("start_date").toLocalDate() : null,
-                rs.getDate("end_date").toLocalDate() != null ? rs.getDate("end_date").toLocalDate() : null);
+                rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
+                rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null);
     }
 
 }

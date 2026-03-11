@@ -3,11 +3,11 @@ package com.gestor.dominator.business;
 import com.gestor.dominator.dto.projects.ContractPayload;
 import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeRecord;
-import com.gestor.dominator.dto.projects.DetailsForEmployeeResult;
 import com.gestor.dominator.dto.projects.PaymentPayload;
 import com.gestor.dominator.dto.projects.StatusProjectRecord;
 import com.gestor.dominator.dto.projects.StatusProjectResult;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
+import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.ContractMapper;
 import com.gestor.dominator.mapper.PaymentMapper;
@@ -15,12 +15,15 @@ import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.contract.ContractRepository;
 import com.gestor.dominator.model.postgre.contract.CreateContractRq;
 import com.gestor.dominator.model.postgre.contract.CreateContractRs;
+import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
+import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRs;
+import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
-import com.gestor.dominator.model.postgre.project.DetailsForClientRs;
-import com.gestor.dominator.model.postgre.project.DetailsForEmployeeRq;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
+import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.repository.payment.PaymentRepository;
 import com.gestor.dominator.repository.project.ProjectRepository;
 import com.gestor.dominator.service.projects.ProjectService;
@@ -47,10 +50,10 @@ public class ProjectBusiness implements ProjectService {
     private final ContractMapper contractMapper;
 
     @Override
-    public List<DetailsForEmployeeResult> getProyectClientById(DetailsForEmployeeRecord detailsForClientRecord) {
-        DetailsForEmployeeRq detailsForClientRq = projectMapper.toDetailsRq(detailsForClientRecord);
+    public List<DetailsByIdResult> getProyectEmployeeById(DetailsByIdRecord detailsForClientRecord) {
+        DetailsByIdRq detailsForClientRq = projectMapper.toDetailsRq(detailsForClientRecord);
 
-        List<DetailsForClientRs> detailsForClientRs = projectRepository.getProyectClientById(detailsForClientRq);
+        List<DetailsByIdRs> detailsForClientRs = projectRepository.getProyectClientById(detailsForClientRq);
 
         return projectMapper.toDetailsRs(detailsForClientRs);
     }

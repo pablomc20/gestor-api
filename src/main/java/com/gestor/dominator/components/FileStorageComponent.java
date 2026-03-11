@@ -3,7 +3,7 @@ package com.gestor.dominator.components;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gestor.dominator.client.impl.MinioStorageImpl;
+import com.gestor.dominator.client.MinioStorageClient;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
 import com.gestor.dominator.model.client.minio.ImageRenderRs;
@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileStorageComponent {
 
-    private final MinioStorageImpl minioStorageService;
+    private final MinioStorageClient minioStorageService;
 
     private final ThumbnailsConverter thumbnailsConverter;
 
