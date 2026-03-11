@@ -1,4 +1,4 @@
-package com.gestor.dominator.service.projects;
+package com.gestor.dominator.service.payment;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,6 +1,7 @@
 package com.gestor.dominator.controller;
 
 import com.gestor.dominator.business.project.ChangeStatusProjectUseCase;
+import com.gestor.dominator.business.project.CreateProjectUseCase;
 import com.gestor.dominator.business.project.RetrieveProjectDetailsUseCase;
 import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
@@ -31,7 +32,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final RetrieveProjectDetailsUseCase createProjectUseCase;
+    private final RetrieveProjectDetailsUseCase retrieveProjectDetailsUseCase;
+    private final CreateProjectUseCase createProjectUseCase;
     private final ChangeStatusProjectUseCase changeStatusProjectUseCase;
 
     @GetMapping("/{projectId}/details-client")
@@ -43,7 +45,7 @@ public class ProjectController {
     @GetMapping("/{projectId}/details")
     public ResponseEntity<ProjectDetailsResult> getDetailsProjectClient(
             ProjectDetailsRecord projectDetailsRecord) {
-        return ResponseEntity.ok(createProjectUseCase.execute(projectDetailsRecord));
+        return ResponseEntity.ok(retrieveProjectDetailsUseCase.execute(projectDetailsRecord));
     }
 
     @GetMapping("/status/{projectId}")
@@ -60,6 +62,6 @@ public class ProjectController {
     @PostMapping
     @Validated
     public ResponseEntity<CreateProjectResult> createNewProject(@Valid @RequestBody CreateProjectRecord createProject) {
-        return ResponseEntity.ok(projectService.createNewProject(createProject));
+        return ResponseEntity.ok(createProjectUseCase.execute(createProject));
     }
 }

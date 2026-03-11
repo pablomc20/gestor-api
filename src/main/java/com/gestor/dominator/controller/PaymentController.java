@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gestor.dominator.dto.payment.CreatePaymentRecord;
 import com.gestor.dominator.dto.payment.CreatePaymentResult;
 import com.gestor.dominator.dto.payment.ReadPaymentResult;
-import com.gestor.dominator.service.projects.PaymentService;
+import com.gestor.dominator.service.payment.PaymentService;
 
 import lombok.RequiredArgsConstructor;
 

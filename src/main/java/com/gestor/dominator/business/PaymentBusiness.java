@@ -14,7 +14,7 @@ import com.gestor.dominator.mapper.PaymentMapper;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
 import com.gestor.dominator.repository.payment.PaymentRepository;
-import com.gestor.dominator.service.projects.PaymentService;
+import com.gestor.dominator.service.payment.PaymentService;
 
 import lombok.RequiredArgsConstructor;
 

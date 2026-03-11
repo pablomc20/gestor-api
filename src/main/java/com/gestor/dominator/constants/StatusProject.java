@@ -10,7 +10,7 @@ public enum StatusProject {
     ASSEMBLED("ASSEMBLED", "FINISHED", "El proyecto ha sido ensamblado"),
     FINISHED("FINISHED", "DELIVERED", "El proyecto ha sido entregado / instalado"),;
 
-    private final String value;
+    public final String value;
     private final String nextStatus;
     private final String statusMessage;
 

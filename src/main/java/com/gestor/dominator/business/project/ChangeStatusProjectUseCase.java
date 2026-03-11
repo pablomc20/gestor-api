@@ -10,8 +10,8 @@ import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.notification.NotificationSendRq;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
-import com.gestor.dominator.repository.notification.NotifiactionRepository;
-import com.gestor.dominator.repository.project.ProjectRepository;
+import com.gestor.dominator.service.notification.NotificationDbService;
+import com.gestor.dominator.service.projects.ProjectDbService;
 import com.gestor.dominator.service.projects.ProjectImageDbService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,31 +20,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChangeStatusProjectUseCase {
 
-  private final ProjectImageDbService projectDbService;
-  private final ProjectRepository projectRepository;
-  private final NotifiactionRepository notificationRepository;
+  private final String VISIBILITY = "PRIVATE";
+  private final ProjectImageDbService projectImageDbService;
+  private final ProjectDbService projectDbService;
+  private final NotificationDbService notificationDbService;
 
   @Transactional
   public void execute(ChangeStatusProjectRecord record) {
     // Retrieve current status
-    UUID projectId = UUID.fromString(record.projectId());
-    String currentStatus = retierveCurrentStatus(projectId);
+    String projectId = record.projectId();
+    String currentStatus = retierveCurrentStatus(record.projectId());
 
     // Relacionar imagenes
-    createRelation(record.imagesIds(), record.projectId());
+    String typeImage = getTypeImage(currentStatus);
+    if (!typeImage.isEmpty()) {
+      createRelation(record.imagesIds(), record.projectId());
+    }
 
     // Update to next status
     String nextStatus = StatusProject.retrieveNextStatusProject(currentStatus);
-    updateStatusProject(projectId, nextStatus);
-    
+    projectDbService.updateStatus(projectId, nextStatus);
+
     // Send notification if status was updated
-    UUID userId = UUID.fromString(record.userId());
+    String userId = record.userId();
     String message = StatusProject.getStatusMessage(currentStatus);
     sendNotification(message, projectId, userId);
   }
 
-  private String retierveCurrentStatus(UUID projectId) {
-    String currentStatus = projectRepository.getStatusById(projectId);
+  private String retierveCurrentStatus(String projectId) {
+    String currentStatus = projectDbService.getStatusById(projectId);
     if (currentStatus == null) {
       throw new PostgreDbException("Proyecto no encontrado");
     }
@@ -53,39 +57,32 @@ public class ChangeStatusProjectUseCase {
 
   public void createRelation(String[] idsImages, String idProject) {
 
-    String type = "INITIAL";
-    String visibility = "PRIVATE";
-    
     for (String idImage : idsImages) {
       CreateProjectImageRq createProjectImageRq = CreateProjectImageRq.builder()
-              .projectId(UUID.fromString(idProject))
-              .imageId(UUID.fromString(idImage))
-              .type(type)
-              .visibility(visibility)
-              .build();
-      projectDbService.save(createProjectImageRq);
-    }
-}
-
-  private void updateStatusProject(UUID projectId, String nextStatus) {
-    boolean isUpdated = projectRepository.updateStatusProject(projectId, nextStatus);
-    if (!isUpdated) {
-      throw new PostgreDbException("Falló al cambiar el estatus");
+          .projectId(UUID.fromString(idProject))
+          .imageId(UUID.fromString(idImage))
+          .type(VISIBILITY)
+          .visibility(VISIBILITY)
+          .build();
+      projectImageDbService.save(createProjectImageRq);
     }
   }
 
-  private void sendNotification(String message, UUID projectId, UUID userId) {
+  private void sendNotification(String message, String projectId, String userId) {
     NotificationSendRq notification = NotificationSendRq.builder()
         .type("NEW_STATUS")
         .message(message)
-        .projectId(projectId)
-        .userId(userId)
+        .projectId(UUID.fromString(projectId))
+        .userId(UUID.fromString(userId))
         .build();
+    notificationDbService.create(notification);
+  }
 
-    boolean isNotified = notificationRepository.createNotification(notification);
-    if (!isNotified) {
-      throw new PostgreDbException("Falló al enviar la notificación");
-    }
+  private String getTypeImage(String statusProject) {
+    return StatusProject.ASSEMBLED.value == statusProject
+        ? "PROGRESS"
+        : StatusProject.FINISHED.value == statusProject 
+          ? "FINAL" : "";
   }
 
 }
