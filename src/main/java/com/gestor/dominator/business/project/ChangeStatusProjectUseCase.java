@@ -7,13 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
-import com.gestor.dominator.dto.projects.usecase.UploadImageRecord;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.notification.NotificationSendRq;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
 import com.gestor.dominator.repository.notification.NotifiactionRepository;
 import com.gestor.dominator.repository.project.ProjectRepository;
-import com.gestor.dominator.service.projects.ProjectDbService;
+import com.gestor.dominator.service.projects.ProjectImageDbService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChangeStatusProjectUseCase {
 
-  private final ProjectDbService projectDbService;
+  private final ProjectImageDbService projectDbService;
   private final ProjectRepository projectRepository;
   private final NotifiactionRepository notificationRepository;
 

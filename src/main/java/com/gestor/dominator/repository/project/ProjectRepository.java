@@ -3,7 +3,6 @@ package com.gestor.dominator.repository.project;
 import java.util.List;
 import java.util.UUID;
 
-import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRs;

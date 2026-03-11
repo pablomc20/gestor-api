@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.gestor.dominator.dto.materials.MaterialPayload;
-import com.gestor.dominator.dto.materials.MaterialResult;
 import com.gestor.dominator.mapper.MaterialMapper;
 import com.gestor.dominator.repository.material.MaterialRepository;
 

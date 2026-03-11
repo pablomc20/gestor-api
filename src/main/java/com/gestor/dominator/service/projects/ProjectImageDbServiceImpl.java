@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ProjectDbServiceImpl implements ProjectDbService {
+public class ProjectImageDbServiceImpl implements ProjectImageDbService {
 
     private final ProjectImageRepository projectImageRepository;
 

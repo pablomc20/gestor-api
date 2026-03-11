@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
-import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.DbResult;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
