@@ -106,9 +106,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public boolean updateStatusProject(UUID idProject, String status) {
-        
-        
+    public boolean updateStatus(UUID idProject, String status) {
         return jdbcTemplate.update(
                 UPDATE_STATUS_PROJECT,
                 status,

@@ -11,22 +11,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NotificationRepositoryImpl implements NotifiactionRepository {
 
-  private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-  @Override
-  public boolean createNotification(NotificationSendRq notificationSendRq) {
-    return jdbcTemplate.update(
-            NotificationQueryBD.GET_NOTIFICATIONS_BY_USER_ID,
-            mapCreateNotificationParams(notificationSendRq)) > 0;
-  }
+    @Override
+    public boolean create(NotificationSendRq notificationSendRq) {
+        return jdbcTemplate.update(
+                NotificationQueryBD.GET_NOTIFICATIONS_BY_USER_ID,
+                mapCreateNotificationParams(notificationSendRq)) > 0;
+    }
 
-  private Object[] mapCreateNotificationParams(NotificationSendRq r) {
-    return new Object[] {
-      r.type(),
-      r.message(),
-      r.projectId(),
-      r.userId()
-    };
-  }
+    private Object[] mapCreateNotificationParams(NotificationSendRq r) {
+        return new Object[] {
+                r.type(),
+                r.message(),
+                r.projectId(),
+                r.userId()
+        };
+    }
 
 }

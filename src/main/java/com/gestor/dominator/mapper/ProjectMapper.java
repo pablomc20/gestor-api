@@ -7,12 +7,14 @@ import com.gestor.dominator.dto.projects.StatusProjectResult;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
+import com.gestor.dominator.model.postgre.notification.NotificationSendRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
+import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
 
 import java.util.List;
 
@@ -64,5 +66,17 @@ public interface ProjectMapper {
     @Mapping(target = "currentStatus", source = "currentStatus")
     @Mapping(target = "nextStatus", source = "nextStatus")
     StatusProjectResult toStatusProjectResult(String currentStatus, String nextStatus);
-    
+
+    @Mapping(target = "projectId", source = "idProject")
+    @Mapping(target = "imageId", source = "idImage")
+    @Mapping(target = "type", source = "typeImage")
+    @Mapping(target = "visibility", source = "visibility")
+    CreateProjectImageRq projectImagesToRq(String idImage, String idProject, String typeImage, String visibility);
+
+    @Mapping(target = "projectId", source = "projectId")
+    @Mapping(target = "userId", source = "userId")
+    @Mapping(target = "type", source = "typeImage")
+    @Mapping(target = "message", source = "message")
+    NotificationSendRq notificationRq(String message, String projectId, String userId, String typeImage);
+
 }

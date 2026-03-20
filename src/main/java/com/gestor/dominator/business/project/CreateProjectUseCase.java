@@ -18,9 +18,9 @@ import com.gestor.dominator.model.postgre.contract.CreateContractRs;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRq;
 import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
 import com.gestor.dominator.repository.payment.PaymentRepository;
+import com.gestor.dominator.repository.project.ProjectRepository;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
-import com.gestor.dominator.service.projects.ProjectDbService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CreateProjectUseCase {
 
-    private final ProjectDbService projectDbService;
+    private final ProjectRepository projectRepository;
     private final ContractRepository contractRepository;
     private final PaymentRepository paymentRepository;
     private final ProjectMapper projectMapper;
@@ -42,7 +42,7 @@ public class CreateProjectUseCase {
         CreateProjectRq createProjectRecord = projectMapper.toCreateRq(createProject);
 
         // Crear proyecto en la BD
-        CreateProjectRs createProjectResult = projectDbService.createProject(createProjectRecord);
+        CreateProjectRs createProjectResult = projectRepository.createProject(createProjectRecord);
 
         String idProject = createProjectResult.project_id();
 

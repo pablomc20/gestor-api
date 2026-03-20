@@ -19,5 +19,5 @@ public interface ProjectRepository {
 
     String getStatusById(UUID idProject);
 
-    boolean updateStatusProject(UUID idProject, String status);
+    boolean updateStatus(UUID idProject, String status);
 }
