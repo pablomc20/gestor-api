@@ -59,6 +59,7 @@ public interface ProjectMapper {
     @Mapping(target = "additionals", source = "rs.project.additionals")
     @Mapping(target = "startDate", source = "rs.project.start_date")
     @Mapping(target = "endDate", source = "rs.project.end_date")
+    @Mapping(target = "realEndDate", source = "rs.project.real_end_date")
     @Mapping(target = "projectId", source = "projectId")
     @Mapping(target = "status", source = "rs.project.status")
     ProjectPayload toDetailsProjectRs(ProjectDetailsRs rs, String projectId);

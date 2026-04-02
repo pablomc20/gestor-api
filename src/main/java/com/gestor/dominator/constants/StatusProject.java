@@ -8,7 +8,8 @@ public enum StatusProject {
     ACQUIRED("ACQUIRED", "CUT", "Se estan realizando todos los cortes de madera", ""),
     CUT("CUT", "ASSEMBLED", "El proyecto está en proceso de ensamblaje", ""),
     ASSEMBLED("ASSEMBLED", "FINISHED", "El proyecto ha sido ensamblado", "PROGRESS"),
-    FINISHED("FINISHED", "DELIVERED", "El proyecto ha sido entregado / instalado", "FINAL"),;
+    FINISHED("FINISHED", "DELIVERED", "El mueble esta listo para ser entregado / instalado", "FINAL"),
+    DELIVERED("DELIVERED", "", "Tu mueble ha sido entregado / instalado", ""),;
 
     public final String value;
     public final String nextStatus;

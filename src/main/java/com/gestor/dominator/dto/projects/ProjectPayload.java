@@ -16,6 +16,7 @@ public record ProjectPayload(
         String colors,
         String materials,
         String additionals,
+        LocalDate realEndDate,
         LocalDate startDate,
         LocalDate endDate) {
 

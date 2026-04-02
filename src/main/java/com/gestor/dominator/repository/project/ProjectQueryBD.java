@@ -7,7 +7,7 @@ public final class ProjectQueryBD {
 
     public static final String GET_PROJECT_DETAILS_BY_ID = """
             SELECT p.user_client, p.user_employee, p.title, p.size, p.style, p.additionals, ca.name as category, p.status,
-                p.start_date, p.estimated_completion_date as end_date,
+                p.start_date, p.estimated_completion_date as end_date, p.actual_completion_date as real_end_date,
                 (select STRING_AGG(name, ', ' ORDER BY name)
                     from materials m inner join project_materials pm on pm.material_id = m.material_id
                     where pm.project_id = p.project_id) as materials,
@@ -30,9 +30,14 @@ public final class ProjectQueryBD {
                 SELECT status FROM projects WHERE project_id = ?;
             """;
 
-    public static final String UPDATE_STATUS_PROJECT = 
-                """
-                UPDATE projects SET status = ?::project_status, updated_at = CURRENT_TIMESTAMP 
+    public static final String UPDATE_STATUS_PROJECT = """
+                UPDATE projects SET status = ?::project_status, updated_at = CURRENT_TIMESTAMP
+                WHERE project_id = ?;
+            """;
+
+    public static final String UPDATE_COMPLETE_STATUS_PROJECT = """
+                UPDATE projects 
+                SET updated_at = CURRENT_TIMESTAMP, actual_completion_date = CURRENT_TIMESTAMP
                 WHERE project_id = ?;
             """;
 }

@@ -107,12 +107,22 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public boolean updateStatus(UUID idProject, String status) {
+
+        if (status == null || status.isEmpty()) {
+            return updateCompleteStatus(idProject);
+        }
+
         return jdbcTemplate.update(
                 UPDATE_STATUS_PROJECT,
                 status,
                 idProject) > 0;
     }
 
+    public boolean updateCompleteStatus(UUID idProject) {
+        return jdbcTemplate.update(
+                UPDATE_COMPLETE_STATUS_PROJECT,
+                idProject) > 0;
+    }
     // ********** FUNCIONES AUXILIARES **********
 
     private Object[] mapCreateProjectParams(CreateProjectRq r) {
@@ -147,6 +157,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 rs.getString("colors"),
                 rs.getString("materials"),
                 rs.getString("additionals"),
+                rs.getDate("real_end_date") != null ? rs.getDate("real_end_date").toLocalDate() : null,
                 rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
                 rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null);
     }

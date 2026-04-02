@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gestor.dominator.constants.StatusProject;
 import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
+import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
 import com.gestor.dominator.repository.notification.NotifiactionRepository;
@@ -35,6 +36,9 @@ public class ChangeStatusProjectUseCase {
 
         // Relacionar imagenes
         if (!currentStatus.imageType.isEmpty()) {
+            if (record.imagesIds() == null || record.imagesIds().length == 0) {
+                throw new DataValidationException("Images IDs are required for status: " + currentStatus.value);
+            }
             saveProjectImages(record.imagesIds(), record.projectId(), currentStatus.imageType);
         }
 
@@ -53,7 +57,7 @@ public class ChangeStatusProjectUseCase {
     }
 
     private void sendNotification(String message, String projectId, String userId) {
-        notificationRepository.create(projectMapper.notificationRq(NEW_STATUS, message, projectId, userId));
+        notificationRepository.create(projectMapper.notificationRq(message, projectId, userId, NEW_STATUS));
     }
 
 }
