@@ -1,10 +1,6 @@
-version: '3.8'
-
 services:
   java-app:
     build: .
-    ports:
-      - "${SERVER_PORT_BACK:-8080}:${SERVER_PORT_BACK:-8080}"
     volumes:
       - /app/uploads:/app/uploads
     env_file:
