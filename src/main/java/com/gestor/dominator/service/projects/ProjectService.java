@@ -2,6 +2,8 @@ package com.gestor.dominator.service.projects;
 
 import java.util.List;
 
+import com.gestor.dominator.dto.projectimage.ProjectImagesRecord;
+import com.gestor.dominator.dto.projectimage.ProjectImagesResult;
 import com.gestor.dominator.dto.projects.StatusProjectRecord;
 import com.gestor.dominator.dto.projects.StatusProjectResult;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;

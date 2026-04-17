@@ -19,6 +19,7 @@ import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.model.postgre.project.ProjectPayloadRs;
+import com.gestor.dominator.model.postgre.projectimage.ProjectImagesRs;
 import com.fasterxml.jackson.core.type.TypeReference;
 import static com.gestor.dominator.repository.project.ProjectQueryBD.*;
 
@@ -161,5 +162,4 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
                 rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null);
     }
-
 }
