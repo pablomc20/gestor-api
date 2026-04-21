@@ -9,7 +9,6 @@
 - **Gestión de Dependencias:** Maven
 - **Bases de Datos:** 
   - **PostgreSQL:** Almacenamiento relacional principal (vía Spring Data JPA).
-  - **MongoDB:** Almacenamiento de documentos (configurado en `application-dev.properties`).
 - **Seguridad:** Spring Security con **JWT** (JSON Web Tokens).
 - **Almacenamiento de Archivos:** **Minio** (Compatible con S3).
 - **Documentación:** Springdoc OpenAPI / **Swagger**.
@@ -55,7 +54,6 @@ El proyecto sigue una arquitectura por capas bien definida:
 La aplicación requiere las siguientes variables de entorno (pueden definirse en un archivo `.env` o en el sistema):
 - `POSTGRE_SQL_URI`: URL de conexión a PostgreSQL.
 - `POSTGRE_SQL_USER` / `POSTGRE_SQL_PASSWORD`: Credenciales de la BD.
-- `MONGODB_URI`: URL de conexión a MongoDB.
 - `JWT_SECRET`: Clave secreta para la firma de tokens JWT.
 - `MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`: Configuración del bucket de Minio.
 - `CLIENT_DIPOMEX_URL` / `CLIENT_DIPOMEX_TOKEN`: Credenciales para el cliente Dipomex.

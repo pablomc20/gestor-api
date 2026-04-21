@@ -20,6 +20,13 @@ public interface CategoryMapper {
     @Mapping(target = "slug", source = "categoryRs.slug")
     CategoryResult toCategoryResult(CategoryRs categoryRs);
 
+    @Mapping(target = "slug", expression = "java(categoryRecord.name()"
+            + ".toLowerCase()"
+            + ".trim()"
+            + ".replaceAll(\"[^a-z0-9\\s-]\", \"\")"
+            + ".replaceAll(\"\\s+\", \"-\")"
+            + ".replaceAll(\"-+\", \"-\")"
+            + ")")
     CategoryRq toRecordRq(CategoryRecord categoryRecord);
 
 }
