@@ -92,7 +92,9 @@ public class MinioStorageImpl implements MinioStorageClient {
 
             return new ImageRenderRs(outputStream.toByteArray(), contentType);
         } catch (Exception e) {
-            throw new FileSystemException("Recurso no encontrado", HttpStatus.NOT_FOUND);
+            System.err.println("Error al descargar de Minio: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileSystemException("Recurso no encontrado: " + objectName, HttpStatus.NOT_FOUND);
         }
     }
 
