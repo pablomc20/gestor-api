@@ -3,8 +3,14 @@ version: '3.8'
 services:
   java-app:
     build: .
-    volumes:
-      - /app/uploads:/app/uploads
+    container_name: dominator-api
+    ports:
+      - "8082:8082"
     env_file:
       - .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT_BACK=8082
+    volumes:
+      - ./uploads:/app/uploads
     restart: unless-stopped
