@@ -21,8 +21,9 @@ public class MinioConfig {
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
-                .endpoint(url)
-                .credentials(accessKey, secretKey)
+                .endpoint(url.trim()) // Quitamos posibles espacios en blanco
+                .credentials(accessKey.trim(), secretKey.trim())
+                .region("us-east-1") // Forzamos la región estándar de Minio
                 .build();
     }
 }
