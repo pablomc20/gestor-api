@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  java-app:
+  gestor-api:
     build: .
     container_name: gestor-api
     ports:
