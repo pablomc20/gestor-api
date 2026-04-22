@@ -15,7 +15,7 @@ public class FileUtils {
         if (contentType == null) {
             return "JPEG"; // default
         }
-        if (contentType.equals("image/jpeg")) {
+        if (contentType.equals("image/jpeg") || contentType.equals("image/jpg")) {
             return "JPEG";
         } else if (contentType.equals("image/png")) {
             return "PNG";
@@ -30,6 +30,7 @@ public class FileUtils {
 
     public static boolean isValidImageType(String contentType) {
         return contentType != null && (contentType.equals("image/jpeg") ||
+                contentType.equals("image/jpg") ||
                 contentType.equals("image/png") ||
                 contentType.equals("image/gif") ||
                 contentType.equals("image/webp"));

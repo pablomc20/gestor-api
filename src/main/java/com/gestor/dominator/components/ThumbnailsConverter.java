@@ -18,109 +18,60 @@ import net.coobird.thumbnailator.Thumbnails;
 @Component
 public class ThumbnailsConverter {
 
-    private MultipartFile file;
-    
-    private BufferedImage original;
-    
-    private String format;
-
-    private String extension;
-
-    private String filename;
-
-    private String identifier;
-
-    public void registerFile(MultipartFile file) {
-        this.file = file;
-    }
-
-    public void clear() {
-        this.file = null;
-        this.original = null;
-        this.format = null;
-        this.extension = null;
-        this.filename = null;
-        this.identifier = null;
-    }
-
-    private BufferedImage getOriginal() {
-        if (this.original == null) {
-            try {
-                this.original = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-            } catch (IOException e) {
-                throw new FileSystemException("No se pudo leer la imagen", e);
-            }
+    public BufferedImage getOriginal(MultipartFile file) {
+        try {
+            return ImageIO.read(new ByteArrayInputStream(file.getBytes()));
+        } catch (IOException e) {
+            throw new FileSystemException("No se pudo leer la imagen", e);
         }
-        return this.original;
     }
 
-    private String getFormat() {
-        if (this.format == null) {
-            this.format = FileUtils.getFormatFromContentType(file.getContentType());
-        }
-        return this.format;
+    public String generateIdentifier() {
+        return String.valueOf(System.currentTimeMillis());
     }
 
-    private String getExtension() {
-        if (this.extension == null) {
-            this.extension = FileUtils.getFileExtension(file.getOriginalFilename());
-        }
-        return this.extension;
+    public String generateFilename(MultipartFile file, String identifier) {
+        return FileUtils.generateUniqueFilename(file.getOriginalFilename(), identifier);
     }
 
-    public String getFilename() {
-        if (this.filename == null) {
-            String identifier = getIdentifier();
-            this.filename = FileUtils.generateUniqueFilename(file.getOriginalFilename(), identifier);
-        }
-        return this.filename;
+    public String buildOrigObjectName(String identifier, String filename, String extension) {
+        return identifier + "/" + filename + "_orig" + extension;
     }
 
-    private String getIdentifier() {
-        if (this.identifier == null) {
-            this.identifier = String.valueOf(System.currentTimeMillis());
-        }
-        return this.identifier;
+    public String buildMedObjectName(String identifier, String filename, String extension) {
+        return identifier + "/" + filename + "_med" + extension;
     }
 
-    public String buildOrigObjectName() {
-        return getIdentifier() + "/" + getFilename() + "_orig" + getExtension();
+    public String buildThumbObjectName(String identifier, String filename, String extension) {
+        return identifier + "/" + filename + "_thumb" + extension;
     }
 
-    public String buildMedObjectName() {
-        return getIdentifier() + "/" + getFilename() + "_med" + getExtension();
-    }
-
-    public String buildThumbObjectName() {
-        return getIdentifier() + "/" + getFilename() + "_thumb" + getExtension();
-    }
-
-    public byte[] formatImageMed() {
+    public byte[] formatImageMed(BufferedImage original, String format) {
         // Versión mediana (ej. 1280px ancho máx)
         ByteArrayOutputStream medOutput = new ByteArrayOutputStream();
         try {
-            Thumbnails.of(getOriginal())
+            Thumbnails.of(original)
                     .size(1280, 1280)
                     .outputQuality(0.8)
-                    .outputFormat(getFormat())
+                    .outputFormat(format)
                     .toOutputStream(medOutput);
         } catch (IOException e) {
-            throw new FileSystemException("Error al formatear la imagen", e);
+            throw new FileSystemException("Error al formatear la imagen (mediana)", e);
         }
         return medOutput.toByteArray();
     }
 
-    public byte[] formatImageThumb() {
+    public byte[] formatImageThumb(BufferedImage original, String format) {
         // Miniatura (ej. 300px ancho máx)
         ByteArrayOutputStream thumbOutput = new ByteArrayOutputStream();
         try {
-            Thumbnails.of(getOriginal())
+            Thumbnails.of(original)
                     .size(300, 300)
                     .outputQuality(0.7)
-                    .outputFormat(getFormat())
+                    .outputFormat(format)
                     .toOutputStream(thumbOutput);
         } catch (IOException e) {
-            throw new FileSystemException("Error al formatear la imagen", e);
+            throw new FileSystemException("Error al formatear la imagen (miniatura)", e);
         }
         return thumbOutput.toByteArray();
     }

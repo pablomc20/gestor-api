@@ -1,5 +1,7 @@
 package com.gestor.dominator.components;
 
+import java.awt.image.BufferedImage;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,24 +32,26 @@ public class FileStorageComponent {
             throw new DataValidationException("Tipo de archivo no válido. Solo se permiten imágenes.");
         }
 
-        // Lee y registra el archivo en el conversor de miniaturas
-        thumbnailsConverter.registerFile(file);
+        String contentType = file.getContentType();
+        String format = FileUtils.getFormatFromContentType(contentType);
+        String extension = FileUtils.getFileExtension(file.getOriginalFilename());
+        
+        String identifier = thumbnailsConverter.generateIdentifier();
+        String filename = thumbnailsConverter.generateFilename(file, identifier);
+        BufferedImage original = thumbnailsConverter.getOriginal(file);
 
         // Subir original
-        String origObjectName = thumbnailsConverter.buildOrigObjectName();
+        String origObjectName = thumbnailsConverter.buildOrigObjectName(identifier, filename, extension);
         minioStorageService.uploadFile(file, origObjectName);
 
         // Subir mediana y miniatura
-        byte[] medBytes = thumbnailsConverter.formatImageMed();
-        String medObjectName = thumbnailsConverter.buildMedObjectName();
-        minioStorageService.uploadFile(medBytes, medObjectName, file.getContentType());
+        byte[] medBytes = thumbnailsConverter.formatImageMed(original, format);
+        String medObjectName = thumbnailsConverter.buildMedObjectName(identifier, filename, extension);
+        minioStorageService.uploadFile(medBytes, medObjectName, contentType);
 
-        byte[] thumbBytes = thumbnailsConverter.formatImageThumb();
-        String thumbObjectName = thumbnailsConverter.buildThumbObjectName();
-        minioStorageService.uploadFile(thumbBytes, thumbObjectName, file.getContentType());
-
-        String filename = thumbnailsConverter.getFilename();
-        thumbnailsConverter.clear(); // Limpiar el estado del conversor
+        byte[] thumbBytes = thumbnailsConverter.formatImageThumb(original, format);
+        String thumbObjectName = thumbnailsConverter.buildThumbObjectName(identifier, filename, extension);
+        minioStorageService.uploadFile(thumbBytes, thumbObjectName, contentType);
 
         return filename;
     }
