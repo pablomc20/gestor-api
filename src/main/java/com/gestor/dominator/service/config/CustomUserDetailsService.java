@@ -4,6 +4,7 @@ import com.gestor.dominator.exceptions.custom.AuthenticationException;
 import com.gestor.dominator.model.postgre.auth.User;
 import com.gestor.dominator.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @Cacheable(value = "users", key = "#username.toLowerCase().trim()")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmailWithDetail(username)
                 .orElseThrow(() -> AuthenticationException.userNotFound(username));

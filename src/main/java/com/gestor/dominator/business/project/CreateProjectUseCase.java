@@ -44,7 +44,7 @@ public class CreateProjectUseCase {
         // Crear proyecto en la BD
         CreateProjectRs createProjectResult = projectRepository.createProject(createProjectRecord);
 
-        String idProject = createProjectResult.project_id();
+        UUID idProject = createProjectResult.project_id();
 
         // FN - Crear contrato en la BD
         UUID idContract = createContract(createProject.contract(), idProject);
@@ -67,7 +67,7 @@ public class CreateProjectUseCase {
         }
     }
 
-    private UUID createContract(ContractPayload createContract, String idProject) {
+    private UUID createContract(ContractPayload createContract, UUID idProject) {
         CreateContractRq createContractRecord = contractMapper.toCreateContractRq(createContract, idProject);
 
         // Registrar contrato en la BD

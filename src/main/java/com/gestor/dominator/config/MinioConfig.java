@@ -20,10 +20,16 @@ public class MinioConfig {
 
     @Bean
     public MinioClient minioClient() {
+        // Log de seguridad para verificar longitudes y descartar truncamiento por caracteres como #
+        System.out.println("Configurando MinioClient:");
+        System.out.println("- Endpoint: " + url.trim());
+        System.out.println("- AccessKey length: " + (accessKey != null ? accessKey.trim().length() : 0));
+        System.out.println("- SecretKey length: " + (secretKey != null ? secretKey.trim().length() : 0));
+
         return MinioClient.builder()
-                .endpoint(url.trim()) // Quitamos posibles espacios en blanco
+                .endpoint(url.trim())
                 .credentials(accessKey.trim(), secretKey.trim())
-                .region("us-east-1") // Forzamos la región estándar de Minio
+                .region("us-east-1")
                 .build();
     }
 }

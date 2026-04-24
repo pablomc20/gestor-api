@@ -3,6 +3,7 @@ package com.gestor.dominator.repository.project;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,7 +20,6 @@ import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.model.postgre.project.ProjectPayloadRs;
-import com.gestor.dominator.model.postgre.projectimage.ProjectImagesRs;
 import com.fasterxml.jackson.core.type.TypeReference;
 import static com.gestor.dominator.repository.project.ProjectQueryBD.*;
 
@@ -34,22 +34,22 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public CreateProjectRs createProject(CreateProjectRq createProjectRq) {
-        String jsonResult = jdbcTemplate.queryForObject(
-                CREATE_PROJECT,
-                String.class,
-                mapCreateProjectParams(createProjectRq));
+        UUID projectId = Optional.ofNullable(
+                jdbcTemplate.queryForObject(
+                        CREATE_PROJECT,
+                        UUID.class,
+                        mapCreateProjectParams(createProjectRq)))
+                .orElseThrow(() -> new IllegalStateException("No se pudo crear el proyecto"));
 
-        DbResult<CreateProjectRs> result = objectManipulationUtil.fromJson(
-                jsonResult,
-                new TypeReference<>() {
-                });
+        createProjectImages(projectId, createProjectRq);
 
-        if (!result.isOk()) {
-            throw new PostgreDbException(
-                    result.error().code() + " - " + result.error().message());
-        }
+        createProjectColors(projectId, createProjectRq);
 
-        return result.data();
+        createProjectChapes(projectId, createProjectRq);
+
+        createProjectMaterials(projectId, createProjectRq);
+
+        return CreateProjectRs.builder().project_id(projectId).build();
     }
 
     @Override
@@ -124,24 +124,65 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 UPDATE_COMPLETE_STATUS_PROJECT,
                 idProject) > 0;
     }
+
     // ********** FUNCIONES AUXILIARES **********
+    private void createProjectImages(UUID projectId, CreateProjectRq rq) {
+        if (rq.images() != null) {
+            for (UUID imageId : rq.images()) {
+                jdbcTemplate.update(
+                        CREATE_PROJECT_IMAGES,
+                        imageId,
+                        projectId);
+            }
+        }
+    }
+
+    private void createProjectColors(UUID projectId, CreateProjectRq rq) {
+        if (rq.colors() != null) {
+            for (UUID colorId : rq.colors()) {
+                jdbcTemplate.update(
+                        CREATE_PROJECT_COLORS,
+                        colorId,
+                        projectId);
+            }
+        }
+    }
+
+    private void createProjectChapes(UUID projectId, CreateProjectRq rq) {
+        if (rq.chapes() != null) {
+            for (UUID chapeId : rq.chapes()) {
+                jdbcTemplate.update(
+                        CREATE_PROJECT_CHAPES,
+                        chapeId,
+                        projectId);
+            }
+        }
+    }
+
+    private void createProjectMaterials(UUID projectId, CreateProjectRq rq) {
+        if (rq.materials() != null) {
+            for (UUID materialId : rq.materials()) {
+                jdbcTemplate.update(
+                        CREATE_PROJECT_MATERIALS,
+                        projectId,
+                        materialId);
+            }
+        }
+    }
 
     private Object[] mapCreateProjectParams(CreateProjectRq r) {
         return new Object[] {
-                r.employee(),
-                r.client(),
                 r.title(),
                 r.size(),
                 r.style(),
                 r.additionalInfo(),
                 r.startDate(),
                 r.estimatedCompletionDate(),
+                r.actualCompletionDate(), // Parámetro faltante agregado
                 r.budget(),
                 r.category(),
-                r.colors(),
-                r.materials(),
-                r.images(),
-                r.chapes()
+                r.client(),
+                r.employee()
         };
     }
 

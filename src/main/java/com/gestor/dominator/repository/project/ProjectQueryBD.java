@@ -23,7 +23,32 @@ public final class ProjectQueryBD {
             """;
 
     public static final String CREATE_PROJECT = """
-                SELECT fn_create_new_project(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO projects (
+                    title, size, style, additionals, start_date, estimated_completion_date, actual_completion_date,
+                    budget, category_id, user_client, user_employee
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                RETURNING project_id;
+            """;
+
+    public static final String CREATE_PROJECT_MATERIALS = """
+                INSERT INTO project_materials (project_id, material_id)
+                VALUES (?, ?);
+            """;
+
+    public static final String CREATE_PROJECT_IMAGES = """
+                INSERT INTO project_images (project_id, image_id)
+                VALUES (?, ?);
+            """;
+
+    public static final String CREATE_PROJECT_COLORS = """
+                INSERT INTO project_colors (project_id, color_id)
+                VALUES (?, ?);
+            """;
+
+    public static final String CREATE_PROJECT_CHAPES = """
+                INSERT INTO project_chapes (project_id, chape_id)
+                VALUES (?, ?);
             """;
 
     public static final String GET_STATUS_BY_ID = """
@@ -40,4 +65,6 @@ public final class ProjectQueryBD {
                 SET updated_at = CURRENT_TIMESTAMP, actual_completion_date = CURRENT_TIMESTAMP
                 WHERE project_id = ?;
             """;
+
+    // public
 }

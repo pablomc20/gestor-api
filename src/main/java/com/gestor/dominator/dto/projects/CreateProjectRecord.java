@@ -15,6 +15,7 @@ public record CreateProjectRecord(
         String additionalInfo,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
+        LocalDate actualCompletionDate,
         UUID category,
         UUID client,
         UUID employee,

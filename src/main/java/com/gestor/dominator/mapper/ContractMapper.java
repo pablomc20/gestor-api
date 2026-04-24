@@ -17,7 +17,7 @@ public interface ContractMapper {
     @Mapping(target = "finalAmount", source = "contract.budget")
     @Mapping(target = "numberPayment", source = "contract.numberPayment")
     @Mapping(target = "description", source = "contract.description")
-    CreateContractRq toCreateContractRq(ContractPayload contract, String idProject);
+    CreateContractRq toCreateContractRq(ContractPayload contract, UUID idProject);
 
     @Named("toUUID")
     public static UUID toUUID(String id) {

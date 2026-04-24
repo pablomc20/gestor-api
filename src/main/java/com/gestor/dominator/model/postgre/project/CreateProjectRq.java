@@ -14,6 +14,7 @@ public record CreateProjectRq(
         String additionalInfo,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
+        LocalDate actualCompletionDate, // Parámetro faltante
         BigDecimal budget,
         UUID category,
         UUID client,
