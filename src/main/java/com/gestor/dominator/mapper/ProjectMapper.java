@@ -4,6 +4,7 @@ import com.gestor.dominator.dto.projects.CreateProjectRecord;
 import com.gestor.dominator.dto.projects.CreateProjectResult;
 import com.gestor.dominator.dto.projects.ProjectPayload;
 import com.gestor.dominator.dto.projects.StatusProjectResult;
+import com.gestor.dominator.dto.projectuser.ProjectUserResult;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
@@ -14,6 +15,7 @@ import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
+import com.gestor.dominator.model.postgre.projectuser.ProjectUserRs;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
 
 import java.util.List;
@@ -46,6 +48,10 @@ public interface ProjectMapper {
     DetailsByIdResult toDetailsRs(DetailsByIdRs detailsForClientRs);
 
     List<DetailsByIdResult> toDetailsRs(List<DetailsByIdRs> detailsForEmployeeRs);
+
+    ProjectUserResult toProjectUserResult(ProjectUserRs projectUserRs);
+
+    List<ProjectUserResult> toProjectUserResult(List<ProjectUserRs> projectUserRs);
 
     ProjectDetailsRq toDetailsProjectRq(ProjectDetailsRecord projectDetailsRecord);
 

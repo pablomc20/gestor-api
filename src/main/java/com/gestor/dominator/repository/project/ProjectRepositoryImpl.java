@@ -153,9 +153,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
             for (UUID chapeId : rq.chapes()) {
                 jdbcTemplate.update(
                         CREATE_PROJECT_CHAPES,
-                        chapeId,
-                        projectId);
-            }
+                        projectId,
+                        chapeId);
+                    }
         }
     }
 
