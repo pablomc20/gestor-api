@@ -7,5 +7,6 @@ import com.gestor.dominator.dto.projectuser.ProjectUserResult;
 
 public interface ProjectUserService {
 
-    List<ProjectUserResult> getProjectsForUser(ProjectUserRecord request);
+    List<ProjectUserResult> getProjectsForEmployee(ProjectUserRecord request);
+    List<ProjectUserResult> getProjectsForClient(ProjectUserRecord request);
 }

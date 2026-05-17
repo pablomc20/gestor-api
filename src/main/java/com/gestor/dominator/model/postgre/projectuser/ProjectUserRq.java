@@ -5,6 +5,6 @@ import lombok.Builder;
 
 @Builder
 public record ProjectUserRq(
-        String employeeId,
+        String userId,
         ProjectUserType type) {
 }

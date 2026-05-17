@@ -27,8 +27,19 @@ public class ProjectUserRepositoryImpl implements ProjectUserRepository {
             case FINISHED -> GET_PROJECTS_FOR_EMPLOYEE_FINISHED;
         };
 
-        return jdbcTemplate.query(sql, this::mapProjectUserRs, request.employeeId());
+        return jdbcTemplate.query(sql, this::mapProjectUserRs, request.userId());
     }
+
+    @Override
+    public List<ProjectUserRs> findProjectsByClientAndType(ProjectUserRq request) {
+        String sql = switch (request.type()) {
+            case NEW -> GET_PROJECTS_FOR_CLIENT_NEW; // Assuming similar queries for clients
+            case IN_COURSE -> GET_PROJECTS_FOR_CLIENT_IN_COURSE; // Placeholder, replace with actual query
+            case FINISHED -> GET_PROJECTS_FOR_CLIENT_FINISHED; // Placeholder, replace with actual query
+        };
+
+        return jdbcTemplate.query(sql, this::mapProjectUserRs, request.userId());
+    }    
 
     private ProjectUserRs mapProjectUserRs(ResultSet rs, int rowNum) throws SQLException {
         Integer daysRemaining = rs.getObject("dias_restantes") != null ? rs.getInt("dias_restantes") : null;
@@ -38,10 +49,12 @@ public class ProjectUserRepositoryImpl implements ProjectUserRepository {
                 rs.getString("title"),
                 rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
                 rs.getDate("estimated_completion_date") != null ? rs.getDate("estimated_completion_date").toLocalDate() : null,
+                rs.getDate("actual_completion_date") != null ? rs.getDate("actual_completion_date").toLocalDate() : null,
                 daysRemaining,
                 rs.getString("client_name"),
                 rs.getString("status"),
                 rs.getString("user_id")
         );
     }
+
 }

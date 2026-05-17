@@ -8,4 +8,6 @@ import com.gestor.dominator.model.postgre.projectuser.ProjectUserRs;
 public interface ProjectUserRepository {
 
     List<ProjectUserRs> findProjectsByEmployeeAndType(ProjectUserRq request);
+
+    List<ProjectUserRs> findProjectsByClientAndType(ProjectUserRq request);
 }

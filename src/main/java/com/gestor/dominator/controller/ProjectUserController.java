@@ -28,6 +28,14 @@ public class ProjectUserController {
             @RequestParam("employeeId") String employeeId,
             @RequestParam("type") String type) {
         ProjectUserRecord request = new ProjectUserRecord(employeeId, type);
-        return ResponseEntity.ok(projectUserService.getProjectsForUser(request));
+        return ResponseEntity.ok(projectUserService.getProjectsForEmployee(request));
+    }
+
+    @GetMapping("/client")
+    public ResponseEntity<List<ProjectUserResult>> getProjectsByClientType(
+            @RequestParam("clientId") String clientId,
+            @RequestParam("type") String type) {
+        ProjectUserRecord request = new ProjectUserRecord(clientId, type);
+        return ResponseEntity.ok(projectUserService.getProjectsForClient(request));
     }
 }

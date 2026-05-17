@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record ProjectUserRecord(
-        String employeeId,
+        String userId,
         String type) {
 }

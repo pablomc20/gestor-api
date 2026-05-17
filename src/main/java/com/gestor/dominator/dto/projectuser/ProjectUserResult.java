@@ -9,6 +9,7 @@ public record ProjectUserResult(
         String title,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,
+        LocalDate actualCompletionDate,
         Integer daysRemaining,
         String clientName,
         String status,
