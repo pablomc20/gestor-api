@@ -1,0 +1,11 @@
+package com.gestor.dominator.dto.projects;
+
+import lombok.Builder;
+
+@Builder
+public record StatusPayload(
+        String currentStatus,
+        String dateChanged
+) {
+  
+}

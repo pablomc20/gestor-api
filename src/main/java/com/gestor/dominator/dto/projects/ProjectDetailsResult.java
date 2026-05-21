@@ -9,6 +9,7 @@ public record ProjectDetailsResult(
         ProjectPayload project,
         ContractPayload contract,
         PaymentPayload[] payments,
+        List<StatusPayload> statusHistory,
         List<UserPayload> users) {
 
 }

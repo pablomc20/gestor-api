@@ -29,7 +29,7 @@ public class PublicController {
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ProjectDetailsResult> getProjectDetailsById(@PathVariable String id) {
-        ProjectDetailsRecord projectDetailsRecord = new ProjectDetailsRecord(UUID.fromString(id));
+        ProjectDetailsRecord projectDetailsRecord = new ProjectDetailsRecord(id);
         ProjectDetailsResult result = createProjectUseCase.execute(projectDetailsRecord);
         return ResponseEntity.ok(result);
     }

@@ -10,8 +10,10 @@ import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
+import com.gestor.dominator.model.postgre.projectstatus.CreateProjectStatusRq;
 import com.gestor.dominator.repository.notification.NotifiactionRepository;
 import com.gestor.dominator.repository.project.ProjectRepository;
+import com.gestor.dominator.repository.projectstatus.ProjectStatusRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +25,7 @@ public class ChangeStatusProjectUseCase {
     private final String NEW_STATUS = "NEW_STATUS"; // For Notification
     private final ProjectImageRepository projectImageRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectStatusRepository projectStatusRepository;
     private final NotifiactionRepository notificationRepository;
     private final ProjectMapper projectMapper;
 
@@ -44,10 +47,16 @@ public class ChangeStatusProjectUseCase {
 
         // Update to next status
         projectRepository.updateStatus(idProject, currentStatus.nextStatus);
+        createProjectStatus(record, currentStatus.nextStatus);
 
         // Send notification if status was updated
         String message = currentStatus.statusMessage;
         sendNotification(message, record.projectId(), record.userId());
+    }
+
+    private void createProjectStatus(ChangeStatusProjectRecord record, String currentStatus) {
+        CreateProjectStatusRq request = projectMapper.createProjectStatusRq(record, currentStatus);
+        projectStatusRepository.createProjectStatus(request);
     }
 
     private void saveProjectImages(String[] idsImages, String idProject, String typeImage) {
