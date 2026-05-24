@@ -1,17 +1,22 @@
 package com.gestor.dominator.mapper;
 
+import javax.sound.midi.Patch;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.gestor.dominator.dto.projects.UserPayload;
 import com.gestor.dominator.dto.users.UserDetailsRecord;
 import com.gestor.dominator.dto.users.UserDetailsResult;
+import com.gestor.dominator.dto.users.UserPatchRecord;
+import com.gestor.dominator.dto.users.UserPatchResult;
 import com.gestor.dominator.dto.users.UserRecord;
 import com.gestor.dominator.dto.users.UserResult;
 import com.gestor.dominator.model.postgre.user.CreateUserRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRs;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRq;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRs;
+import com.gestor.dominator.model.postgre.user.PatchUserRq;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -32,10 +37,14 @@ public interface UserMapper {
     CreateUserRq toCreateUserRq(UserRecord userRecord);
 
     @Mapping(target = "id", source = "createUserRs.id")
-    UserResult toUserResult(CreateUserRs createUserRs);
+    UserResult toCreateUserResult(CreateUserRs createUserRs);
+
+    @Mapping(target = "email", source = "userPatchRecord.email")
+    @Mapping(target = "password", source = "passwordEncoded")
+    PatchUserRq toPatchUserRq(UserPatchRecord userPatchRecord, String passwordEncoded);
 
     @Mapping(target = "id", source = "id")
-    UserResult toUserResult(String id);
+    UserPatchResult toPatchUserResult(String id);
 
     @Mapping(target = "userId", source = "userId")
     @Mapping(target = "email", source = "getUserByIdRs.email")

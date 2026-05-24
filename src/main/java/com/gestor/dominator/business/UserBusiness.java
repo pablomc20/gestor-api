@@ -2,11 +2,14 @@ package com.gestor.dominator.business;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gestor.dominator.dto.users.UserClientResult;
 import com.gestor.dominator.dto.users.UserDetailsRecord;
 import com.gestor.dominator.dto.users.UserDetailsResult;
+import com.gestor.dominator.dto.users.UserPatchRecord;
+import com.gestor.dominator.dto.users.UserPatchResult;
 import com.gestor.dominator.dto.users.UserRecord;
 import com.gestor.dominator.dto.users.UserResult;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
@@ -16,6 +19,8 @@ import com.gestor.dominator.model.postgre.user.CreateUserRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRs;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRq;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRs;
+import com.gestor.dominator.model.postgre.user.PatchUserDetailsRq;
+import com.gestor.dominator.model.postgre.user.PatchUserRq;
 import com.gestor.dominator.repository.user.UserRepository;
 import com.gestor.dominator.service.users.UserService;
 
@@ -29,6 +34,7 @@ public class UserBusiness implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetailsResult getUserDetailsById(UserDetailsRecord userDetailsRecord) {
@@ -44,7 +50,6 @@ public class UserBusiness implements UserService {
 
         CreateUserDetailsRq createUserDetailsRq = CreateUserDetailsRq.builder()
                 .userId(createUserRs.id())
-                .name(createUserRq.legalRepresentative().split(" ")[0])
                 .phone(createUserRq.phone())
                 .legalRepresentative(createUserRq.legalRepresentative())
                 .taxId(createUserRq.taxId())
@@ -52,36 +57,27 @@ public class UserBusiness implements UserService {
 
         userRepository.createUserDetails(createUserDetailsRq);
 
-        return userMapper.toUserResult(createUserRs);
+        return userMapper.toCreateUserResult(createUserRs);
     }
 
     @Override
-    public UserResult updateUser(UserRecord userRecord, String id) {
-        if (userRecord.email() == null || userRecord.email().isEmpty()) {
-            return userMapper.toUserResult(id);
-        }
+    public UserPatchResult patchUser(UserPatchRecord userRecord, String id) {
+        validateUserInfo(userRecord, id);
 
-        boolean isEnabled = userRepository.isEnabled(id);
-        if (isEnabled) {
-            log.info("Email will not be updated");
-            return userMapper.toUserResult(id);
-        }
+        String passwordEncoded = passwordEncoder.encode(userRecord.password());
 
-        CreateUserRq createUserRq = userMapper.toCreateUserRq(userRecord);
-        String userId = userRepository.updateUser(createUserRq, id);
+        PatchUserRq createUserRq = userMapper.toPatchUserRq(userRecord, passwordEncoded);
+        String userId = userRepository.patchUser(createUserRq, id);
 
-        String idUserDetails = userRepository.getIdUserDetails(userId);
-        CreateUserDetailsRq createUserDetailsRq = CreateUserDetailsRq.builder()
-                .userDetailId(idUserDetails)
-                .name(createUserRq.legalRepresentative().split(" ")[0])
-                .phone(createUserRq.phone())
-                .legalRepresentative(createUserRq.legalRepresentative())
-                .taxId(createUserRq.taxId())
+        PatchUserDetailsRq createUserDetailsRq = PatchUserDetailsRq.builder()
+                .userId(userId)
+                .phone(userRecord.phone())
+                .legalRepresentative(userRecord.legalRepresentative())
                 .build();
 
-        userRepository.updateUserDetails(createUserDetailsRq);
+        userRepository.patchUserDetails(createUserDetailsRq);
 
-        return userMapper.toUserResult(userId);
+        return userMapper.toPatchUserResult(userId);
     }
 
     @Override
@@ -95,6 +91,19 @@ public class UserBusiness implements UserService {
     @Override
     public List<UserClientResult> getAllClients() {
         return userRepository.getAllClients();
+    }
+
+    private void validateUserInfo(UserPatchRecord userRecord, String id) {
+
+        Boolean isEnabled = userRepository.isEnabled(id);
+        if (isEnabled == null) {
+            throw new PostgreDbException("User not found");
+        }
+
+        if (isEnabled) {
+            log.info("Email will not be updated");
+            throw new PostgreDbException("Email will not be updated, because the user is enabled");
+        }
     }
 
 }

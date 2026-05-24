@@ -7,6 +7,8 @@ import com.gestor.dominator.model.postgre.user.CreateUserRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRs;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRq;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRs;
+import com.gestor.dominator.model.postgre.user.PatchUserDetailsRq;
+import com.gestor.dominator.model.postgre.user.PatchUserRq;
 
 import java.util.List;
 import java.util.UUID;
@@ -58,20 +60,20 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public String updateUser(CreateUserRq createUserRq, String id) {
+    public String patchUser(PatchUserRq patchUserRq, String id) {
 
         return jdbcTemplate.queryForObject(
-                UserQueryDB.UPDATE_USER,
-                UPDATE_USER_MAPPER,
-                updateUserParams(createUserRq, UUID.fromString(id)));
+                UserQueryDB.PATCH_USER,
+                PATCH_USER_MAPPER,
+                updateUserParams(patchUserRq, UUID.fromString(id)));
     }
 
     @Override
-    public String updateUserDetails(CreateUserDetailsRq createUserDetailsRq) {
+    public String patchUserDetails(PatchUserDetailsRq createUserDetailsRq) {
         return jdbcTemplate.queryForObject(
-                UserQueryDB.UPDATE_USER_DETAILS,
-                UPDATE_USER_DETAILS_MAPPER,
-                updateUserDetailsParams(createUserDetailsRq));
+                UserQueryDB.PATCH_USER_DETAILS,
+                PATCH_USER_DETAILS_MAPPER,
+                patchUserDetailsParams(createUserDetailsRq));
     }
 
     @Override
@@ -85,21 +87,18 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean isEnabled(String id) {
-        return jdbcTemplate.queryForObject(
-                UserQueryDB.IS_ENABLED,
-                Boolean.class,
-                UUID.fromString(id));
+    public Boolean isEnabled(String id) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    UserQueryDB.IS_ENABLED,
+                    Boolean.class,
+                    UUID.fromString(id));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    @Override
-    public String getIdUserDetails(String idUser) {
-        return jdbcTemplate.queryForObject(
-                UserQueryDB.GET_ID_USER_DETAILS,
-                String.class,
-                UUID.fromString(idUser));
-    }
-
+    // MAPPERS AND PARAMS
     private static final RowMapper<GetUserByIdRs> USER_DETAILS_MAPPER = (rs, rowNum) -> new GetUserByIdRs(
             rs.getString("email"),
             rs.getString("phone"),
@@ -111,9 +110,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final RowMapper<String> CREATE_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
 
-    private static final RowMapper<String> UPDATE_USER_MAPPER = (rs, rowNum) -> rs.getString("user_id");
+    private static final RowMapper<String> PATCH_USER_MAPPER = (rs, rowNum) -> rs.getString("user_id");
 
-    private static final RowMapper<String> UPDATE_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
+    private static final RowMapper<String> PATCH_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
 
     private static final RowMapper<UserClientResult> USER_CLIENT_MAPPER = (rs, rowNum) -> new UserClientResult(
             rs.getString("user_id"),
@@ -130,23 +129,22 @@ public class UserRepositoryImpl implements UserRepository {
     private Object[] createUserDetailsParams(CreateUserDetailsRq createUserRq) {
         return new Object[] {
                 UUID.fromString(createUserRq.userId()),
-                createUserRq.name(),
                 createUserRq.phone(),
                 createUserRq.legalRepresentative(),
                 createUserRq.taxId() };
     }
 
-    private Object[] updateUserParams(CreateUserRq createUserRq, UUID id) {
+    private Object[] updateUserParams(PatchUserRq patchUserRq, UUID id) {
         return new Object[] {
-                createUserRq.email(),
+                patchUserRq.email(),
+                patchUserRq.password(),
                 id };
     }
 
-    private Object[] updateUserDetailsParams(CreateUserDetailsRq createUserDetailsRq) {
+    private Object[] patchUserDetailsParams(PatchUserDetailsRq createUserDetailsRq) {
         return new Object[] {
                 createUserDetailsRq.phone(),
                 createUserDetailsRq.legalRepresentative(),
-                createUserDetailsRq.taxId(),
                 UUID.fromString(createUserDetailsRq.userId()) };
     }
 }

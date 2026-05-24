@@ -2,12 +2,16 @@ package com.gestor.dominator.repository.user;
 
 import java.util.List;
 
+import javax.sound.midi.Patch;
+
 import com.gestor.dominator.dto.users.UserClientResult;
 import com.gestor.dominator.model.postgre.user.CreateUserDetailsRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRs;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRq;
 import com.gestor.dominator.model.postgre.user.GetUserByIdRs;
+import com.gestor.dominator.model.postgre.user.PatchUserDetailsRq;
+import com.gestor.dominator.model.postgre.user.PatchUserRq;
 
 public interface UserRepository {
     GetUserByIdRs getUserDetailsById(GetUserByIdRq getUserByIdRq);
@@ -16,16 +20,18 @@ public interface UserRepository {
 
     String createUserDetails(CreateUserDetailsRq createUserDetailsRq);
 
-    String updateUser(CreateUserRq createUserRq, String id);
+    String patchUser(PatchUserRq patchUserRq, String id);
 
-    String updateUserDetails(CreateUserDetailsRq createUserDetailsRq);
+    String patchUserDetails(PatchUserDetailsRq createUserDetailsRq);
 
     Integer deleteUser(String id);
 
     List<UserClientResult> getAllClients();
 
     // Auxiliar
-    boolean isEnabled(String id);
+    Boolean isEnabled(String id);
 
-    String getIdUserDetails(String idUser);
+    boolean existsByEmail(String email);
+
+    boolean existsByPhone(String phone);
 }

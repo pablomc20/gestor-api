@@ -3,11 +3,9 @@ package com.gestor.dominator.model.postgre.user;
 import lombok.Builder;
 
 @Builder
-public record CreateUserDetailsRq(
-        String userDetailId,
+public record PatchUserDetailsRq(
         String userId,
         String phone,
-        String legalRepresentative,
-        String taxId) {
+        String legalRepresentative) {
 
 }
