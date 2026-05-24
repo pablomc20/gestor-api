@@ -3,8 +3,6 @@ package com.gestor.dominator.repository.category;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

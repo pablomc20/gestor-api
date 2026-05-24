@@ -1,7 +1,5 @@
 package com.gestor.dominator.mapper;
 
-import javax.sound.midi.Patch;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -2,8 +2,6 @@ package com.gestor.dominator.repository.user;
 
 import java.util.List;
 
-import javax.sound.midi.Patch;
-
 import com.gestor.dominator.dto.users.UserClientResult;
 import com.gestor.dominator.model.postgre.user.CreateUserDetailsRq;
 import com.gestor.dominator.model.postgre.user.CreateUserRq;
@@ -31,7 +29,4 @@ public interface UserRepository {
     // Auxiliar
     Boolean isEnabled(String id);
 
-    boolean existsByEmail(String email);
-
-    boolean existsByPhone(String phone);
 }

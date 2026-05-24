@@ -1,9 +1,7 @@
 package com.gestor.dominator.mapper;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.Comparator;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
