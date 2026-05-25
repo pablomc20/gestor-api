@@ -5,5 +5,6 @@ import lombok.Builder;
 @Builder
 public record ChapeResult(
         String idChape,
-        String name) {
+        String name,
+        String slug) {
 }

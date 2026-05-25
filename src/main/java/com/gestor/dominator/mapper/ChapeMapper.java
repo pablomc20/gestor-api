@@ -17,6 +17,7 @@ public interface ChapeMapper {
 
     @Mapping(target = "idChape", source = "chapeRs.chape_id")
     @Mapping(target = "name", source = "chapeRs.name")
+    @Mapping(target = "slug", source = "chapeRs.slug")
     ChapeResult toChapeResult(ChapeRs chapeRs);
 
     ChapeRq toRecordRq(ChapeRecord chapeRecord);

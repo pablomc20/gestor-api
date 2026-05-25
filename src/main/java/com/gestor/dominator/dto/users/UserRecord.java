@@ -1,10 +1,11 @@
 package com.gestor.dominator.dto.users;
 
+import jakarta.validation.constraints.Email;
 import lombok.Builder;
 
 @Builder
 public record UserRecord(
-        String email,
+        @Email String email,
         String phone,
         String legalRepresentative,
         String taxId) {

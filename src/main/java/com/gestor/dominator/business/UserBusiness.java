@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gestor.dominator.dto.users.UserClientResult;
 import com.gestor.dominator.dto.users.UserDetailsRecord;
@@ -44,6 +45,7 @@ public class UserBusiness implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResult createUser(UserRecord userRecord) {
         CreateUserRq createUserRq = userMapper.toCreateUserRq(userRecord);
         CreateUserRs createUserRs = userRepository.createUser(createUserRq);

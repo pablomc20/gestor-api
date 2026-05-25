@@ -21,7 +21,8 @@ public class ChapeRepositoryImpl implements ChapeRepository {
 
     private final RowMapper<ChapeRs> chapeMapper = (rs, rowNum) -> new ChapeRs(
             rs.getString("chape_id"),
-            rs.getString("name"));
+            rs.getString("name"),
+            rs.getString("slug"));
 
     @Override
     public List<ChapeRs> getAllChapes() {
@@ -54,11 +55,11 @@ public class ChapeRepositoryImpl implements ChapeRepository {
     }
 
     private Object[] mapCreateChapeParams(ChapeRq chapeRq) {
-        return new Object[] { chapeRq.name() };
+        return new Object[] { chapeRq.name(), chapeRq.slug() };
     }
 
     private Object[] mapUpdateChapeParams(ChapeRq chapeRq, String chapeId) {
-        return new Object[] { chapeRq.name(), mapIdToUUID(chapeId) };
+        return new Object[] { chapeRq.name(), chapeRq.slug(), mapIdToUUID(chapeId) };
     }
 
     private Object mapIdToUUID(String id) {
