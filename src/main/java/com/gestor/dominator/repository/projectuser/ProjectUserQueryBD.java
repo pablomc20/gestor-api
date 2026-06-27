@@ -97,7 +97,7 @@ public final class ProjectUserQueryBD {
                    p.estimated_completion_date,
                    p.estimated_completion_date - CURRENT_DATE AS dias_restantes,
                    p.actual_completion_date,
-                   ud.legal_representativeAS client_name,
+                   ud.legal_representative AS client_name,
                    p.status,
                    ud.user_id
               FROM projects p

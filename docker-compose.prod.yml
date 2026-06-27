@@ -1,0 +1,6 @@
+services:
+  gestor-api:
+    build: .
+    image: pablovski/gestor-api:latest
+    ports:
+      - "8082:8082"

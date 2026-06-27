@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Cacheable(value = "users", key = "#username.toLowerCase().trim()")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmailWithDetail(username)
+        User user = userRepository.findByEmailOrPhone(username)
                 .orElseThrow(() -> AuthenticationException.userNotFound(username));
 
         return user;

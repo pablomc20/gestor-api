@@ -62,15 +62,16 @@ public class User implements UserDetails {
             if (this.role == "EMPLOYEE") {
                 roleName = "ROLE_ADMIN";
             }
-            // Agrega más mapeos si es necesario
+            if ("CLIENT".equals(this.role)) {
+                roleName = "ROLE_ADMIN";
+            }
         }
         return List.of(new SimpleGrantedAuthority(roleName));
     }
 
     @Override
     public String getUsername() {
-        // Usamos el email como "username" para la autenticación
-        return this.email;
+        return this.email != null ? this.email : (this.userDetail != null ? this.userDetail.getPhone() : null);
     }
 
     @Override
