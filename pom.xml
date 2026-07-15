@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.10</version>
+		<version>3.5.16</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gestor</groupId>
-	<artifactId>dominator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>dominator</name>
-	<description>Demo project for Spring Boot</description>
+	<artifactId>gestor-api</artifactId>
+	<version>1.0.0</version>
+	<name>gestor-api</name>
+	<description/>
 	<url/>
 	<licenses>
 		<license/>
@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 
 	<dependencyManagement>

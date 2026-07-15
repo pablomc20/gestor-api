@@ -3,7 +3,7 @@ package com.gestor.dominator.business;
 import com.gestor.dominator.model.postgre.image.ImageCreateRs;
 import com.gestor.dominator.model.postgre.image.ImageRq;
 import com.gestor.dominator.model.postgre.image.ImageRs;
-import com.gestor.dominator.repository.ImageRepository;
+import com.gestor.dominator.repository.images.ImageRepository;
 import com.gestor.dominator.service.image.ImageDbService;
 import org.springframework.stereotype.Service;
 

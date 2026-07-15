@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.lang.NonNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gestor.dominator.service.config.CustomUserDetailsService;
@@ -39,15 +40,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return !(requestURI.startsWith("/auth/") ||
                 requestURI.startsWith("/public/") ||
                 requestURI.startsWith("/images/file/") ||
+                requestURI.equals("/projects/images") ||
                 requestURI.contains("/swagger-ui") ||
                 requestURI.contains("/v3/api-docs") ||
                 requestURI.equals("/swagger-ui.html"));
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         try {
             final String authHeader = request.getHeader("Authorization");

@@ -55,10 +55,11 @@ public class ImageUseCase implements ImageService {
             ImageCreateRs savedImage = imageDbService.save(imageRq);
 
             if (savedImage == null || !"ok".equals(savedImage.status())) {
+                fileStorageService.delete(filename, ext);
                 throw new PostgreDbException("Error al crear imagen");
             }
 
-            idImages.add(savedImage.idImage());
+            idImages.add(savedImage.idImage().toString());
         }
 
         return ImageCreateResult.builder()

@@ -5,10 +5,11 @@ import com.gestor.dominator.dto.image.ImageRenderResult;
 import com.gestor.dominator.dto.image.ImageResult;
 import com.gestor.dominator.service.image.ImageService;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/images")
+@RequiredArgsConstructor
 public class ImageController {
 
-    @Autowired
-    private ImageService imageService;
+    private final ImageService imageService;
 
     @GetMapping("/{id}")
     public ResponseEntity<ImageResult> getImageById(@PathVariable String id) {

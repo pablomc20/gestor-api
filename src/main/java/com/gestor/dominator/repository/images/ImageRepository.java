@@ -1,4 +1,4 @@
-package com.gestor.dominator.repository;
+package com.gestor.dominator.repository.images;
 
 import com.gestor.dominator.model.postgre.image.ImageCreateRs;
 import com.gestor.dominator.model.postgre.image.ImageRq;

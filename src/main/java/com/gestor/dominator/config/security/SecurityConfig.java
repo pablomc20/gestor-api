@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll() // Endpoints de autenticación públicos
                         .requestMatchers("/public/**").permitAll() // Endpoints públicos
                         .requestMatchers("/images/file/**").permitAll() // Archivos de imagen públicos
+                        .requestMatchers("/projects/images/**").permitAll() // Archivos de imagen públicos
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll() // Swagger
                                                                                                               // UI
                                                                                                               // públicos

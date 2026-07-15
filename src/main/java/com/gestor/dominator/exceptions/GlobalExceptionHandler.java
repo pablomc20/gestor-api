@@ -23,6 +23,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Manejador global de excepciones para toda la aplicación.
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler {
                 ex.getDescription(),
                 ex.getStatusCode());
 
-        return new ResponseEntity<>(errorResponse, ex.getStatus());
+        return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -55,7 +56,7 @@ public class GlobalExceptionHandler {
         // Puedes revisar si adentro viene InvalidFormatException
         Throwable cause = ex.getCause();
         if (cause instanceof com.fasterxml.jackson.databind.exc.InvalidFormatException ife) {
-            if (ife.getTargetType() == java.util.UUID.class) {
+            if (ife.getTargetType() == UUID.class) {
                 ErrorResponse errorResponse = new ErrorResponse(
                         "UUID_INVALID",
                         "Uno o más UUID no tienen un formato válido.",
