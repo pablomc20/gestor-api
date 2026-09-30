@@ -8,6 +8,7 @@ import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
 import com.gestor.dominator.repository.project.ProjectRepository;
+import com.gestor.dominator.repository.projectstatus.ProjectStatusRepository;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.service.projects.ProjectService;
 import com.gestor.dominator.constants.StatusProject;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class ProjectBusiness implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final ProjectStatusRepository projectStatusRepository;
     private final ProjectMapper projectMapper;
 
     @Override
@@ -39,7 +41,7 @@ public class ProjectBusiness implements ProjectService {
     @Override
     public StatusProjectResult retrieveStatusById(StatusProjectRecord statusProjectRecord) {
         UUID idProject = UUID.fromString(statusProjectRecord.projectId());
-        String currentStatus = projectRepository.getStatusById(idProject);
+        String currentStatus = projectStatusRepository.getStatusById(idProject);
 
         if (currentStatus.isEmpty()) {
             throw new DataValidationException("No se pudo obtneer el estado del proyecto");

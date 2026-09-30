@@ -51,20 +51,5 @@ public final class ProjectQueryBD {
                 VALUES (?, ?);
             """;
 
-    public static final String GET_STATUS_BY_ID = """
-                SELECT status FROM projects WHERE project_id = ?;
-            """;
-
-    public static final String UPDATE_STATUS_PROJECT = """
-                UPDATE projects SET status = ?::project_status, updated_at = CURRENT_TIMESTAMP
-                WHERE project_id = ?;
-            """;
-
-    public static final String UPDATE_COMPLETE_STATUS_PROJECT = """
-                UPDATE projects 
-                SET updated_at = CURRENT_TIMESTAMP, actual_completion_date = CURRENT_TIMESTAMP
-                WHERE project_id = ?;
-            """;
-
     // public
 }

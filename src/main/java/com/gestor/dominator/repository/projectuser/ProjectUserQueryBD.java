@@ -53,7 +53,7 @@ public final class ProjectUserQueryBD {
               JOIN users u ON u.user_id = p.user_client
               JOIN user_details ud ON ud.user_id = u.user_id
              WHERE p.user_employee = ?::uuid
-               AND p.status = 'DELIVERED' and p.actual_completion_date != null;
+               AND p.status = 'DELIVERED' and p.actual_completion_date IS NOT NULL;
             """;
 
     public static final String GET_PROJECTS_FOR_CLIENT_IN_COURSE = """
@@ -104,6 +104,6 @@ public final class ProjectUserQueryBD {
               JOIN users u ON u.user_id = p.user_client
               JOIN user_details ud ON ud.user_id = u.user_id
              WHERE p.user_client = ?::uuid
-               AND p.status = 'DELIVERED' and p.actual_completion_date != null;
+               AND p.status = 'DELIVERED' and p.actual_completion_date IS NOT NULL;
             """;
 }

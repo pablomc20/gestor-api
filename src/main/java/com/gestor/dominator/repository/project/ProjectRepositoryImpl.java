@@ -92,39 +92,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         }
     }
 
-    @Override
-    public String getStatusById(UUID idProject) {
-        try {
-            String statusProject = jdbcTemplate.queryForObject(
-                    GET_STATUS_BY_ID,
-                    String.class,
-                    idProject);
-
-            return statusProject;
-        } catch (EmptyResultDataAccessException e) {
-            return "";
-        }
-    }
-
-    @Override
-    public boolean updateStatus(UUID idProject, String status) {
-
-        if (status == null || status.isEmpty()) {
-            return updateCompleteStatus(idProject);
-        }
-
-        return jdbcTemplate.update(
-                UPDATE_STATUS_PROJECT,
-                status,
-                idProject) > 0;
-    }
-
-    public boolean updateCompleteStatus(UUID idProject) {
-        return jdbcTemplate.update(
-                UPDATE_COMPLETE_STATUS_PROJECT,
-                idProject) > 0;
-    }
-
     // ********** FUNCIONES AUXILIARES **********
     private void createProjectImages(UUID projectId, CreateProjectRq rq) {
         if (rq.images() != null) {

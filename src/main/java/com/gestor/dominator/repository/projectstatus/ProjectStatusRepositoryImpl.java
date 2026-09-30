@@ -1,7 +1,9 @@
 package com.gestor.dominator.repository.projectstatus;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -31,13 +33,47 @@ public class ProjectStatusRepositoryImpl implements ProjectStatusRepository {
         request.projectId(), request.currentStatus(), request.byUserId());
   }
 
+  @Override
+  public boolean updateStatus(UUID idProject, String status, boolean isDelivered) {
+
+    if (isDelivered) {
+      return updateCompleteStatus(idProject);
+    }
+
+    return jdbcTemplate.update(
+        UPDATE_STATUS_PROJECT,
+        status,
+        idProject) > 0;
+  }
+
+  public boolean updateCompleteStatus(UUID idProject) {
+    return jdbcTemplate.update(
+        UPDATE_COMPLETE_STATUS_PROJECT,
+        idProject) > 0;
+  }
+
+  @Override
+  public String getStatusById(UUID idProject) {
+    try {
+      String statusProject = jdbcTemplate.queryForObject(
+          GET_STATUS_BY_ID,
+          String.class,
+          idProject);
+
+      return statusProject;
+    } catch (EmptyResultDataAccessException e) {
+      return "";
+    }
+  }
+
   private ProjectStatusRs mapProjectStatusRs(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
     return new ProjectStatusRs(
         rs.getString("new_status"),
         rs.getString("created_at"));
   }
 
-  private CreateProjectStatusRs mapCreateProjectStatusRs(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
+  private CreateProjectStatusRs mapCreateProjectStatusRs(java.sql.ResultSet rs, int rowNum)
+      throws java.sql.SQLException {
     return CreateProjectStatusRs.builder()
         .statusLogId(rs.getObject("status_log_id", java.util.UUID.class))
         .build();

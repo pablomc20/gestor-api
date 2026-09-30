@@ -17,7 +17,4 @@ public interface ProjectRepository {
 
     ProjectDetailsRs getProjectDetailsById(ProjectDetailsRq projectDetailsRq);
 
-    String getStatusById(UUID idProject);
-
-    boolean updateStatus(UUID idProject, String status);
 }

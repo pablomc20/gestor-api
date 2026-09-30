@@ -12,7 +12,6 @@ import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
 import com.gestor.dominator.model.postgre.projectstatus.CreateProjectStatusRq;
 import com.gestor.dominator.repository.notification.NotifiactionRepository;
-import com.gestor.dominator.repository.project.ProjectRepository;
 import com.gestor.dominator.repository.projectstatus.ProjectStatusRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ public class ChangeStatusProjectUseCase {
     private final String VISIBILITY = "PRIVATE"; // For ProjectImage
     private final String NEW_STATUS = "NEW_STATUS"; // For Notification
     private final ProjectImageRepository projectImageRepository;
-    private final ProjectRepository projectRepository;
     private final ProjectStatusRepository projectStatusRepository;
     private final NotifiactionRepository notificationRepository;
     private final ProjectMapper projectMapper;
@@ -34,7 +32,7 @@ public class ChangeStatusProjectUseCase {
         // Retrieve current status
 
         UUID idProject = UUID.fromString(record.projectId());
-        String currentStatusValue = projectRepository.getStatusById(idProject);
+        String currentStatusValue = projectStatusRepository.getStatusById(idProject);
         StatusProject currentStatus = StatusProject.fromValue(currentStatusValue);
 
         // Relacionar imagenes
@@ -45,9 +43,16 @@ public class ChangeStatusProjectUseCase {
             saveProjectImages(record.imagesIds(), record.projectId(), currentStatus.imageType);
         }
 
+        String nextStatus = currentStatus.nextStatus;
+        boolean isDelivered = false;
+        if (nextStatus.isEmpty() && currentStatus.value.equals(StatusProject.DELIVERED.value)) {
+            nextStatus = currentStatus.value; // If nextStatus is empty, keep the current status
+            isDelivered = true; // Mark as delivered
+        }
+
         // Update to next status
-        projectRepository.updateStatus(idProject, currentStatus.nextStatus);
-        createProjectStatus(record, currentStatus.nextStatus);
+        projectStatusRepository.updateStatus(idProject, nextStatus, isDelivered);
+        createProjectStatus(record, nextStatus);
 
         // Send notification if status was updated
         String message = currentStatus.statusMessage;
