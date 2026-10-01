@@ -38,76 +38,76 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RetrieveProjectDetailsUseCase {
 
-        private final ProjectMapper projectMapper;
-        private final ContractMapper contractMapper;
-        private final PaymentMapper paymentMapper;
-        private final ProjectRepository projectRepository;
-        private final ProjectStatusRepository projectStatusRepository;
-        private final ContractRepository contractRepository;
-        private final PaymentRepository paymentRepository;
-        private final UserRepository userRepository;
-        private final UserMapper userMapper;
+    private final ProjectMapper projectMapper;
+    private final ContractMapper contractMapper;
+    private final PaymentMapper paymentMapper;
+    private final ProjectRepository projectRepository;
+    private final ProjectStatusRepository projectStatusRepository;
+    private final ContractRepository contractRepository;
+    private final PaymentRepository paymentRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-        public ProjectDetailsResult execute(ProjectDetailsRecord projectDetailsRecord) {
-                ProjectDetailsRq projectDetailsRq = projectMapper.toDetailsProjectRq(projectDetailsRecord);
+    public ProjectDetailsResult execute(ProjectDetailsRecord projectDetailsRecord) {
+        ProjectDetailsRq projectDetailsRq = projectMapper.toDetailsProjectRq(projectDetailsRecord);
 
-                // FN - Obtener detalles del proyecto
-                ProjectDetailsRs projectDetailsRs = projectRepository.getProjectDetailsById(projectDetailsRq);
-                if (projectDetailsRs == null) {
-                        throw new PostgreDbException("No se encontro el proyecto");
-                }
-                ProjectPayload project = projectMapper.toDetailsProjectRs(projectDetailsRs,
-                                projectDetailsRecord.projectId().toString());
-
-                // FN - Obtener detalles del contrato
-                ReadContractRs readContractRs = contractRepository.getContractDetailsById(
-                                ReadContractRq.builder().project_id(UUID.fromString(projectDetailsRecord.projectId()))
-                                                .build());
-                // FN - Obtener detalles de los pagos
-                List<PaymentReadRs> paymentsRs = paymentRepository
-                                .getPayments(UUID.fromString(readContractRs.contract_id()));
-                Long numberPaymentPaid = paymentsRs.stream().filter(p -> p.paid()).count();
-                // FN - Mapear estatus del proyecto
-                List<StatusPayload> statusHistory = projectMapper
-                                .toStatusPayloads(projectStatusRepository.findProjectStatus(projectMapper
-                                                .toProjectStatusRq(projectDetailsRecord.projectId())));
-
-                ContractPayload contract = contractMapper.toDetailsContractRs(readContractRs,
-                                numberPaymentPaid.intValue());
-
-                PaymentPayload[] payments = paymentMapper.toPayloads(paymentsRs);
-                // Ordenar pagos por su propiedad type en este orden (FIRST, SECOND y FINAL)
-                PaymentPayload[] orderedPayments = sortPayments(payments);
-
-                String userClient = projectDetailsRs.project().user_client();
-                String userEmployee = projectDetailsRs.project().user_employee();
-
-                return ProjectDetailsResult.builder()
-                                .project(project)
-                                .contract(contract)
-                                .payments(orderedPayments)
-                                .statusHistory(statusHistory)
-                                .users(getUsersByIds(userClient, userEmployee))
-                                .build();
+        // FN - Obtener detalles del proyecto
+        ProjectDetailsRs projectDetailsRs = projectRepository.getProjectDetailsById(projectDetailsRq);
+        if (projectDetailsRs == null) {
+            throw new PostgreDbException("No se encontro el proyecto");
         }
+        ProjectPayload project = projectMapper.toDetailsProjectRs(projectDetailsRs,
+                projectDetailsRecord.projectId().toString());
 
-        public PaymentPayload[] sortPayments(PaymentPayload[] payments) {
+        // FN - Obtener detalles del contrato
+        ReadContractRs readContractRs = contractRepository.getContractDetailsById(
+                ReadContractRq.builder().project_id(UUID.fromString(projectDetailsRecord.projectId()))
+                        .build());
+        // FN - Obtener detalles de los pagos
+        List<PaymentReadRs> paymentsRs = paymentRepository
+                .getPayments(UUID.fromString(readContractRs.contract_id()));
+        Long numberPaymentPaid = paymentsRs.stream().filter(p -> p.paid()).count();
+        // FN - Mapear estatus del proyecto
+        List<StatusPayload> statusHistory = projectMapper
+                .toStatusPayloads(projectStatusRepository.findProjectStatus(projectMapper
+                        .toProjectStatusRq(projectDetailsRecord.projectId())));
 
-                return Arrays.stream(payments).sorted(Comparator.comparingInt(p -> p.type().getOrder()))
-                                .toArray(PaymentPayload[]::new);
+        ContractPayload contract = contractMapper.toDetailsContractRs(readContractRs,
+                numberPaymentPaid.intValue());
 
-        }
+        PaymentPayload[] payments = paymentMapper.toPayloads(paymentsRs);
+        // Ordenar pagos por su propiedad type en este orden (FIRST, SECOND y FINAL)
+        PaymentPayload[] orderedPayments = sortPayments(payments);
 
-        private List<UserPayload> getUsersByIds(String userClient, String userEmployee) {
-                GetUserByIdRq clientRq = GetUserByIdRq.builder()
-                                .userId(UUID.fromString(userClient)).build();
-                GetUserByIdRq employeeRq = GetUserByIdRq.builder()
-                                .userId(UUID.fromString(userEmployee)).build();
+        String userClient = projectDetailsRs.project().user_client();
+        String userEmployee = projectDetailsRs.project().user_employee();
 
-                GetUserByIdRs clientRs = userRepository.getUserDetailsById(clientRq);
-                GetUserByIdRs employeeRs = userRepository.getUserDetailsById(employeeRq);
+        return ProjectDetailsResult.builder()
+                .project(project)
+                .contract(contract)
+                .payments(orderedPayments)
+                .statusHistory(statusHistory)
+                .users(getUsersByIds(userClient, userEmployee))
+                .build();
+    }
 
-                return List.of(userMapper.toUserPayload(clientRs, userClient),
-                                userMapper.toUserPayload(employeeRs, userEmployee));
-        }
+    public PaymentPayload[] sortPayments(PaymentPayload[] payments) {
+
+        return Arrays.stream(payments).sorted(Comparator.comparingInt(p -> p.type().getOrder()))
+                .toArray(PaymentPayload[]::new);
+
+    }
+
+    private List<UserPayload> getUsersByIds(String userClient, String userEmployee) {
+        GetUserByIdRq clientRq = GetUserByIdRq.builder()
+                .userId(UUID.fromString(userClient)).build();
+        GetUserByIdRq employeeRq = GetUserByIdRq.builder()
+                .userId(UUID.fromString(userEmployee)).build();
+
+        GetUserByIdRs clientRs = userRepository.getUserDetailsById(clientRq);
+        GetUserByIdRs employeeRs = userRepository.getUserDetailsById(employeeRq);
+
+        return List.of(userMapper.toUserPayload(clientRs, userClient),
+                userMapper.toUserPayload(employeeRs, userEmployee));
+    }
 }
