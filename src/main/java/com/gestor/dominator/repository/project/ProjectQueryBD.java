@@ -51,5 +51,36 @@ public final class ProjectQueryBD {
                 VALUES (?, ?);
             """;
 
-    // public
+
+    // TODO: Cambiar a PUBLIC si se desea que la galería sea visible para todos los usuarios
+    public static final String GET_PROJECT_LIST_PUBLIC = """
+            SELECT p.project_id, p.title, p.style, p.size, ca.name as category, p.status,
+                (select STRING_AGG(name, ', ' ORDER BY name)
+                    from chapes c inner join project_chapes pc on pc.chape_id = c.chape_id
+                    where pc.project_id = p.project_id) as chapes,
+                (select STRING_AGG(name, ', ' ORDER BY name)
+                    from colors c inner join project_colors pc on pc.color_id = c.color_id
+                    where pc.project_id = p.project_id) as colors,
+                (select STRING_AGG(name, ', ' ORDER BY name)
+                    from materials m inner join project_materials pm on pm.material_id = m.material_id
+                    where pm.project_id = p.project_id) as materials,
+                p.additionals, p.start_date, p.estimated_completion_date as end_date, p.actual_completion_date as real_end_date,
+                COALESCE((
+                    SELECT JSON_AGG(
+                        JSON_BUILD_OBJECT(
+                            'id', i.image_id,
+                            'filename', i.filename,
+                            'size', i.size,
+                            'mimeType', i.mimeType,
+                            'ext', i.ext
+                        )
+                    )
+                    FROM project_images AS pi
+                    INNER JOIN images AS i ON i.image_id = pi.image_id
+                    WHERE pi.project_id = p.project_id
+                    AND pi.visibility = 'PRIVATE' 
+                ), '[]'::json)::text AS gallery
+            FROM projects p
+            INNER JOIN categories ca ON ca.category_id = p.category_id;
+            """;
 }

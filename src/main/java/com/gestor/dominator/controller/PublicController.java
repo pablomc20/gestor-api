@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gestor.dominator.business.project.RetrieveProjectDetailsUseCase;
+import com.gestor.dominator.business.project.RetrieveProjectPublicUseCase;
 import com.gestor.dominator.dto.image.ImageRenderResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.dto.projects.ProjectDetailsResult;
+import com.gestor.dominator.dto.projects.usecase.ProjectListPublicResult;
 import com.gestor.dominator.service.image.ImageService;
 import com.gestor.dominator.service.projects.ProjectService;
 
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class PublicController {
 
     private final RetrieveProjectDetailsUseCase createProjectUseCase;
+    private final RetrieveProjectPublicUseCase retrieveProjectPublicUseCase;
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ProjectDetailsResult> getProjectDetailsById(@PathVariable String id) {
@@ -34,12 +37,32 @@ public class PublicController {
         return ResponseEntity.ok(result);
     }
 
-    // @GetMapping("/file/{filename}")
-    // public ResponseEntity<byte[]> getImageFile(@PathVariable String filename) {
-    // ImageRenderResponse response = imageService.getImageFile(filename);
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> getImageFile() {
+        // Implement the logic to retrieve the image file here
+        // For example, you can call a service method to get the image data
+        // byte[] imageData = imageService.getImageData();
+        // return ResponseEntity.ok()
+        //         .contentType(MediaType.IMAGE_JPEG) // or the appropriate media type
+        //         .body(imageData);
+        
+        // return ResponseEntity.ok()
+        // .contentType(MediaType.parseMediaType(response.contentType()))
+        // .body(response.imageData());
 
-    // return ResponseEntity.ok()
-    // .contentType(MediaType.parseMediaType(response.contentType()))
-    // .body(response.imageData());
-    // }
+        return ResponseEntity.ok().build(); // Placeholder response{
+    }
+    
+    
+    @GetMapping("/projectlist")
+    public ResponseEntity<List<ProjectListPublicResult>> getProjectList() {
+        // Implement the logic to retrieve the project list here
+        // For example, you can call a service method to get the project data
+        // byte[] projectData = projectService.getProjectData();
+        // return ResponseEntity.ok()
+        //         .contentType(MediaType.IMAGE_JPEG) // or the appropriate media type
+        //         .body(imageData);
+        return ResponseEntity.ok(retrieveProjectPublicUseCase.execute()); // Placeholder response
+    }
+
 }

@@ -9,20 +9,25 @@ import com.gestor.dominator.dto.projectuser.ProjectUserResult;
 import com.gestor.dominator.dto.projects.usecase.ChangeStatusProjectRecord;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdRecord;
 import com.gestor.dominator.dto.projects.usecase.DetailsByIdResult;
+import com.gestor.dominator.dto.projects.usecase.GalleryImagePayload;
+import com.gestor.dominator.dto.projects.usecase.ProjectListPublicResult;
 import com.gestor.dominator.dto.projects.ProjectDetailsRecord;
 import com.gestor.dominator.model.postgre.notification.NotificationSendRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRs;
+import com.gestor.dominator.model.postgre.project.GalleryImageDto;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRq;
 import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
+import com.gestor.dominator.model.postgre.project.ProjectListPublicRs;
 import com.gestor.dominator.model.postgre.projectuser.ProjectUserRs;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
 import com.gestor.dominator.model.postgre.projectstatus.CreateProjectStatusRq;
 import com.gestor.dominator.model.postgre.projectstatus.ProjectStatusRq;
 import com.gestor.dominator.model.postgre.projectstatus.ProjectStatusRs;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.mapstruct.Mapper;
@@ -99,4 +104,12 @@ public interface ProjectMapper {
     ProjectStatusRq toProjectStatusRq(String projectId);
 
     List<StatusPayload> toStatusPayloads(List<ProjectStatusRs> projectStatusRs);
+
+    List<ProjectListPublicResult> toProjectListPublicResult(List<ProjectListPublicRs> projectListPublicRs);
+
+    @Mapping(target = "filePath", expression = "java(\"/file/\" + dto.filename() + \"_orig\" + dto.ext())")
+    @Mapping(target = "medPath", expression = "java(\"/file/\" + dto.filename() + \"_med\" + dto.ext())")
+    @Mapping(target = "thumbPath", expression = "java(\"/file/\" + dto.filename() + \"_thumb\" + dto.ext())")
+    GalleryImagePayload toGalleryImagePayload(GalleryImageDto dto);
+
 }
