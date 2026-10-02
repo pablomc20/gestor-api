@@ -10,14 +10,16 @@ import org.springframework.stereotype.Repository;
 import com.gestor.dominator.model.postgre.projectuser.ProjectUserRq;
 import com.gestor.dominator.model.postgre.projectuser.ProjectUserRs;
 
-import lombok.RequiredArgsConstructor;
 import static com.gestor.dominator.repository.projectuser.ProjectUserQueryBD.*;
 
-@RequiredArgsConstructor
 @Repository
 public class ProjectUserRepositoryImpl implements ProjectUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public ProjectUserRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<ProjectUserRs> findProjectsByEmployeeAndType(ProjectUserRq request) {
@@ -50,8 +52,10 @@ public class ProjectUserRepositoryImpl implements ProjectUserRepository {
                 rs.getDate("start_date") != null ? rs.getDate("start_date").toLocalDate() : null,
                 rs.getDate("estimated_completion_date") != null ? rs.getDate("estimated_completion_date").toLocalDate() : null,
                 rs.getDate("actual_completion_date") != null ? rs.getDate("actual_completion_date").toLocalDate() : null,
+                rs.getTimestamp("last_status_date") != null ? rs.getTimestamp("last_status_date").toLocalDateTime() : null,
                 daysRemaining,
                 rs.getString("client_name"),
+                rs.getString("phone"),
                 rs.getString("status"),
                 rs.getString("user_id")
         );
