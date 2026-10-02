@@ -13,21 +13,23 @@ import static com.gestor.dominator.repository.payment.PaymentQueryBD.*;
 
 import java.util.List;
 import java.util.UUID;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Objects;
 
 @Repository
-@RequiredArgsConstructor
 public class PaymentRepositoryImpl implements PaymentRepository {
     private final JdbcTemplate jdbcTemplate;
+
+    public PaymentRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public PaymentCreateRs createPayment(PaymentCreateRq paymentCreateRq) {
 
-        Integer existsPayment = jdbcTemplate.queryForObject(GET_PAYMENT_BY_TYPE, Integer.class,
+        Integer count = jdbcTemplate.queryForObject(GET_PAYMENT_BY_TYPE, Integer.class,
                 paymentCreateRq.type(), paymentCreateRq.contract_id());
 
-        if (existsPayment > 0) {
+        if (Objects.requireNonNullElse(count, 0) > 0) {
             throw new PostgreDbException("Payment already exists");
         }
 
@@ -43,6 +45,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
     public List<PaymentReadRs> getPayments(UUID contractId) {
+
         List<PaymentReadRs> payments = jdbcTemplate.query(GET_PAYMENTS,
                 (rs, rowNum) -> new PaymentReadRs(
                         rs.getString("payment_id"),
@@ -61,10 +64,10 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     @Override
     public void validateFirstPaymentExists(UUID contractId) {
-        int existsPayment = jdbcTemplate.queryForObject(EXISTS_PAYMENT_BY_TYPE, Integer.class,
+        Integer count = jdbcTemplate.queryForObject(EXISTS_PAYMENT_BY_TYPE, Integer.class,
                 PaymentType.FIRST.getValue(), contractId);
 
-        if (existsPayment == 0) {
+        if (Objects.requireNonNullElse(count, 0) == 0) {
             throw new PostgreDbException("You must create the first payment");
         }
     }

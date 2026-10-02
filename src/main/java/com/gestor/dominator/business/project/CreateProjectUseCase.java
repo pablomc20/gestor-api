@@ -22,11 +22,9 @@ import com.gestor.dominator.repository.project.ProjectRepository;
 import com.gestor.dominator.model.postgre.project.CreateProjectRq;
 import com.gestor.dominator.model.postgre.project.CreateProjectRs;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class CreateProjectUseCase {
 
@@ -36,6 +34,17 @@ public class CreateProjectUseCase {
     private final ProjectMapper projectMapper;
     private final PaymentMapper paymentMapper;
     private final ContractMapper contractMapper;
+
+    public CreateProjectUseCase(ProjectRepository projectRepository, ContractRepository contractRepository,
+            PaymentRepository paymentRepository, ProjectMapper projectMapper, PaymentMapper paymentMapper,
+            ContractMapper contractMapper) {
+        this.projectRepository = projectRepository;
+        this.contractRepository = contractRepository;
+        this.paymentRepository = paymentRepository;
+        this.projectMapper = projectMapper;
+        this.paymentMapper = paymentMapper;
+        this.contractMapper = contractMapper;
+    }
 
     @Transactional
     public CreateProjectResult execute(CreateProjectRecord createProject) {

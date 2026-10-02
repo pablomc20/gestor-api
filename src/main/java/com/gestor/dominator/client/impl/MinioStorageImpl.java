@@ -13,17 +13,19 @@ import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import lombok.RequiredArgsConstructor;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 @Service
-@RequiredArgsConstructor
 public class MinioStorageImpl implements MinioStorageClient {
 
     private final MinioClient minioClient;
+
+    public MinioStorageImpl(MinioClient minioClient) {
+        this.minioClient = minioClient;
+    }
 
     @Value("${minio.bucket.name}")
     private String bucketName;

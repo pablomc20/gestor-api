@@ -17,14 +17,16 @@ import com.gestor.dominator.dto.category.CategoryRecord;
 import com.gestor.dominator.dto.category.CategoryResult;
 import com.gestor.dominator.service.category.CategoryService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/categories")
-@RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<CategoryResult>> getAllCategories() {

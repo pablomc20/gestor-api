@@ -7,7 +7,6 @@ import com.gestor.dominator.dto.projectuser.ProjectUserResult;
 import com.gestor.dominator.service.projectuser.ProjectUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/projectusers")
 @Tag(name = "ProjectUser", description = "API para consultas de proyectos por tipo del usuario")
 @SecurityRequirement(name = "bearerAuth")
-@RequiredArgsConstructor
 public class ProjectUserController {
 
     private final ProjectUserService projectUserService;
+
+    public ProjectUserController(ProjectUserService projectUserService) {
+        this.projectUserService = projectUserService;
+    }
 
     @GetMapping("/employee")
     public ResponseEntity<List<ProjectUserResult>> getProjectsByUserType(

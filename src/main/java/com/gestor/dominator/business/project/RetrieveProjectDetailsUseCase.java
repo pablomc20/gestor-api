@@ -32,13 +32,10 @@ import com.gestor.dominator.mapper.ProjectMapper;
 import com.gestor.dominator.mapper.UserMapper;
 import com.gestor.dominator.mapper.ContractMapper;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class RetrieveProjectDetailsUseCase {
 
-    private final ProjectMapper projectMapper;
+	private final ProjectMapper projectMapper;
     private final ContractMapper contractMapper;
     private final PaymentMapper paymentMapper;
     private final ProjectRepository projectRepository;
@@ -47,6 +44,21 @@ public class RetrieveProjectDetailsUseCase {
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+    public RetrieveProjectDetailsUseCase(ProjectMapper projectMapper, ContractMapper contractMapper,
+            PaymentMapper paymentMapper, ProjectRepository projectRepository,
+            ProjectStatusRepository projectStatusRepository, ContractRepository contractRepository,
+            PaymentRepository paymentRepository, UserRepository userRepository, UserMapper userMapper) {
+        this.projectMapper = projectMapper;
+        this.contractMapper = contractMapper;
+        this.paymentMapper = paymentMapper;
+        this.projectRepository = projectRepository;
+        this.projectStatusRepository = projectStatusRepository;
+        this.contractRepository = contractRepository;
+        this.paymentRepository = paymentRepository;
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+    }
 
     public ProjectDetailsResult execute(ProjectDetailsRecord projectDetailsRecord) {
         ProjectDetailsRq projectDetailsRq = projectMapper.toDetailsProjectRq(projectDetailsRecord);

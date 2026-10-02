@@ -11,14 +11,18 @@ import com.gestor.dominator.model.postgre.mobileappclick.MobileAppClickRq;
 import com.gestor.dominator.repository.mobileappclick.MobileAppClickRepository;
 import com.gestor.dominator.service.mobileappclick.MobileAppClickService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class MobileAppClickBusiness implements MobileAppClickService {
 
     private final MobileAppClickRepository mobileAppClickRepository;
     private final MobileAppClickMapper mobileAppClickMapper;
+
+    public MobileAppClickBusiness(MobileAppClickRepository mobileAppClickRepository,
+            MobileAppClickMapper mobileAppClickMapper) {
+        this.mobileAppClickRepository = mobileAppClickRepository;
+        this.mobileAppClickMapper = mobileAppClickMapper;
+    }
 
     @Override
     public MobileAppClickResult createClick(MobileAppClickRecord record) {

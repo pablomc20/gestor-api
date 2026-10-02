@@ -13,14 +13,17 @@ import com.gestor.dominator.model.client.dipomex.CodigoPostalResponse;
 import com.gestor.dominator.model.client.dipomex.EstadoResponse;
 import com.gestor.dominator.service.address.AddressService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AddressBusiness implements AddressService {
 
    private final DipomexClient dipomexClient;
    private final DipomexProperties dipomexProperties;
+
+   public AddressBusiness(DipomexClient dipomexClient, DipomexProperties dipomexProperties) {
+      this.dipomexClient = dipomexClient;
+      this.dipomexProperties = dipomexProperties;
+   }
 
    @Override
    public AdressCPResult buscarCP(String cp) {

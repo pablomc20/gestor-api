@@ -17,14 +17,16 @@ import com.gestor.dominator.dto.payment.CreatePaymentResult;
 import com.gestor.dominator.dto.payment.ReadPaymentResult;
 import com.gestor.dominator.service.payment.PaymentService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/payments")
-@RequiredArgsConstructor
 public class PaymentController {
 
     private final PaymentService paymentService;
+
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     @PostMapping
     public ResponseEntity<CreatePaymentResult> createPayment(@RequestBody CreatePaymentRecord createPaymentRecord) {

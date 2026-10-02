@@ -11,13 +11,16 @@ import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImageRq;
 import com.gestor.dominator.service.projectimage.ProjectImageService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class ProjectImagesBusiness implements ProjectImageService {
   private final ProjectImageRepository projectImageRepository;
   private final ProjectImageMapper projectImageMapper;
+
+  public ProjectImagesBusiness(ProjectImageRepository projectImageRepository, ProjectImageMapper projectImageMapper) {
+    this.projectImageRepository = projectImageRepository;
+    this.projectImageMapper = projectImageMapper;
+  }
 
   @Override
   public List<ProjectImagesResult> getProjectImages(ProjectImagesRecord projectImagesRecord) {

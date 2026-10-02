@@ -15,15 +15,17 @@ import com.gestor.dominator.model.postgre.projectimage.ProjectImageRepository;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImageRq;
 import com.gestor.dominator.model.postgre.projectimage.ProjectImagesRs;
 
-import lombok.RequiredArgsConstructor;
 
 import static com.gestor.dominator.repository.projectimage.ProjectImageQueryBD.INSERT_PROJECT_IMAGE;
 
 @Repository
-@RequiredArgsConstructor
 public class ProjectImageRepositoryImpl implements ProjectImageRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public ProjectImageRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public CreateProjectImageRs save(CreateProjectImageRq rq) {

@@ -27,7 +27,6 @@ import com.gestor.dominator.model.postgre.projectstatus.CreateProjectStatusRq;
 import com.gestor.dominator.model.postgre.projectstatus.ProjectStatusRq;
 import com.gestor.dominator.model.postgre.projectstatus.ProjectStatusRs;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.mapstruct.Mapper;

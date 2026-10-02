@@ -12,7 +12,6 @@ import com.gestor.dominator.repository.projectstatus.ProjectStatusRepository;
 import com.gestor.dominator.model.postgre.project.DetailsByIdRq;
 import com.gestor.dominator.service.projects.ProjectService;
 import com.gestor.dominator.constants.StatusProject;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
@@ -21,13 +20,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ProjectBusiness implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectStatusRepository projectStatusRepository;
     private final ProjectMapper projectMapper;
+
+    public ProjectBusiness(ProjectRepository projectRepository, ProjectStatusRepository projectStatusRepository,
+            ProjectMapper projectMapper) {
+        this.projectRepository = projectRepository;
+        this.projectStatusRepository = projectStatusRepository;
+        this.projectMapper = projectMapper;
+    }
 
     @Override
     public List<DetailsByIdResult> getProyectEmployeeById(DetailsByIdRecord detailsForClientRecord) {

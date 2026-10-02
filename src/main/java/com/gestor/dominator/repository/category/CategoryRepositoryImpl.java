@@ -5,21 +5,24 @@ import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.postgre.category.CategoryRq;
 import com.gestor.dominator.model.postgre.category.CategoryRs;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<CategoryRs> categoryMapper = (rs, rowNum) -> new CategoryRs(
+    public CategoryRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final @NonNull RowMapper<CategoryRs> categoryMapper = (rs, rowNum) -> new CategoryRs(
             rs.getString("category_id"),
             rs.getString("name"),
             rs.getString("slug"));

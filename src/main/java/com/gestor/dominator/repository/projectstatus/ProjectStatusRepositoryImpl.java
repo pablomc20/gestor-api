@@ -14,13 +14,15 @@ import com.gestor.dominator.model.postgre.projectstatus.ProjectStatusRs;
 
 import static com.gestor.dominator.repository.projectstatus.ProjectStatusQueryBD.*;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class ProjectStatusRepositoryImpl implements ProjectStatusRepository {
 
   private final JdbcTemplate jdbcTemplate;
+
+  public ProjectStatusRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+  }
 
   @Override
   public List<ProjectStatusRs> findProjectStatus(ProjectStatusRq request) {

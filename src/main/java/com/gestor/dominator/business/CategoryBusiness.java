@@ -14,14 +14,17 @@ import com.gestor.dominator.model.postgre.category.CategoryRq;
 import com.gestor.dominator.repository.category.CategoryRepository;
 import com.gestor.dominator.service.category.CategoryService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class CategoryBusiness implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+
+    public CategoryBusiness(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+        this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
+    }
 
     @Cacheable("categories")
     @Override

@@ -21,7 +21,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "user_details")
 public class UserDetail {
 
@@ -38,4 +37,13 @@ public class UserDetail {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
+    public UserDetail(UUID userDetailId, String name, String phone, String url_image, User user) {
+        this.userDetailId = userDetailId;
+        this.name = name;
+        this.phone = phone;
+        this.url_image = url_image;
+        this.user = user;
+    }
+
+    
 }

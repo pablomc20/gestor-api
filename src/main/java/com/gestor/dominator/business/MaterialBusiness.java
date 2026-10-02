@@ -14,14 +14,17 @@ import com.gestor.dominator.model.postgre.material.MaterialRq;
 import com.gestor.dominator.repository.material.MaterialRepository;
 import com.gestor.dominator.service.material.MaterialService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class MaterialBusiness implements MaterialService {
 
     private final MaterialRepository materialRepository;
     private final MaterialMapper materialMapper;
+
+    public MaterialBusiness(MaterialRepository materialRepository, MaterialMapper materialMapper) {
+        this.materialRepository = materialRepository;
+        this.materialMapper = materialMapper;
+    }
 
     @Cacheable("materials")
     @Override

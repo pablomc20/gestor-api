@@ -15,14 +15,16 @@ import com.gestor.dominator.dto.mobileappclick.MobileAppClickRecord;
 import com.gestor.dominator.dto.mobileappclick.MobileAppClickResult;
 import com.gestor.dominator.service.mobileappclick.MobileAppClickService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/public/mobile-app-clicks")
-@RequiredArgsConstructor
 public class MobileAppClickController {
 
     private final MobileAppClickService mobileAppClickService;
+
+    public MobileAppClickController(MobileAppClickService mobileAppClickService) {
+        this.mobileAppClickService = mobileAppClickService;
+    }
 
     @PostMapping
     public ResponseEntity<MobileAppClickResult> createClick(@RequestBody MobileAppClickRecord record) {

@@ -5,13 +5,15 @@ import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.model.postgre.notification.NotificationSendRq;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class NotificationRepositoryImpl implements NotifiactionRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public NotificationRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public boolean create(NotificationSendRq notificationSendRq) {

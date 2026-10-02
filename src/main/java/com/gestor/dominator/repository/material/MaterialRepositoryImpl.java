@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.exceptions.custom.DataValidationException;
@@ -14,15 +15,17 @@ import com.gestor.dominator.model.postgre.material.MaterialRs;
 
 import static com.gestor.dominator.repository.material.MaterialQueryBD.*;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class MaterialRepositoryImpl implements MaterialRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<MaterialRs> materialMapper = (rs, rowNum) -> new MaterialRs(
+    public MaterialRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final @NonNull RowMapper<MaterialRs> materialMapper = (rs, rowNum) -> new MaterialRs(
             rs.getString("material_id"),
             rs.getString("name"),
             rs.getString("slug"));

@@ -7,13 +7,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 public class ObjectManipulationUtil {
 
   private final ObjectMapper objectMapper;
+
+  public ObjectManipulationUtil(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
 
   public <T> T objectMapperToString(String jsonResult, Class<T> clazz) {
     try {

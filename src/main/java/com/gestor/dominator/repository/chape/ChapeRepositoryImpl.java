@@ -5,21 +5,24 @@ import java.util.UUID;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.exceptions.custom.DataValidationException;
 import com.gestor.dominator.model.postgre.chape.ChapeRq;
 import com.gestor.dominator.model.postgre.chape.ChapeRs;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class ChapeRepositoryImpl implements ChapeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<ChapeRs> chapeMapper = (rs, rowNum) -> new ChapeRs(
+    public ChapeRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final @NonNull RowMapper<ChapeRs> chapeMapper = (rs, rowNum) -> new ChapeRs(
             rs.getString("chape_id"),
             rs.getString("name"),
             rs.getString("slug"));

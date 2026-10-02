@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
@@ -28,13 +27,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/projects")
 @Tag(name = "Projects", description = "API para gestión de proyectos")
 @SecurityRequirement(name = "bearerAuth")
-@RequiredArgsConstructor
 public class ProjectController {
 
     private final ProjectService projectService;
     private final RetrieveProjectDetailsUseCase retrieveProjectDetailsUseCase;
     private final CreateProjectUseCase createProjectUseCase;
     private final ChangeStatusProjectUseCase changeStatusProjectUseCase;
+
+    public ProjectController(ProjectService projectService, RetrieveProjectDetailsUseCase retrieveProjectDetailsUseCase,
+            CreateProjectUseCase createProjectUseCase, ChangeStatusProjectUseCase changeStatusProjectUseCase) {
+        this.projectService = projectService;
+        this.retrieveProjectDetailsUseCase = retrieveProjectDetailsUseCase;
+        this.createProjectUseCase = createProjectUseCase;
+        this.changeStatusProjectUseCase = changeStatusProjectUseCase;
+    }
 
     @GetMapping("/{projectId}/details-client")
     public List<DetailsByIdResult> getDetailsProjectClient(

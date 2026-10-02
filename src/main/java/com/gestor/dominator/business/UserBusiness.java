@@ -25,17 +25,21 @@ import com.gestor.dominator.model.postgre.user.PatchUserRq;
 import com.gestor.dominator.repository.user.UserRepository;
 import com.gestor.dominator.service.users.UserService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class UserBusiness implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
+    public UserBusiness(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetailsResult getUserDetailsById(UserDetailsRecord userDetailsRecord) {

@@ -14,14 +14,17 @@ import com.gestor.dominator.model.postgre.chape.ChapeRq;
 import com.gestor.dominator.repository.chape.ChapeRepository;
 import com.gestor.dominator.service.chape.ChapeService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class ChapeBusiness implements ChapeService {
 
     private final ChapeRepository chapeRepository;
     private final ChapeMapper chapeMapper;
+
+    public ChapeBusiness(ChapeRepository chapeRepository, ChapeMapper chapeMapper) {
+        this.chapeRepository = chapeRepository;
+        this.chapeMapper = chapeMapper;
+    }
 
     @Cacheable("chapes")
     @Override

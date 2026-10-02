@@ -19,7 +19,6 @@ import java.util.UUID;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "users") // Nombre exacto de tu tabla
 public class User implements UserDetails {
@@ -51,7 +50,21 @@ public class User implements UserDetails {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
+    
+
     // --- Métodos de UserDetails ---
+
+    public User(UUID userId, String password, String email, boolean enabled, String role, UserDetail userDetail,
+            OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+        this.userId = userId;
+        this.password = password;
+        this.email = email;
+        this.enabled = enabled;
+        this.role = role;
+        this.userDetail = userDetail;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

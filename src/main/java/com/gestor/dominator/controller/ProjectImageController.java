@@ -12,13 +12,15 @@ import com.gestor.dominator.dto.projectimage.ProjectImagesRecord;
 import com.gestor.dominator.dto.projectimage.ProjectImagesResult;
 import com.gestor.dominator.service.projectimage.ProjectImageService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/projects/images")
-@RequiredArgsConstructor
 public class ProjectImageController {
   private final ProjectImageService projectImageService;
+
+  public ProjectImageController(ProjectImageService projectImageService) {
+    this.projectImageService = projectImageService;
+  }
 
   @PostMapping
   public ResponseEntity<List<ProjectImagesResult>> getProjectImages(@RequestBody ProjectImagesRecord projectImagesRecord) {

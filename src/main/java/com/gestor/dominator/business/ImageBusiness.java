@@ -7,13 +7,15 @@ import com.gestor.dominator.repository.images.ImageRepository;
 import com.gestor.dominator.service.image.ImageDbService;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class ImageBusiness implements ImageDbService {
 
     private final ImageRepository imageRepository;
+
+    public ImageBusiness(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
 
     @Override
     public ImageRs findById(String id) {

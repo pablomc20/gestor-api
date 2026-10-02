@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
@@ -15,13 +16,15 @@ import com.gestor.dominator.model.postgre.image.ImageRs;
 
 import static com.gestor.dominator.repository.images.ImageQueryBD.*;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class ImageRepositoryImpl implements ImageRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public ImageRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public ImageRs findById(String id) {
@@ -50,7 +53,7 @@ public class ImageRepositoryImpl implements ImageRepository {
         }
     }
 
-    private RowMapper<ImageRs> rowMapperImage() {
+    private @NonNull RowMapper<ImageRs> rowMapperImage() {
         return (rs, rowNum) -> ImageRs.builder()
                 .id(rs.getString("image_id"))
                 .filename(rs.getString("filename"))

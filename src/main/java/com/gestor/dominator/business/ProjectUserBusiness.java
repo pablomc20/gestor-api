@@ -12,15 +12,18 @@ import com.gestor.dominator.model.postgre.projectuser.ProjectUserRq;
 import com.gestor.dominator.repository.projectuser.ProjectUserRepository;
 import com.gestor.dominator.service.projectuser.ProjectUserService;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class ProjectUserBusiness implements ProjectUserService {
 
     private final ProjectUserRepository projectUserRepository;
     private final ProjectMapper projectMapper;
+
+    public ProjectUserBusiness(ProjectUserRepository projectUserRepository, ProjectMapper projectMapper) {
+        this.projectUserRepository = projectUserRepository;
+        this.projectMapper = projectMapper;
+    }
 
     @Override
     public List<ProjectUserResult> getProjectsForEmployee(ProjectUserRecord request) {

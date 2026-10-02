@@ -14,10 +14,8 @@ import com.gestor.dominator.model.postgre.projectstatus.CreateProjectStatusRq;
 import com.gestor.dominator.repository.notification.NotifiactionRepository;
 import com.gestor.dominator.repository.projectstatus.ProjectStatusRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class ChangeStatusProjectUseCase {
 
     private final String VISIBILITY = "PRIVATE"; // For ProjectImage
@@ -26,6 +24,15 @@ public class ChangeStatusProjectUseCase {
     private final ProjectStatusRepository projectStatusRepository;
     private final NotifiactionRepository notificationRepository;
     private final ProjectMapper projectMapper;
+
+    public ChangeStatusProjectUseCase(ProjectImageRepository projectImageRepository,
+            ProjectStatusRepository projectStatusRepository, NotifiactionRepository notificationRepository,
+            ProjectMapper projectMapper) {
+        this.projectImageRepository = projectImageRepository;
+        this.projectStatusRepository = projectStatusRepository;
+        this.notificationRepository = notificationRepository;
+        this.projectMapper = projectMapper;
+    }
 
     @Transactional
     public void execute(ChangeStatusProjectRecord record) {

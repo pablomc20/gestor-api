@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.components.ObjectManipulationUtil;
@@ -24,7 +25,6 @@ import com.gestor.dominator.model.postgre.project.ProjectDetailsRs;
 import com.gestor.dominator.model.postgre.project.ProjectListPublicRs;
 import com.gestor.dominator.model.postgre.project.ProjectPayloadRs;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static com.gestor.dominator.repository.project.ProjectQueryBD.*;
 
@@ -32,15 +32,12 @@ import static com.gestor.dominator.repository.project.ProjectQueryBD.*;
 public class ProjectRepositoryImpl implements ProjectRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ObjectMapper objectMapper;
     private final ObjectManipulationUtil objectManipulationUtil;
 
     public ProjectRepositoryImpl(
             JdbcTemplate jdbcTemplate,
-            ObjectMapper objectMapper,
             ObjectManipulationUtil objectManipulationUtil) {
         this.jdbcTemplate = jdbcTemplate;
-        this.objectMapper = objectMapper;
         this.objectManipulationUtil = objectManipulationUtil;
     }
 
@@ -203,7 +200,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
                 rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null);
     }
 
-    private final RowMapper<ProjectListPublicRs> projectRowMapper = (rs, rowNum) -> {
+    private final @NonNull RowMapper<ProjectListPublicRs> projectRowMapper = (rs, rowNum) -> {
         try {
             // Mapeo directo de los campos estándar
             String projectId = rs.getString("project_id");

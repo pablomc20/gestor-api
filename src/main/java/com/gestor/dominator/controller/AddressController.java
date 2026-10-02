@@ -9,14 +9,16 @@ import com.gestor.dominator.business.AddressBusiness;
 import com.gestor.dominator.dto.address.AdressCPResult;
 import com.gestor.dominator.dto.address.StatesResult;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/address")
-@RequiredArgsConstructor
 public class AddressController {
 
   private final AddressBusiness addressBusiness;
+
+  public AddressController(AddressBusiness addressBusiness) {
+    this.addressBusiness = addressBusiness;
+  }
 
   @GetMapping("/cp/{cp}")
   public AdressCPResult buscarCP(@PathVariable String cp) {

@@ -12,16 +12,18 @@ import static com.gestor.dominator.repository.contract.ContractQueryBD.CREATE_CO
 import java.time.LocalDate;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class ContractRepositoryImpl implements ContractRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public ContractRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public CreateContractRs createContract(CreateContractRq createContractRecord) {

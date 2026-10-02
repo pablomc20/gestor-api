@@ -5,20 +5,23 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.model.postgre.mobileappclick.MobileAppClickRq;
 import com.gestor.dominator.model.postgre.mobileappclick.MobileAppClickRs;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class MobileAppClickRepositoryImpl implements MobileAppClickRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<MobileAppClickRs> clickMapper = (rs, rowNum) -> MobileAppClickRs.builder()
+    public MobileAppClickRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final @NonNull RowMapper<MobileAppClickRs> clickMapper = (rs, rowNum) -> MobileAppClickRs.builder()
             .id(rs.getInt("id"))
             .eventType(rs.getString("event_type"))
             .eventDate(rs.getObject("event_date", OffsetDateTime.class))

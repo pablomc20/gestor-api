@@ -7,13 +7,15 @@ import com.gestor.dominator.dto.interested.CreateResult;
 import com.gestor.dominator.repository.InteresatedRepository;
 import com.gestor.dominator.service.interested.InteresatedService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class InterestedBusiness implements InteresatedService {
 
     private final InteresatedRepository interesatedRepository;
+
+    public InterestedBusiness(InteresatedRepository interesatedRepository) {
+        this.interesatedRepository = interesatedRepository;
+    }
 
     public CreateResult createInteresated(CreateRecord record) {
         return CreateResult.builder()

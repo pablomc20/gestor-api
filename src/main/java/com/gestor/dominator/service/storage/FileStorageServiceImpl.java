@@ -8,13 +8,15 @@ import com.gestor.dominator.components.FileStorageComponent;
 import com.gestor.dominator.exceptions.custom.FileSystemException;
 import com.gestor.dominator.model.client.minio.ImageRenderRs;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class FileStorageServiceImpl implements FileStorageService {
 
     private final FileStorageComponent fileStorageComponent;
+
+    public FileStorageServiceImpl(FileStorageComponent fileStorageComponent) {
+        this.fileStorageComponent = fileStorageComponent;
+    }
 
     @Override
     public String save(MultipartFile file) {

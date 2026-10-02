@@ -5,13 +5,15 @@ import org.springframework.stereotype.Repository;
 
 import com.gestor.dominator.repository.InteresatedRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Repository
-@RequiredArgsConstructor
 public class InteresatedRepositoryImpl implements InteresatedRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public InteresatedRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public boolean createInteresated(String email) {

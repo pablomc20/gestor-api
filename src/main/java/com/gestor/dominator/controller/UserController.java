@@ -22,14 +22,16 @@ import com.gestor.dominator.dto.users.UserRecord;
 import com.gestor.dominator.dto.users.UserResult;
 import com.gestor.dominator.service.users.UserService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDetailsResult> getUserDetailsById(@PathVariable String id) {

@@ -17,14 +17,16 @@ import com.gestor.dominator.dto.materials.MaterialPayload;
 import com.gestor.dominator.dto.materials.MaterialRecord;
 import com.gestor.dominator.service.material.MaterialService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/materials")
-@RequiredArgsConstructor
 public class MaterialsController {
 
     private final MaterialService materialService;
+
+    public MaterialsController(MaterialService materialService) {
+        this.materialService = materialService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<MaterialPayload>> getAllMaterials() {

@@ -20,15 +20,19 @@ import com.gestor.dominator.dto.projects.usecase.ProjectListPublicResult;
 import com.gestor.dominator.service.image.ImageService;
 import com.gestor.dominator.service.projects.ProjectService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping(path = "/public")
-@RequiredArgsConstructor
 public class PublicController {
 
     private final RetrieveProjectDetailsUseCase createProjectUseCase;
     private final RetrieveProjectPublicUseCase retrieveProjectPublicUseCase;
+
+    public PublicController(RetrieveProjectDetailsUseCase createProjectUseCase,
+            RetrieveProjectPublicUseCase retrieveProjectPublicUseCase) {
+        this.createProjectUseCase = createProjectUseCase;
+        this.retrieveProjectPublicUseCase = retrieveProjectPublicUseCase;
+    }
 
     @GetMapping("/project/{id}")
     public ResponseEntity<ProjectDetailsResult> getProjectDetailsById(@PathVariable String id) {
@@ -56,12 +60,6 @@ public class PublicController {
     
     @GetMapping("/projectlist")
     public ResponseEntity<List<ProjectListPublicResult>> getProjectList() {
-        // Implement the logic to retrieve the project list here
-        // For example, you can call a service method to get the project data
-        // byte[] projectData = projectService.getProjectData();
-        // return ResponseEntity.ok()
-        //         .contentType(MediaType.IMAGE_JPEG) // or the appropriate media type
-        //         .body(imageData);
         return ResponseEntity.ok(retrieveProjectPublicUseCase.execute()); // Placeholder response
     }
 

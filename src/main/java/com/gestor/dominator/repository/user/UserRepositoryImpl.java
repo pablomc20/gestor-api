@@ -16,11 +16,10 @@ import java.util.UUID;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -28,6 +27,10 @@ public class UserRepositoryImpl implements UserRepository {
     private final String PASSWORD_DEFAULT = "secret";
     private final boolean ENABLED_DEFAULT = false;
     private final JdbcTemplate jdbcTemplate;
+
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public GetUserByIdRs getUserDetailsById(GetUserByIdRq getUserByIdRq) {
@@ -99,22 +102,22 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     // MAPPERS AND PARAMS
-    private static final RowMapper<GetUserByIdRs> USER_DETAILS_MAPPER = (rs, rowNum) -> new GetUserByIdRs(
+    private static final @NonNull RowMapper<GetUserByIdRs> USER_DETAILS_MAPPER = (rs, rowNum) -> new GetUserByIdRs(
             rs.getString("email"),
             rs.getString("phone"),
             rs.getString("legal_representative"),
             rs.getString("tax_id"));
 
-    private static final RowMapper<CreateUserRs> CREATE_USER_MAPPER = (rs, rowNum) -> new CreateUserRs(
+    private static final @NonNull RowMapper<CreateUserRs> CREATE_USER_MAPPER = (rs, rowNum) -> new CreateUserRs(
             rs.getString("user_id"));
 
-    private static final RowMapper<String> CREATE_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
+    private static final @NonNull RowMapper<String> CREATE_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
 
-    private static final RowMapper<String> PATCH_USER_MAPPER = (rs, rowNum) -> rs.getString("user_id");
+    private static final @NonNull RowMapper<String> PATCH_USER_MAPPER = (rs, rowNum) -> rs.getString("user_id");
 
-    private static final RowMapper<String> PATCH_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
+    private static final @NonNull RowMapper<String> PATCH_USER_DETAILS_MAPPER = (rs, rowNum) -> rs.getString("user_detail_id");
 
-    private static final RowMapper<UserClientResult> USER_CLIENT_MAPPER = (rs, rowNum) -> new UserClientResult(
+    private static final @NonNull RowMapper<UserClientResult> USER_CLIENT_MAPPER = (rs, rowNum) -> new UserClientResult(
             rs.getString("user_id"),
             rs.getString("legal_representative"));
 

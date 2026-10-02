@@ -16,14 +16,17 @@ import com.gestor.dominator.model.postgre.payment.PaymentCreateRs;
 import com.gestor.dominator.repository.payment.PaymentRepository;
 import com.gestor.dominator.service.payment.PaymentService;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class PaymentBusiness implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
+
+    public PaymentBusiness(PaymentRepository paymentRepository, PaymentMapper paymentMapper) {
+        this.paymentRepository = paymentRepository;
+        this.paymentMapper = paymentMapper;
+    }
 
     @Override
     public CreatePaymentResult createPayment(CreatePaymentRecord createPaymentRecord) {

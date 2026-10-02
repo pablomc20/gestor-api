@@ -17,14 +17,16 @@ import com.gestor.dominator.dto.chapes.ChapeRecord;
 import com.gestor.dominator.dto.chapes.ChapeResult;
 import com.gestor.dominator.service.chape.ChapeService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/chapes")
-@RequiredArgsConstructor
 public class ChapeController {
 
     private final ChapeService chapeService;
+
+    public ChapeController(ChapeService chapeService) {
+        this.chapeService = chapeService;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<ChapeResult>> getAllChapes() {

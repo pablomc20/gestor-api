@@ -11,15 +11,18 @@ import com.gestor.dominator.exceptions.custom.FileSystemException;
 import com.gestor.dominator.model.client.minio.ImageRenderRs;
 import com.gestor.dominator.utils.FileUtils;
 
-import lombok.RequiredArgsConstructor;
 
 @Component
-@RequiredArgsConstructor
 public class FileStorageComponent {
 
     private final MinioStorageClient minioStorageService;
 
     private final ThumbnailsConverter thumbnailsConverter;
+
+    public FileStorageComponent(MinioStorageClient minioStorageService, ThumbnailsConverter thumbnailsConverter) {
+        this.minioStorageService = minioStorageService;
+        this.thumbnailsConverter = thumbnailsConverter;
+    }
 
     /**
      * Guarda un archivo en Minio y devuelve el nombre único generado.

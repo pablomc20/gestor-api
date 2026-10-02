@@ -22,14 +22,16 @@ import com.gestor.dominator.service.image.ImageService;
 import com.gestor.dominator.service.storage.FileStorageService;
 import com.gestor.dominator.utils.FileUtils;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class ImageUseCase implements ImageService {
 
     private final ImageDbService imageDbService;
     private final FileStorageService fileStorageService;
+
+    public ImageUseCase(ImageDbService imageDbService, FileStorageService fileStorageService) {
+        this.imageDbService = imageDbService;
+        this.fileStorageService = fileStorageService;
+    }
 
     @Override
     public ImageResult getImageById(String id) {
