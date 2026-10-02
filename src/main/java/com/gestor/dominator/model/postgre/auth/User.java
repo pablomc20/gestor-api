@@ -1,7 +1,6 @@
 package com.gestor.dominator.model.postgre.auth;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

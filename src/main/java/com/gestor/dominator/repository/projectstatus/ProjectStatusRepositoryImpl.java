@@ -71,7 +71,8 @@ public class ProjectStatusRepositoryImpl implements ProjectStatusRepository {
   private ProjectStatusRs mapProjectStatusRs(java.sql.ResultSet rs, int rowNum) throws java.sql.SQLException {
     return new ProjectStatusRs(
         rs.getString("new_status"),
-        rs.getString("created_at"));
+        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null
+    );
   }
 
   private CreateProjectStatusRs mapCreateProjectStatusRs(java.sql.ResultSet rs, int rowNum)
