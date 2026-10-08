@@ -9,13 +9,24 @@ import lombok.Builder;
 
 @Builder
 public record ContractPayload(
-        UUID contractId,
-        BigDecimal budget,
-        @NotNull
-        @Positive Integer numberPayment,
-        Integer numberPaymentPaid,
-        String description,
-        String status,
-        String fileUrl) {
+		UUID contractId,
+		BigDecimal budget,
+		@NotNull @Positive Integer numberPayment,
+		Integer numberPaymentPaid,
+		String description,
+		String status,
+		String fileUrl) {
+
+	public ContractPayload withAmount(BigDecimal totalPaymentAmount) {
+		return new ContractPayload(
+				this.contractId,
+				totalPaymentAmount,
+				this.numberPayment,
+				this.numberPaymentPaid,
+				this.description,
+				this.status,
+				this.fileUrl
+		);
+	}
 
 }

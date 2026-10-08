@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public record CreatePaymentRecord(
-        UUID idContract,
+        UUID idProject,
         String type,
         BigDecimal amount,
         LocalDate paymentDate) {

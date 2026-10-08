@@ -77,7 +77,7 @@ public class RetrieveProjectDetailsUseCase {
                         .build());
         // FN - Obtener detalles de los pagos
         List<PaymentReadRs> paymentsRs = paymentRepository
-                .getPayments(UUID.fromString(readContractRs.contract_id()));
+                .getPayments(UUID.fromString(projectDetailsRecord.projectId()));
         Long numberPaymentPaid = paymentsRs.stream().filter(p -> p.paid()).count();
         // FN - Mapear estatus del proyecto
         List<StatusPayload> statusHistory = projectMapper

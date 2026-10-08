@@ -11,7 +11,6 @@ public interface PaymentRepository {
 
     PaymentCreateRs createPayment(PaymentCreateRq paymentCreateRq);
 
-    List<PaymentReadRs> getPayments(UUID contractId);
+    List<PaymentReadRs> getPayments(UUID projectId);
 
-    void validateFirstPaymentExists(UUID contractId);
 }

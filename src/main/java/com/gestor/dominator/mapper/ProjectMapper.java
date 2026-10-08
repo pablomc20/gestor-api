@@ -35,8 +35,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
 
-    @Mapping(target = "budget", source = "contract.budget")
-    CreateProjectRq toCreateRq(CreateProjectRecord createProject);
+    @Mapping(target = "budget", source = "createProject.contract.budget")
+    @Mapping(target = "status", expression = "java(hasContract ? \"NOT_APPLIED\" : \"DELIVERED\")")
+    CreateProjectRq toCreateRq(CreateProjectRecord createProject, Boolean hasContract);
 
     @Mapping(target = "idProject", source = "project_id")
     CreateProjectResult toResult(CreateProjectRs result);

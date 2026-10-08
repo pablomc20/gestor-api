@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Builder
 public record PaymentCreateRq(
-        String contract_id,
+        String project_id,
         String type,
         BigDecimal amount,
         LocalDate payment_date) {

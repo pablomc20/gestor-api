@@ -11,6 +11,7 @@ public record CreateProjectRq(
         String title,
         String size,
         String style,
+        String status,
         String additionalInfo,
         LocalDate startDate,
         LocalDate estimatedCompletionDate,

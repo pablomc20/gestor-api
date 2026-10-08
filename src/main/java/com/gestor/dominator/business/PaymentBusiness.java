@@ -32,11 +32,7 @@ public class PaymentBusiness implements PaymentService {
     public CreatePaymentResult createPayment(CreatePaymentRecord createPaymentRecord) {
 
         validatePayload(createPaymentRecord);
-
-        if (!PaymentType.FIRST.getValue().equals(createPaymentRecord.type())) {
-            paymentRepository.validateFirstPaymentExists(createPaymentRecord.idContract());
-        }
-
+        
         PaymentCreateRq paymentCreateRecord = paymentMapper.toPaymentCreateRq(createPaymentRecord);
 
         // Crear pago en la BD
@@ -57,7 +53,7 @@ public class PaymentBusiness implements PaymentService {
     private void validatePayload(CreatePaymentRecord createPaymentRecord) {
         PaymentType.fromValue(createPaymentRecord.type());
 
-        require(createPaymentRecord.idContract(), "Id contract is required");
+        require(createPaymentRecord.idProject(), "Id project is required");
         require(createPaymentRecord.type(), "Type is required");
         require(createPaymentRecord.amount(), "Amount is required");
 

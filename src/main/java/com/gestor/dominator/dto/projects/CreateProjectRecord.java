@@ -21,7 +21,7 @@ public record CreateProjectRecord(
         UUID employee,
 
         @Valid
-        @NotNull ContractPayload contract,
+        ContractPayload contract,
         PaymentPayload[] payments,
 
         UUID[] colors,

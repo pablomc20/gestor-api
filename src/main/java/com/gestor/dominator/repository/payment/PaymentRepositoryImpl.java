@@ -27,14 +27,14 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     public PaymentCreateRs createPayment(PaymentCreateRq paymentCreateRq) {
 
         Integer count = jdbcTemplate.queryForObject(GET_PAYMENT_BY_TYPE, Integer.class,
-                paymentCreateRq.type(), paymentCreateRq.contract_id());
+                paymentCreateRq.type(), paymentCreateRq.project_id());
 
         if (Objects.requireNonNullElse(count, 0) > 0) {
             throw new PostgreDbException("Payment already exists");
         }
 
         UUID paymentId = jdbcTemplate.queryForObject(CREATE_PAYMENT, UUID.class,
-                paymentCreateRq.type(), paymentCreateRq.amount(), paymentCreateRq.contract_id());
+                paymentCreateRq.type(), paymentCreateRq.amount(), paymentCreateRq.project_id());
 
         if (paymentId == null) {
             throw new PostgreDbException("Payment not created");
@@ -44,7 +44,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public List<PaymentReadRs> getPayments(UUID contractId) {
+    public List<PaymentReadRs> getPayments(UUID projectId) {
 
         List<PaymentReadRs> payments = jdbcTemplate.query(GET_PAYMENTS,
                 (rs, rowNum) -> new PaymentReadRs(
@@ -53,23 +53,13 @@ public class PaymentRepositoryImpl implements PaymentRepository {
                         rs.getDate("payment_date") != null ? rs.getDate("payment_date").toLocalDate() : null,
                         rs.getString("type"),
                         rs.getBoolean("paid")),
-                contractId);
+                projectId);
 
         if (payments.isEmpty()) {
             throw new PostgreDbException("Payments not found");
         }
 
         return payments;
-    }
-
-    @Override
-    public void validateFirstPaymentExists(UUID contractId) {
-        Integer count = jdbcTemplate.queryForObject(EXISTS_PAYMENT_BY_TYPE, Integer.class,
-                PaymentType.FIRST.getValue(), contractId);
-
-        if (Objects.requireNonNullElse(count, 0) == 0) {
-            throw new PostgreDbException("You must create the first payment");
-        }
     }
 
 }

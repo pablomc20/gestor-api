@@ -15,7 +15,7 @@ import com.gestor.dominator.model.postgre.payment.PaymentReadRs;
 public interface PaymentMapper {
 
     // Aplica a un pago individual
-    @Mapping(target = "contract_id", source = "rq.idContract")
+    @Mapping(target = "project_id", source = "rq.idProject")
     @Mapping(target = "type", source = "rq.type")
     @Mapping(target = "amount", source = "rq.amount")
     @Mapping(target = "payment_date", source = "rq.paymentDate")
@@ -31,11 +31,11 @@ public interface PaymentMapper {
     List<ReadPaymentResult> toPaymentReadedRs(List<PaymentReadRs> paymentReadRs);
 
     // Aplica para varios pagos, cuando se crea un contrato
-    @Mapping(target = "contract_id", source = "idContract")
+    @Mapping(target = "project_id", source = "idProject")
     @Mapping(target = "type", source = "payment.type")
     @Mapping(target = "amount", source = "payment.amount")
     @Mapping(target = "payment_date", ignore = true)
-    PaymentCreateRq toPaymentCreateRq(PaymentPayload payment, UUID idContract);
+    PaymentCreateRq toPaymentCreateRq(PaymentPayload payment, UUID idProject);
 
     @Mapping(target = "isPaid", source = "paymentReadRs.paid")
     @Mapping(target = "paymentId", source = "paymentReadRs.payment_id")
