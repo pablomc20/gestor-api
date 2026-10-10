@@ -12,7 +12,7 @@ import static com.gestor.dominator.repository.contract.ContractQueryBD.CREATE_CO
 import java.time.LocalDate;
 import java.util.UUID;
 
-
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -43,18 +43,25 @@ public class ContractRepositoryImpl implements ContractRepository {
 
         UUID projectId = contractDetailsRq.project_id();
 
-        return jdbcTemplate.queryForObject(
-                ContractQueryBD.READ_CONTRACT_BY_PROJECT_ID,
-                (rs, rowNum) -> ReadContractRs.builder()
-                        .contract_id(rs.getString("contract_id"))
-                        .status(rs.getString("status"))
-                        .file_url(rs.getString("file_url"))
-                        .signed_at(rs.getObject("signed_at", LocalDate.class))
-                        .final_amount(rs.getBigDecimal("final_amount"))
-                        .number_payments(rs.getInt("number_payments"))
-                        .description(rs.getString("description"))
-                        .build(),
-                projectId);
+        ReadContractRs contractDetails;
+        try {
+            contractDetails = jdbcTemplate.queryForObject(
+                    ContractQueryBD.READ_CONTRACT_BY_PROJECT_ID,
+                    (rs, rowNum) -> ReadContractRs.builder()
+                            .contract_id(rs.getString("contract_id"))
+                            .status(rs.getString("status"))
+                            .file_url(rs.getString("file_url"))
+                            .signed_at(rs.getObject("signed_at", LocalDate.class))
+                            .final_amount(rs.getBigDecimal("final_amount"))
+                            .number_payments(rs.getInt("number_payments"))
+                            .description(rs.getString("description"))
+                            .build(),
+                    projectId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new PostgreDbException("No se encontró el contrato para el proyecto con ID: " + projectId);
+        }
+
+        return contractDetails;
     }
 
 }

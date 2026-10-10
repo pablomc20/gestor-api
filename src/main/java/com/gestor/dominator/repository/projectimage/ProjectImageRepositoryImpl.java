@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.gestor.dominator.constants.ImageType;
+import com.gestor.dominator.constants.VisibilityType;
 import com.gestor.dominator.exceptions.custom.PostgreDbException;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRq;
 import com.gestor.dominator.model.postgre.projectimage.CreateProjectImageRs;
@@ -29,8 +31,8 @@ public class ProjectImageRepositoryImpl implements ProjectImageRepository {
 
     @Override
     public CreateProjectImageRs save(CreateProjectImageRq rq) {
-        String type = rq.type() != null ? rq.type() : "INITIAL";
-        String visibility = rq.visibility() != null ? rq.visibility() : "PRIVATE";
+        String type = rq.type() != null ? rq.type() : ImageType.INITIAL.name();
+        String visibility = rq.visibility() != null ? rq.visibility() : VisibilityType.PUBLIC.name();
 
         UUID projectImageId = jdbcTemplate.queryForObject(
                 INSERT_PROJECT_IMAGE,

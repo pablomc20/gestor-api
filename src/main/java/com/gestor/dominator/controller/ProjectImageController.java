@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gestor.dominator.dto.projectimage.CreateProjectImageRecord;
 import com.gestor.dominator.dto.projectimage.ProjectImagesRecord;
 import com.gestor.dominator.dto.projectimage.ProjectImagesResult;
 import com.gestor.dominator.service.projectimage.ProjectImageService;
@@ -25,5 +26,13 @@ public class ProjectImageController {
   @PostMapping
   public ResponseEntity<List<ProjectImagesResult>> getProjectImages(@RequestBody ProjectImagesRecord projectImagesRecord) {
     return ResponseEntity.ok(projectImageService.getProjectImages(projectImagesRecord));
+  }
+
+  @PostMapping ("/create")
+  public ResponseEntity<String> createProjectImage(@RequestBody CreateProjectImageRecord createProjectImageRecord) {
+
+    projectImageService.createProjectImage(createProjectImageRecord);
+
+    return ResponseEntity.noContent().build();
   }
 }
